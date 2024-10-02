@@ -1,14 +1,15 @@
 // src/App.jsx
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/home";
 
 const App = () => {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
       </Routes>
-    </Router>
+      </BrowserRouter>
   );
 };
 
