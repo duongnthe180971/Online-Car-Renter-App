@@ -1,12 +1,14 @@
 // src/App.jsx
 import React from "react";
-import AppRoutes from "./Routing/Admin/routes";
+import Home from "./pages/home/home";
 
 const App = () => {
   return (
-    <div>
-      <AppRoutes />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Router>
   );
 };
 
