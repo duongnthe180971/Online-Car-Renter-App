@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import {NavLink, Link} from 'react-router-dom';
 import {FiChevronDown } from "react-icons/fi";
 import logo from '../../assets/icon/logo.png';
-import "../../styles/HomeHeaderStyle.css"
+import "../../styles/component/HomeHeaderStyle.css"
 
 
 const HomeHeader = () => {

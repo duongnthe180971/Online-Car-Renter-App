@@ -1,0 +1,117 @@
+/* Rental Card General Styling */
+.rental-card {
+    display: flex;
+    background-color: #333;
+    color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin: 20px 0;
+    transition: transform 0.3s;
+    margin-left: 5vh;
+    margin-right: 5vh;
+}
+
+.rental-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Rental Info Section */
+.rental-info {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Status and Customer Info */
+.rental-customer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+}
+
+.status1 {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #ffc107;
+    color: black;
+}
+
+.status1.waiting-to-confirm {
+    background-color: #ffc107;
+    color: black;
+    transition: 400ms;
+}
+
+.status1.renting {
+    background-color: #28a745;
+    color: white;
+    transition: 400ms;
+
+}
+
+/* Rental Details Section */
+.rental-details {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    gap: 5px;
+}
+
+.rental-details span {
+    color: #ddd;
+}
+
+/* Action Buttons */
+.rental-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover{
+    transform: translateY(-5px);
+    transition: 400ms;
+}
+
+.view-customer-btn {
+    background-color: #007bff;
+    color: white;
+    margin-right: 1vh;
+}
+
+.approve-btn {
+    background-color: #28a745;
+    color: white;
+    margin-right: 1vh;
+}
+
+.reject-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Availability Styles */
+.available {
+    border-left: 5px solid #ffc107;
+
+}
+
+.unavailable {
+    border-left: 5px solid #28a745;
+}
+
+
+
