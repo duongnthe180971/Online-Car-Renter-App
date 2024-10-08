@@ -1,0 +1,22 @@
+/* FeedbackPage.css */
+
+
+.feedback-container{
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.feedback-page {
+    text-align: center;
+    padding: 20px;
+    background-color: #1e1e1e;
+    width:50vw;
+    align-items: center;
+  }
+  
+  .feedback-page .title {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  
