@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import "../../styles/component/FeedbackCard.css";
-import "../../styles/General.css";
 
 
 const FeedbackCard = ({ userName, userProfilePic, starRate, date, content }) => {
