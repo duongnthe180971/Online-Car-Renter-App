@@ -7,9 +7,9 @@ import RentalRequest from "./pages/car_owner/RentalRequest";
 import RentalHistory from "./pages/car_owner/RentalHistory";
 import CarList from "./pages/customer/CarList";
 import CarStatus from "./pages/customer/CarStatus";
-import CarRegistration from "./pages/Car/CarRegistration";
-import FeedbackPage from "./pages/Car/FeedbackPage";
-import UpdateCar from "./pages/Car/UpdateCar";
+import CarRegistration from "./pages/car/CarRegistration";
+import FeedbackPage from "./pages/car/FeedbackPage";
+import UpdateCar from "./pages/car/UpdateCar";
 import './styles/General.css'
 const App = () => {
   return (
