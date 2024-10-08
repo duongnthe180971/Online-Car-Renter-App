@@ -1,0 +1,105 @@
+.row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+
+.car-item {
+  border: 1px solid #9a9a9a;
+  width: 280px;
+  padding: 20px;
+  background-color: #373737;
+  border-radius: 8px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.car-item:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.car-img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.car-content .car-name {
+  white-space: nowrap;
+  font-size: 1.4rem;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.car-content .car-details {
+  font-size: 12px;
+  padding-bottom: 20px;
+  color: #ffffff;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.split-line{
+  color: #ffffff;
+}
+.book-section{
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.book-section .car-price{
+  display: flex;
+  white-space: nowrap;
+  flex-direction: column;
+  align-items: start;
+}
+
+.book-section .car-price h6{
+  font-size: 12px;
+  color: #ffffff;
+  font-weight: 300;
+}
+.book-section .car-price h5{
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: bolder;
+}
+
+.car-content button {
+  border: none;
+  padding: 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-block;
+  width: 50%;
+  text-align: center;
+  color: #040000;
+  font-weight: bolder;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.car-content button a:hover {
+  color: #fff;
+}
+
+/* Responsive cho màn hình nhỏ hơn */
+@media (max-width: 768px) {
+  .car-item {
+    margin-bottom: 30px;
+  }
+
+  .car-content h4 {
+    font-size: 1.4rem;
+  }
+
+  
+  .car-content button {
+    font-size: 0.9rem;
+  }
+}
