@@ -126,7 +126,7 @@ body {
 }
 
 .status.idle {
-    color: white;
+    color: #28a745;
 }
 
 .status.renting {

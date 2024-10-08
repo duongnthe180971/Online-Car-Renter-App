@@ -32,7 +32,6 @@ function App() {
                 <div class="Bar">
                     <ChooseBar />
                 </div>
-
             </div>
             <div class="RightSide">
                 <div class="garage rentalReq">

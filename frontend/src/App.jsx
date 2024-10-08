@@ -3,8 +3,11 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/home";
 import Garage from "./pages/car_owner/Garage";
-import RentalRequest from "./pages/car_owner/RentalRequest"
-
+import RentalRequest from "./pages/car_owner/RentalRequest";
+import RentalHistory from "./pages/car_owner/RentalHistory";
+import CarList from "./pages/customer/CarList";
+import CarStatus from "./pages/customer/CarStatus";
+import './styles/General.css'
 const App = () => {
   return (
     <BrowserRouter>
@@ -12,7 +15,9 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/garage" element={<Garage />} />
         <Route path="/rentalrequest" element={<RentalRequest />} />
-
+        <Route path="/rental-history" element={<RentalHistory />} />
+        <Route path="/carlist" element={<CarList />} />
+        <Route path="/carstatus" element={<CarStatus id={3} />} />
 
       </Routes>
       </BrowserRouter>

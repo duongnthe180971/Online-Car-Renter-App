@@ -13,7 +13,7 @@
 .car-order-container .title{
     color: #ffffff;
     font-size: 36px;
-    padding: 30px;
+    padding: 10px;
 }
 .car-order-content{
     display: flex;
@@ -60,10 +60,10 @@
     margin: 0;
 }
 .car-order-content .car-info .item{
-    width: 500px;
+    width: 30vw;
     display: flex;
     justify-content: space-between;
-    margin: 30px 0;
+    margin: 2vh 0;
 }
 .car-info .item h5{
     justify-content: space-between;
@@ -76,7 +76,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 50px;
+    margin: 5vh 0;
+
 }
 .progress-item{
     display: flex;
@@ -89,7 +90,7 @@
     color: white;
 }
 .progress-step {
-    margin: 20px;
+    margin: 0 3vw;
     width: 50px;
     height: 50px;
     background-color: #777;
@@ -127,7 +128,7 @@
     top: 50%;
     right: 0;
     height: 10px;
-    width: 280px;
+    width: 18vw;
     background-color: inherit;
     transform: translateY(-50%);
 }
@@ -153,4 +154,16 @@
 
 .cancel-btn:hover {
     background-color: #d32f2f;
+}
+.car-order-container
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  color: #ffffff;
+  font-weight: 600;
 }
