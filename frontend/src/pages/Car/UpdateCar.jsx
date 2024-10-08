@@ -75,8 +75,8 @@ const UpdateCar = () => {
   };
 
   return (
-    <div className="container">
-      <div className="header">
+    <div className="car-container">
+      <div className="car-header">
         <button className="backButton">&lt; Back</button>
         <h1 className="heading">Update Car</h1>
       </div>

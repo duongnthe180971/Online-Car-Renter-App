@@ -75,8 +75,8 @@ const CarRegistration = () => {
   };
 
   return (
-    <div className="container">
-      <div className="header">
+    <div className="car-container">
+      <div className="car-header">
         <button className="backButton">&lt; Back</button>
         <h1 className="heading">Car Registration</h1>
       </div>
