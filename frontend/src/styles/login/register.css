@@ -1,0 +1,68 @@
+body {
+  background-color: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+.register-container {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 400px;
+}
+.register-container h1 {
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.register-container label {
+  color: white;
+  display: block;
+  margin-bottom: 5px;
+}
+.register-container input[type="text"],
+.register-container input[type="password"],
+.register-container input[type="date"],
+.register-container input[type="email"],
+.register-container input[type="tel"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #666;
+  color: white;
+}
+.register-container .gender-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.register-container .gender-container input[type="radio"] {
+  margin-right: 5px;
+}
+.register-container .gender-container label {
+  margin-right: 20px;
+}
+.register-container .buttons {
+  display: flex;
+  justify-content: space-between;
+}
+.register-container .buttons button {
+  width: 48%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+.register-container .buttons .confirm {
+  background-color: #28a745;
+}
+.register-container .buttons .cancel {
+  background-color: #dc3545;
+}

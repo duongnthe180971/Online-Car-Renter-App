@@ -11,6 +11,9 @@ import CarRegistration from "./pages/Car/CarRegistration";
 import FeedbackPage from "./pages/Car/FeedbackPage";
 import UpdateCar from "./pages/Car/UpdateCar";
 import './styles/General.css'
+import Register from "./pages/login/register";
+import Login from "./pages/login/login";
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -24,8 +27,10 @@ const App = () => {
         <Route path="/carregistration" element={<CarRegistration />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/updatecar" element={<UpdateCar />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
-      </BrowserRouter>
+    </BrowserRouter>
   );
 };
 
