@@ -51,7 +51,7 @@ const RentalHistory = ({ garageID }) => {
         return {
           ...rental,
           carName: car.carName,
-          price: car.carPrice,
+          price: car.price,
           GarageID: car.GarageID // Add GarageID from car data
         };
       }
