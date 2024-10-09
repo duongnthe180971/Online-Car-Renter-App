@@ -1,4 +1,4 @@
-body {
+.login-body {
   background-color: #000000;
   color: #ffffff;
   font-family: Arial, sans-serif;
@@ -8,7 +8,7 @@ body {
   height: 100vh;
   margin: 0;
 }
-.container {
+.login-container {
   text-align: center;
 }
 .login-box,
@@ -36,7 +36,7 @@ body {
   cursor: pointer;
 }
 .register-btn {
-  background-color: #b4b4b4;
+  background-color: #0746f3;
   color: #fffdfd;
 }
 .confirm-btn {
