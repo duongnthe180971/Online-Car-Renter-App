@@ -11,7 +11,9 @@ import CarDetail from "./pages/customer/CarDetail";
 import CarRegistration from "./pages/car/CarRegistration";
 import FeedbackPage from "./pages/car/FeedbackPage";
 import UpdateCar from "./pages/car/UpdateCar";
-import './styles/General.css'
+import Login from "./pages/login/login";
+import Register from "./pages/login/register";
+import "./styles/General.css";
 
 const App = () => {
   return (
@@ -26,6 +28,8 @@ const App = () => {
         <Route path="/carregistration" element={<CarRegistration />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/updatecar" element={<UpdateCar />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/cardetail" element={<CarDetail id={5} />} />
       </Routes>
     </BrowserRouter>
