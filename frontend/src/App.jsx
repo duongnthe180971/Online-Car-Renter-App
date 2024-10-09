@@ -5,6 +5,7 @@ import Home from "./pages/home/home";
 import Garage from "./pages/car_owner/Garage";
 import RentalRequest from "./pages/car_owner/RentalRequest";
 import RentalHistory from "./pages/car_owner/RentalHistory";
+import RentalDetail from "./pages/customer/RentalDeltail";
 import CarList from "./pages/customer/CarList";
 import CarStatus from "./pages/customer/CarStatus";
 import CarDetail from "./pages/customer/CarDetail";
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/garage" element={<Garage garageID={3}/>} />
         <Route path="/rentalrequest" element={<RentalRequest garageID={1}/>} />
         <Route path="/rental-history" element={<RentalHistory garageID={1} />} />
+        <Route path="/rentaldetail" element={<RentalDetail />} />
         <Route path="/carlist" element={<CarList />} />
         <Route path="/carstatus" element={<CarStatus id={5} />} />
         <Route path="/carregistration" element={<CarRegistration />} />
