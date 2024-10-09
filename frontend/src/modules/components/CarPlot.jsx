@@ -1,10 +1,9 @@
 import React from "react";
 import { Col } from "reactstrap";
 import "../../styles/component/CarPlot.css";
-import {formatPrice} from "../../assets/format/numberFormat"
 
 const CarPlot = (props) => {
-  const { imgUrl, carName, gear, price, seat, type } = props.item;
+  const { imgUrl, carName, automatic, price, seat, type } = props.item;
 
   return (
     <>
@@ -16,14 +15,15 @@ const CarPlot = (props) => {
             <div className="car-details">
               <h8> {seat} Seats </h8>
               <h8> {type} </h8>
-              <h8> {gear} </h8>
+              <h8> {automatic} </h8>
             </div>
             <hr className="split-line" />
             <div className="book-section">
               <div className="car-price">
                 <h6 className="price">Starting from </h6>
-                <h5>{formatPrice(price)} vnd</h5>
+                <h5>{price} vnd</h5>
               </div>
+              
               <button className="book-btn">Book now</button>
             </div>
           </div>

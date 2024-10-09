@@ -13,8 +13,7 @@
 .car-order-container .title{
     color: #ffffff;
     font-size: 36px;
-    padding: 20px;
-    margin-left: 2vw;
+    padding: 10px;
 }
 .car-order-content{
     display: flex;
@@ -47,7 +46,14 @@
     color: #fff;
 }
 
-.stars .rate-value {
+.rating {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.rating .rate-value {
     color: rgb(182, 182, 182);
 }
 .car-order-content .car-info{
