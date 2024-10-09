@@ -1,4 +1,3 @@
-// import all images from assets/images directory
 import img01 from "../img/car/nissan-offer.png";
 import img02 from "../img/car/offer-toyota.png";
 import img03 from "../img/car/bmw-offer.png";
@@ -17,14 +16,13 @@ const carData = [
     imgUrl: img01,
     type: "SUV",
     price: 400000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
     seat: 4,
-    automatic: "Automatic",
+    gear: "Auto",
+    fuel: "Electric",
+    address: "123 Tran Duy Hung, Cau Giay, Ha Noi",
     description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
+      "Tesla Malibu offers a smooth and quiet ride with an all-electric powertrain. It's ideal for those seeking a luxurious, eco-friendly vehicle with advanced technology and premium comfort.",
   },
-
   {
     id: 2,
     brand: "Toyota",
@@ -33,14 +31,13 @@ const carData = [
     imgUrl: img02,
     type: "Van",
     price: 500000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
     seat: 6,
-    automatic: "Automatic",
+    gear: "Manual",
+    fuel: "Gasoline",
+    address: "45 Nguyen Chi Thanh, Dong Da, Ha Noi",
     description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
+      "Toyota Aventador is the ultimate van for family road trips or group travels. Spacious, reliable, and loaded with safety features, it provides comfort for long journeys.",
   },
-
   {
     id: 3,
     brand: "BMW",
@@ -49,14 +46,13 @@ const carData = [
     imgUrl: img03,
     type: "SUV",
     price: 300000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
     seat: 4,
-    automatic: "Automatic",
+    gear: "Auto",
+    fuel: "Diesel",
+    address: "67 Pham Hung, Nam Tu Liem, Ha Noi",
     description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
+      "The BMW X3 is an SUV that blends luxury with performance. Its powerful diesel engine ensures excellent fuel efficiency, while the advanced interior offers premium comfort and connectivity.",
   },
-
   {
     id: 4,
     brand: "Nissan",
@@ -65,14 +61,13 @@ const carData = [
     imgUrl: img04,
     type: "SUV",
     price: 270000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
     seat: 4,
-    automatic: "Automatic",
+    gear: "Manual",
+    fuel: "Gasoline",
+    address: "89 Hoang Quoc Viet, Cau Giay, Ha Noi",
     description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
+      "Nissan Mercielago is a reliable and affordable SUV with a spacious interior and great handling. Ideal for those who need a practical vehicle for both city and off-road driving.",
   },
-
   {
     id: 5,
     brand: "Ferrari",
@@ -81,14 +76,13 @@ const carData = [
     imgUrl: img05,
     type: "SUV",
     price: 450000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
     seat: 8,
-    automatic: "Automatic",
+    gear: "Semi-Auto",
+    fuel: "Gasoline",
+    address: "101 Doi Can, Ba Dinh, Ha Noi",
     description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
+      "The Ferrari Camry combines luxury and power, making it perfect for those who crave performance and style. With seating for up to 8, it’s ideal for a grand family road trip.",
   },
-
   {
     id: 6,
     brand: "Mercedes",
@@ -97,14 +91,13 @@ const carData = [
     imgUrl: img06,
     type: "SUV",
     price: 850000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
     seat: 4,
-    automatic: "Automatic",
+    gear: "Auto",
+    fuel: "Diesel",
+    address: "200 Kim Ma, Ba Dinh, Ha Noi",
     description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
+      "Mercedes Benz XC90 offers an unmatched driving experience with its elegant design and advanced diesel engine. It's a luxury SUV with state-of-the-art technology and superior comfort.",
   },
-
   {
     id: 7,
     brand: "Audi",
@@ -113,14 +106,13 @@ const carData = [
     imgUrl: img07,
     type: "Sport",
     price: 500000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
     seat: 6,
-    automatic: "Automatic",
+    gear: "Manual",
+    fuel: "Gasoline",
+    address: "300 Lang Ha, Dong Da, Ha Noi",
     description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
+      "Audi Fiesta is a sporty vehicle with great handling and an eye-catching design. It’s perfect for those who want a fun driving experience with extra room for passengers.",
   },
-
   {
     id: 8,
     brand: "Colorado",
@@ -129,43 +121,14 @@ const carData = [
     imgUrl: img08,
     type: "SUV",
     price: 500000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
     seat: 4,
-    automatic: "Automatic",
+    gear: "Semi-Auto",
+    fuel: "Gasoline",
+    address: "250 Le Duan, Hoan Kiem, Ha Noi",
     description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
-  },
-  {
-    id: 9,
-    brand: "Audi",
-    rating: 5,
-    carName: "Audi Fiesta",
-    imgUrl: img07,
-    type: "SUV",
-    price: 500000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
-    seat: 4,
-    automatic: "Automatic",
-    description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
-  },
-  {
-    id: 10,
-    brand: "Mercedes",
-    rating: 5,
-    carName: "Mercedes Benz XC90",
-    imgUrl: img06,
-    type: "SUV",
-    price: 850000,
-    speed: "20kmpl",
-    gps: "GPS Navigation",
-    seat: 4,
-    automatic: "Automatic",
-    description:
-      " Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam. Dolor labore lorem no accusam sit justo sadipscing labore invidunt voluptua, amet duo et gubergren vero gubergren dolor. At diam.",
+      "The Rolls Royce Colorado combines luxury and ruggedness, making it a standout choice for anyone who needs an SUV that offers both comfort and capability on all terrains.",
   },
 ];
 
 export default carData;
+

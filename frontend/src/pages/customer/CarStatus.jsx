@@ -2,9 +2,10 @@ import React from 'react'
 import ChooseBar from '../../modules/components/ChooseBar'
 import carData from "../../assets/data/carData"
 import rentalData from "../../assets/data/rentalData"
+import {formatPrice} from "../../assets/format/numberFormat"
 import "../../styles/customer/CarStatus.css"
 
-const CarOrderDetails = ({car, rental}) => {
+const CarOrderDetails = ({ car, rental }) => {
     const { imgUrl, carName, rating, price } = car;
     const { bookDate, startDate, returnDate, status } = rental;
     return (
@@ -21,20 +22,26 @@ const CarOrderDetails = ({car, rental}) => {
 
                 <div className="car-details-section">
                     <h1>{carName}</h1>
-                    <div className="rating">
-                        <span className="star">⭐</span>
-                        <span className='rate-value'>{rating}</span>
+                    <div className="stars">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <span
+                                key={star}
+                                className={star <= (rating) ? 'filled' : 'empty'}
+                            >
+                                {star <= (rating) ? '★' : '☆'}
+                            </span>
+                        ))}
                     </div>
                     <div className="car-info">
                         <div className="item"><h5>Book Date:</h5> <h5>{bookDate}</h5></div>
                         <div className="item"><h5>Starting Date:</h5> <h5>{startDate}</h5></div>
                         <div className="item"><h5>Return Date:</h5> <h5>{returnDate}</h5></div>
-                        <div className="item"><h5>Price:</h5> <h5>{price} VND</h5></div>
+                        <div className="item"><h5>Price:</h5> <h5>{formatPrice(price)} VND</h5></div>
                     </div>
                 </div>
 
             </div>
-            <ProgressBar id={status}/>
+            <ProgressBar id={status} />
             <div className="cancel-section">
                 <button className="cancel-btn">Cancel Order</button>
             </div>
@@ -42,7 +49,7 @@ const CarOrderDetails = ({car, rental}) => {
     );
 };
 
-const ProgressBar = ({id}) => {
+const ProgressBar = ({ id }) => {
     return (
         <div className="progress-bar">
             <div className="progress-item" >
@@ -80,7 +87,7 @@ const CarStatus = ({ id }) => {
                 </div>
             </div>
             <div class="RightSide">
-                <CarOrderDetails car={car_data} rental={rental_data}/>
+                <CarOrderDetails car={car_data} rental={rental_data} />
             </div>
 
 
