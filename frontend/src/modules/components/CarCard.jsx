@@ -7,24 +7,33 @@ const CarCard = ({ car, onStatusChange }) => {
 
     useEffect(() => {
         setIsAvailable(car.status === 'Idle');
-      }, [car.status]);
-    
-      const handleToggle = () => {
+    }, [car.status]);
+
+    const handleToggle = () => {
         // Toggle the status and set it locally
         const newStatus = isAvailable ? 'Closed' : 'Idle'; // Change status accordingly
         setIsAvailable(!isAvailable); // Update availability
         onStatusChange(car.id, newStatus); // Inform parent about the status change
-      };
+    };
 
     return (
         <div className={`car-card ${isAvailable ? 'available' : 'unavailable'}`}>
             <div className="car-image">
-                <img src={car.imageUrl} alt={car.name} />
+                <img src={car.imgUrl} alt={car.name} />
             </div>
             <div className="car-info">
                 <h2>{car.carName}</h2>
                 <div className="car-rating">
-                    <span>⭐ {car.rating}</span>
+                    <div className="stars">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <span
+                                key={star}
+                                className={star <= (car.rating) ? 'filled' : 'empty'}
+                            >
+                                {star <= ( car.rating) ? '★' : '☆'}
+                            </span>
+                        ))}
+                    </div>
                     <span className={`status ${car.status.toLowerCase()}`}>
                         Status: {car.status}
                     </span>

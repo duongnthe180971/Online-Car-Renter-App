@@ -1,5 +1,5 @@
 import React from 'react'
-import ChooseBar from '../../modules/components/ChooseBar'
+import ChooseBarCustomer from '../../modules/components/ChooseBarCustomer'
 import carData from "../../assets/data/carData"
 import rentalData from "../../assets/data/rentalData"
 import {formatPrice} from "../../assets/format/numberFormat"
@@ -83,7 +83,7 @@ const CarStatus = ({ id }) => {
         <div class="AllPage">
             <div class="LeftSide">
                 <div class="Bar">
-                    <ChooseBar />
+                    <ChooseBarCustomer />
                 </div>
             </div>
             <div class="RightSide">
