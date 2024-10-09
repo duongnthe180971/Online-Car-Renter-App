@@ -12,7 +12,6 @@ const CarCard = ({ car, onStatusChange }) => {
       const handleToggle = () => {
         // Toggle the status and set it locally
         const newStatus = isAvailable ? 'Closed' : 'Idle'; // Change status accordingly
-    
         setIsAvailable(!isAvailable); // Update availability
         onStatusChange(car.id, newStatus); // Inform parent about the status change
       };
@@ -23,7 +22,7 @@ const CarCard = ({ car, onStatusChange }) => {
                 <img src={car.imageUrl} alt={car.name} />
             </div>
             <div className="car-info">
-                <h2>{car.name}</h2>
+                <h2>{car.carName}</h2>
                 <div className="car-rating">
                     <span>⭐ {car.rating}</span>
                     <span className={`status ${car.status.toLowerCase()}`}>
@@ -32,7 +31,7 @@ const CarCard = ({ car, onStatusChange }) => {
                 </div>
                 <div className="car-details">
                     <span>Type: {car.type}</span>
-                    <span>Seats: {car.seats}</span>
+                    <span>Seats: {car.seat}</span>
                     <span>Gear: {car.gear}</span>
                     <span>Fuel: {car.fuel}</span>
                 </div>

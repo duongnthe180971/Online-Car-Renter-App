@@ -5,7 +5,7 @@ function RentalHistoryCard({ rental }) {
     const { vehicle, customer, bookDate, timePeriod, price } = rental;
 
     // Initialize the state to "Waiting to confirm" or whatever the rental status is
-    const [status, setStatus] = useState(rental.status);
+    const [status] = useState(rental.status);
 
 
     return (

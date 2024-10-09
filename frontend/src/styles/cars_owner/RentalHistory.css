@@ -1,6 +1,4 @@
 /* src/styles/RentalHistory.css */
-
-
 .Bar {
     margin-top: 5vh;
     width: 80%;
@@ -14,6 +12,25 @@
     border-radius: 10px;
     height: 90%;
     width: 95%;
+}
+
+.rental-requests {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin: 3vh;
+    margin-top: 0;
+}
+
+.rental-requests::-webkit-scrollbar {
+    width: 10px;
+    /* Customize scrollbar width */
+}
+
+.rental-requests::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    /* Customize scrollbar color */
+    border-radius: 10px;
 }
 
 .add-car-btn {

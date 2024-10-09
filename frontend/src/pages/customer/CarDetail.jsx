@@ -48,6 +48,7 @@ const CarDetailCard = ({ car }) => {
         </div>
     );
 }
+
 const RentalCard = ({ car, rental }) => {
     const { price } = car;
     const insurance = 60000;
