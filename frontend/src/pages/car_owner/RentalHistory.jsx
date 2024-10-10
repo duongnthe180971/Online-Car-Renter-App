@@ -1,26 +1,26 @@
 // src/RentalHistory.js
-import React from 'react';
-import '../../styles/cars_owner/RentalHistory.css';  // Import the main styles
-import RentalHistoryCard from '../../modules/components/RentalHistoryCard';  // Import the RentalCard component
-import ChooseBar from '../../modules/components/ChooseBar';
-import carData from "../../assets/data/carData"
-import rentalData from '../../assets/data/rentalData';
-import { formatPrice } from "../../assets/format/numberFormat"
+import React from "react";
+import "../../styles/cars_owner/RentalHistory.css"; // Import the main styles
+import RentalHistoryCard from "../../modules/components/RentalHistoryCard"; // Import the RentalCard component
+import ChooseBar from "../../modules/components/ChooseBarCarOwner";
+import carData from "../../assets/data/carData";
+import rentalData from "../../assets/data/rentalData";
+import { formatPrice } from "../../assets/format/numberFormat";
 
 const getStatusLabel = (status) => {
   switch (status) {
     case 1:
-      return 'Success';
+      return "Success";
     case 2:
-      return 'Success';
+      return "Success";
     case 3:
-      return 'Canceled';
+      return "Canceled";
     case 4:
-      return 'Success';
+      return "Success";
     case 5:
-      return 'Canceled';
+      return "Canceled";
     default:
-      return 'Unknown';
+      return "Unknown";
   }
 };
 
@@ -52,7 +52,7 @@ const RentalHistory = ({ garageID }) => {
           ...rental,
           carName: car.carName,
           price: car.price,
-          GarageID: car.GarageID // Add GarageID from car data
+          GarageID: car.GarageID, // Add GarageID from car data
         };
       }
       return null; // Return null if no matching car is found (though this shouldn't happen)
@@ -65,7 +65,6 @@ const RentalHistory = ({ garageID }) => {
         <div class="Bar">
           <ChooseBar />
         </div>
-
       </div>
       <div class="RightSide">
         <div class="garage rentalReq">
@@ -90,12 +89,8 @@ const RentalHistory = ({ garageID }) => {
             ))}
           </div>
         </div>
-
       </div>
-
-
     </div>
-
   );
 };
 

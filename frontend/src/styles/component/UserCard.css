@@ -1,0 +1,54 @@
+.user-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f2f2f2; /* Nền trắng/xám nhạt */
+  padding: 10vh 1vw;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ */
+  width: 95%;
+}
+
+.user-card .user-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%; /* Bo tròn cho hình đại diện */
+}
+
+.user-card .user-info {
+  flex-grow: 1;
+  margin-left: 20px;
+  color: black; /* Văn bản màu đen */
+}
+
+.user-card .user-info p {
+  margin: 5px 0;
+}
+
+.user-card .user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.user-card .view-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.user-card .remove-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.user-card .view-btn:hover,
+.remove-btn:hover {
+  opacity: 0.8;
+}

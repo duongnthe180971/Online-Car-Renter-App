@@ -1,0 +1,102 @@
+.template-container {
+  margin: auto;
+  width: 80%;
+  height: fit-content;
+  border-radius: 10px;
+  padding: 20px 0;
+  background-color: rgb(94, 94, 94);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+/* Điều chỉnh bố cục các nút */
+.manage-buttons {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  justify-content: flex-start; /* Canh các nút về phía bên trái */
+  width: 100%;
+  width: auto;
+}
+
+.manage-feature-btn,
+.manage-char-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 150px;
+  text-align: center;
+  width: auto;
+}
+
+.manage-feature-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.manage-char-btn {
+  background-color: #fff;
+  color: #333;
+}
+
+/* Danh sách các tính năng */
+.feature-list {
+  overflow-y: auto;
+  max-height: 55vh;
+  width: 100%;
+  max-width: 600px;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.feature-item {
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e0e0e0;
+  padding: 10px 15px;
+  border-radius: 8px;
+  width: 90%; /* Làm cho khung màu xám rộng hơn */
+  margin: 0 auto; /* Căn giữa khung */
+}
+
+.remove-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-feature-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  align-self: flex-end; /* Đặt nút ở cuối và căn phải */
+  width: auto; /* Đảm bảo kích thước của nút tự động theo nội dung */
+}
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%; /* Đặt chiều rộng của danh sách tính năng */
+}
