@@ -56,7 +56,7 @@ const RentalCard = ({ car, rental }) => {
     const total_renting_price = price * getNumOfDay(startDate, returnDate);
     return (
         <div className="rental-card-container">
-            <h1>{price} vnd / day</h1>
+            <h1>{formatPrice(price)} vnd / day</h1>
             <h3>Choose rental period</h3>
             <div className="rental-period">
                 <div className="rental-date">

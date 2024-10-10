@@ -32,7 +32,7 @@ const App = () => {
         <Route path="/updatecar" element={<UpdateCar />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/cardetail" element={<CarDetail id={5} />} />
+        <Route path="/cardetail" element={<CarDetail id={8} />} />
       </Routes>
     </BrowserRouter>
   );

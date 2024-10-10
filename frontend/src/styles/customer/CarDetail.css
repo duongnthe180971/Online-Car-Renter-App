@@ -70,7 +70,7 @@
   
   /* Rental card styling */
   .rental-card-container {
-    width: 20vw;
+    width: 25vw;
     height: fit-content;
     background-color: #333;
     color: #fff;
@@ -91,7 +91,7 @@
   }
   .rental-card-container .rental-period {
     display: flex;
-    gap: 3vw;
+    gap: 5.5vw;
     margin-bottom: 20px;
   }
   .rental-card-container .rental-date {

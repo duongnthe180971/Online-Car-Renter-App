@@ -26,7 +26,7 @@ const Filter = () => {
             <input type="text" className="input" placeholder="500000" />
         </div>
         
-        <button className="remove-btn">Remove Filter</button>
+        <button className="remove-btn">Remove</button>
         <button className="find-btn">Find</button>
       </div>
       </div>

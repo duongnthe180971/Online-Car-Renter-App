@@ -34,7 +34,15 @@
 .filter-price {
   display: flex;
   gap: 10px;
-  align-items: baseline;
+  align-items: center;
+  white-space: nowrap;
+  justify-content: center;
+}
+
+.filter-price .input {
+  margin-bottom: 0;
+  width: 8vw;
+  height: 3vh;
 }
 
 .filter-price h6 {
@@ -59,8 +67,7 @@
   background-color: rgb(71, 83, 212);
 }
 
-.filter
-h1,
+.filter h1,
 h2,
 h3,
 h4,
