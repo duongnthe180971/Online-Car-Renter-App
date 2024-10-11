@@ -1,0 +1,147 @@
+.footer-text {
+  margin-top: 2%;
+  margin-left: 5%;
+  color: #00000050;
+}
+.content-payment .payment-details {
+  margin-top: 5vh;
+  background-color: #d0d0d0;
+  padding: 20px;
+  border-radius: 10px;
+}
+.content-payment .payment-details p {
+  font-size: 18px;
+  color: #333;
+}
+.content-payment .payment-details .highlight {
+  color: red;
+}
+.body-payment {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #f0f0f0;
+}
+.payment-container {
+  display: flex;
+  height: 97.9vh;
+  width: 100%;
+}
+.sidebar-payment {
+  height: 100%;
+  width: 15vw;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+.sidebar-payment .menu-item {
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+.sidebar-payment .menu-item.active {
+  width: 6vw;
+  background-color: #4a00e0;
+  border-radius: 5px;
+}
+.sidebar-payment .menu-item i {
+  font-size: 50px;
+}
+.sidebar-payment .menu-item span {
+  display: block;
+  margin-top: 10px;
+  font-size: 18px;
+}
+.sidebar-payment .footer {
+  margin-top: auto;
+  padding: 20px;
+  text-align: center;
+}
+.sidebar-payment .footer img {
+  height: 10vh;
+  width: 15vw;
+}
+.content-payment {
+  width: 80%;
+  padding: 40px;
+  background-color: #fff;
+}
+.content-payment h1 {
+  font-size: 24px;
+  color: #333;
+}
+.content-payment h2 {
+  font-size: 32px;
+  color: #000;
+  margin-top: 10px;
+}
+.content-payment .info {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  padding: 10px;
+  color: rgba(0, 0, 0, 0.404);
+  background-color: #19a7c044;
+  border-radius: 5px;
+}
+.content-payment .info i {
+  font-size: 24px;
+  margin-right: 10px;
+}
+.content-payment .info span {
+  font-size: 18px;
+  color: #333;
+}
+.content-payment .qr-code {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  text-align: center;
+  height: 40vh;
+}
+.content-payment .qr-code img {
+  width: 20vw; /* Adjusted width */
+  height: 40vh; /* Adjusted height */
+}
+.content-payment .partners {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.content-payment .partners img {
+  margin: 5px;
+  width: 5vw;
+  height: auto;
+}
+.bank-card-form {
+  margin-top: 20px;
+}
+.bank-card-form form {
+  display: flex;
+  flex-direction: column;
+}
+.bank-card-form label {
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+.bank-card-form input {
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.bank-card-form button {
+  padding: 10px;
+  font-size: 18px;
+  background-color: #4a00e0;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

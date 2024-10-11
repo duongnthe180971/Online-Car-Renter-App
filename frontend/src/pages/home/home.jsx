@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../styles/home/home.css";
 import carData from "../../assets/data/carData";
 import CarPlot from "../../modules/components/CarPlot";
+import HomeHeader from "./homeheader";
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Home() {
@@ -57,25 +58,7 @@ function Home() {
   //
   return (
     <div className="home-container">
-      <div className="header-home">
-        <div className="logo">
-          <div className="header-logo">
-            <a href="../">
-              <i className="fas fa-car"></i> Cardio
-            </a>
-          </div>
-        </div>
-        <div className="navbar">
-          <a href="./">Home</a>
-          <a href="./">About Us</a>
-          <a href="./">Your Renting Car</a>
-        </div>
-        <div className="user">
-          <i className="fas fa-user-circle"></i>
-
-          <a href="../login"> Login</a>
-        </div>
-      </div>
+      <HomeHeader></HomeHeader>
       {/* Advertisement section */}
       <div className="advertisement">
         {images.map((image, index) => (
@@ -123,7 +106,7 @@ function Home() {
             preferences, and the demands of your adventure.
           </p>
           <button className="rent-button">
-            <a href="./carlist">Rent Now</a>
+            <a href="./car-list">Rent Now</a>
           </button>
         </div>
       </div>
