@@ -43,7 +43,10 @@ const Garage = ({ garageID }) => {
     useEffect(() => {
         // Filter cars based on the garageID passed from the account
         const filteredCars = carData.filter(car => car.GarageID === garageID);
-        setCars(filteredCars);
+        if(garageID === 0){
+            setCars(carData)
+        }else{
+        setCars(filteredCars);}
     }, [garageID]); // Re-run the effect if the garageID changes
 
     const [cars, setCars] = useState(carData);

@@ -5,7 +5,7 @@ function RentalCard({ request }) {
   const { car, customer, bookDate, timePeriod, price } = request;
   
   // Initialize the state to "Waiting to confirm"
-  const [status, setStatus] = useState('Waiting to confirm');
+  const [status, setStatus] = useState(request.status);
 
   // Handle approving the rental
   const handleApprove = () => {
@@ -19,7 +19,7 @@ function RentalCard({ request }) {
         <h2>{car}</h2>
         <div className="rental-customer">
           <span>Customer: {customer}</span>
-          <span className={`status1 ${status.toLowerCase().replace(' ', '-')}`}>
+          <span className={`status1 ${status.toLowerCase().replace(/\s+/g, '-')}`}>
             Status: {status}
           </span>
         </div>

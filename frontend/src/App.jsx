@@ -21,9 +21,9 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/garage" element={<Garage garageID={3}/>} />
+        <Route path="/garage" element={<Garage garageID={0}/>} />
         <Route path="/rentalrequest" element={<RentalRequest garageID={1}/>} />
-        <Route path="/rental-history" element={<RentalHistory garageID={1} />} />
+        <Route path="/rental-history" element={<RentalHistory garageID={3} />} />
         <Route path="/rentaldetail" element={<RentalDetail />} />
         <Route path="/carlist" element={<CarList />} />
         <Route path="/carstatus" element={<CarStatus id={5} />} />

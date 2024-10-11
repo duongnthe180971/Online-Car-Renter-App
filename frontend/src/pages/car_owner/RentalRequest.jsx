@@ -12,13 +12,13 @@ const getStatusLabel = (status) => {
         case 1:
             return 'Waiting to confirm';
         case 2:
-            return 'Confirmed';
+            return 'Renting';
         case 3:
-            return 'In progress';
+            return 'Renting';
         case 4:
-            return 'Completed';
+            return 'Renting';
         case 5:
-            return 'Canceled';
+            return 'Renting';
         default:
             return 'Unknown';
     }

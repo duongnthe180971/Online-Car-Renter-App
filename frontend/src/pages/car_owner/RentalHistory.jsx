@@ -10,17 +10,17 @@ import { formatPrice } from "../../assets/format/numberFormat"
 const getStatusLabel = (status) => {
   switch (status) {
     case 1:
-      return 'Success';
+      return 'Renting';
     case 2:
-      return 'Success';
+      return 'Renting';
     case 3:
-      return 'Canceled';
+      return 'Renting';
     case 4:
-      return 'Success';
+      return 'Renting';
     case 5:
-      return 'Canceled';
+      return 'Success';
     default:
-      return 'Unknown';
+      return 'Canceled';
   }
 };
 
