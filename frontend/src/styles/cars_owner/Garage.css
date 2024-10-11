@@ -75,6 +75,12 @@
     margin-right: 5vh;
 }
 
+.sidebar ul li:active {
+    box-shadow: 0 0 0 0 transparent;
+    -webkit-transition: box-shadow 0.2s ease-in;
+    -moz-transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in;
+  }
 .garage .car-card.available {
     border-left: 5px solid #2ebf91;
 }
@@ -161,6 +167,13 @@
 .view-car-btn:hover {
     box-shadow: 0 0 10px 5px rgb(0, 157, 255);
 }
+
+.view-car-btn:active {
+    box-shadow: 0 0 0 0 transparent;
+    -webkit-transition: box-shadow 0.2s ease-in;
+    -moz-transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in;
+  }
 
 .delete-car-btn {
     margin-top: 10px;

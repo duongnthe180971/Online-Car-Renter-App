@@ -7,20 +7,20 @@ import rentalData from "../../assets/data/rentalData";
 import { formatPrice } from "../../assets/format/numberFormat";
 
 const getStatusLabel = (status) => {
-  switch (status) {
-    case 1:
-      return "Waiting to confirm";
-    case 2:
-      return "Confirmed";
-    case 3:
-      return "In progress";
-    case 4:
-      return "Completed";
-    case 5:
-      return "Canceled";
-    default:
-      return "Unknown";
-  }
+    switch (status) {
+        case 1:
+            return 'Waiting to confirm';
+        case 2:
+            return 'Renting';
+        case 3:
+            return 'Renting';
+        case 4:
+            return 'Renting';
+        case 5:
+            return 'Renting';
+        default:
+            return 'Unknown';
+    }
 };
 
 const rentalRequests = ({ garageID }) => {

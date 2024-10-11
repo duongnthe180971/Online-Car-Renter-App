@@ -42,6 +42,11 @@
   transition: 400ms;
 }
 
+.status2.renting {
+  color: orange;
+  transition: 400ms;
+}
+
 .status2.success {
 
   color: #28a745;
