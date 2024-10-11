@@ -2,6 +2,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/home";
+import AboutUs from "./pages/home/aboutus";
 import Garage from "./pages/car_owner/Garage";
 import RentalRequest from "./pages/car_owner/RentalRequest";
 import RentalHistory from "./pages/car_owner/RentalHistory";
@@ -19,6 +20,7 @@ import AdminCarRegistrations from "./pages/admin/AdminCarRegistrations";
 import CarTemplatePage from "./pages/admin/CarTemplate";
 import Login from "./pages/login/login";
 import Register from "./pages/login/register";
+import QrCode from "./pages/payment/qrcode";
 import "./styles/General.css";
 
 const App = () => {
@@ -27,6 +29,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/finance" element={<FinancePage />} />
         <Route path="/garage" element={<Garage garageID={3} />} />
         <Route
@@ -51,6 +54,7 @@ const App = () => {
         <Route path="/car-template" element={<CarTemplatePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/payment" element={<QrCode />} />
         <Route path="/car-detail" element={<CarDetail id={8} />} />
       </Routes>
     </BrowserRouter>

@@ -1,0 +1,12 @@
+export { default as vietcombank } from "./vietcombank.png";
+export { default as vietinbank } from "./vietinbank.png";
+export { default as acb } from "./acb.png";
+export { default as bidv } from "./bidv.png";
+export { default as hdbank } from "./hdbank.png";
+export { default as lienvietpostbank } from "./lienvietpostbank.png";
+export { default as mbbank } from "./mbbank.png";
+export { default as sacombank } from "./sacombank.png";
+export { default as techcombank } from "./techcombank.png";
+export { default as tpbank } from "./tpbank.png";
+export { default as vib } from "./vib.png";
+export { default as vpbank } from "./vpbank.png";

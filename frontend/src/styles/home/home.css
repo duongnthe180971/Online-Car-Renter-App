@@ -4,19 +4,6 @@
   background-color: #000;
   color: #fff;
 }
-.header-home {
-  background-color: #696969;
-  z-index: 999;
-  position: absolute;
-  width: 100%;
-  max-width: 100%;
-  margin: auto;
-  height: 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: 0.5s ease;
-}
 .header-logo {
   padding: 0 1vw;
   color: #fd5826;
@@ -52,6 +39,11 @@
   gap: 5px;
   margin: 0;
   width: 100;
+}
+.header-logo img {
+  margin-top: 5%;
+  height: 5vh;
+  width: 8vw;
 }
 .user i {
   font-size: 24px;

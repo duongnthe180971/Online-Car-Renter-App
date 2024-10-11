@@ -1,0 +1,29 @@
+.header-home {
+  background-color: #00ff62;
+  z-index: 999;
+  position: fixed;
+  width: 100%;
+  max-width: 100%;
+  margin: auto;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.5s ease;
+}
+.header-logo {
+  padding: 0 1vw;
+  color: #fd5826;
+  font-size: larger;
+  font-weight: bold;
+  font-style: italic;
+  text-shadow: 0.1em 0.1em 0.2em black;
+}
+.header .logo {
+  display: flex;
+  align-items: center;
+}
+.header .logo i {
+  font-size: 24px;
+  margin-right: 10px;
+}

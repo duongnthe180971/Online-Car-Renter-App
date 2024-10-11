@@ -3,6 +3,7 @@ import ChooseBar from "../../modules/components/ChooseBarCarOwner";
 import "../../styles/cars_owner/Garage.css";
 import CarCard from "../../modules/components/CarCard";
 import carData from "../../assets/data/carData";
+import HomeHeader from "../home/homeheader";
 
 const Garage = ({ garageID }) => {
   // const [cars, setCars] = useState([
@@ -56,6 +57,7 @@ const Garage = ({ garageID }) => {
   };
   return (
     <div class="AllPage">
+      <HomeHeader></HomeHeader>
       <div class="LeftSide">
         <div class="Bar">
           <ChooseBar />

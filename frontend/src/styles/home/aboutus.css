@@ -1,0 +1,108 @@
+.body-aboutus {
+  height: 100%;
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #0d0d0d;
+  color: #ffffff;
+}
+.container-aboutus {
+  display: flex;
+  height: 100vh;
+}
+.image-section {
+  flex: 1;
+  position: relative;
+}
+.image-section img {
+  border-radius: 3%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.form-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 50px;
+}
+.form-section h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+.form-section p {
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+.form-section label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.form-section input,
+.form-section textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #1a1a1a;
+  border: none;
+  border-bottom: 1px solid #666666;
+  color: #ffffff;
+  font-size: 14px;
+}
+.form-section input::placeholder,
+.form-section textarea::placeholder {
+  color: #666666;
+}
+.form-section button {
+  width: 100%;
+  padding: 10px;
+  background-color: #666666;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+.form-section .toggle-switch {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 30px;
+}
+.form-section .toggle-switch input {
+  display: none;
+}
+.form-section .toggle-switch label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.form-section .toggle-switch label span {
+  margin-left: 10px;
+  font-size: 12px;
+}
+.form-section .toggle-switch .slider {
+  width: 40px;
+  height: 20px;
+  background-color: #666666;
+  border-radius: 10px;
+  position: relative;
+  transition: background-color 0.3s;
+}
+.form-section .toggle-switch .slider::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+.form-section .toggle-switch input:checked + label .slider {
+  background-color: #4caf50;
+}
+.form-section .toggle-switch input:checked + label .slider::before {
+  transform: translateX(20px);
+}
