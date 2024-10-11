@@ -43,10 +43,11 @@ const Garage = ({ garageID }) => {
     useEffect(() => {
         // Filter cars based on the garageID passed from the account
         const filteredCars = carData.filter(car => car.GarageID === garageID);
-        if(garageID === 0){
+        if (garageID === 0) {
             setCars(carData)
-        }else{
-        setCars(filteredCars);}
+        } else {
+            setCars(filteredCars);
+        }
     }, [garageID]); // Re-run the effect if the garageID changes
 
     const [cars, setCars] = useState(carData);
@@ -79,41 +80,8 @@ const Garage = ({ garageID }) => {
                 </div>
 
             </div>
-
-  const [cars, setCars] = useState(carData);
-
-  const handleStatusChange = (carId, newStatus) => {
-    const updatedCars = cars.map((car) =>
-      car.id === carId ? { ...car, status: newStatus } : car
+        </div>
     );
-    setCars(updatedCars);
-  };
-  return (
-    <div class="AllPage">
-      <div class="LeftSide">
-        <div class="Bar">
-          <ChooseBar />
-        </div>
-      </div>
-      <div class="RightSide">
-        <div class="garage">
-          <div className="header">
-            <h1>Garage</h1>
-            <button className="add-car-btn">Add New Car</button>
-          </div>
-          <div className="garageCarList">
-            {cars.map((car) => (
-              <CarCard
-                key={car.id}
-                car={car}
-                onStatusChange={handleStatusChange}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 };
 
 export default Garage;
