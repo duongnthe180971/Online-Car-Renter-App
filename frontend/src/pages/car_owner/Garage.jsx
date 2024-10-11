@@ -1,8 +1,8 @@
-import React, { useState , useEffect} from 'react';
-import ChooseBar from '../../modules/components/ChooseBar';
-import '../../styles/cars_owner/Garage.css'
-import CarCard from '../../modules/components/CarCard';
-import carData from "../../assets/data/carData"
+import React, { useState, useEffect } from "react";
+import ChooseBar from "../../modules/components/ChooseBarCarOwner";
+import "../../styles/cars_owner/Garage.css";
+import CarCard from "../../modules/components/CarCard";
+import carData from "../../assets/data/carData";
 
 const Garage = ({ garageID }) => {
     // const [cars, setCars] = useState([
@@ -80,9 +80,40 @@ const Garage = ({ garageID }) => {
 
             </div>
 
+  const [cars, setCars] = useState(carData);
 
+  const handleStatusChange = (carId, newStatus) => {
+    const updatedCars = cars.map((car) =>
+      car.id === carId ? { ...car, status: newStatus } : car
+    );
+    setCars(updatedCars);
+  };
+  return (
+    <div class="AllPage">
+      <div class="LeftSide">
+        <div class="Bar">
+          <ChooseBar />
         </div>
-    )
+      </div>
+      <div class="RightSide">
+        <div class="garage">
+          <div className="header">
+            <h1>Garage</h1>
+            <button className="add-car-btn">Add New Car</button>
+          </div>
+          <div className="garageCarList">
+            {cars.map((car) => (
+              <CarCard
+                key={car.id}
+                car={car}
+                onStatusChange={handleStatusChange}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Garage;

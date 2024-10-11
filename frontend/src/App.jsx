@@ -12,6 +12,11 @@ import CarDetail from "./pages/customer/CarDetail";
 import CarRegistration from "./pages/car/CarRegistration";
 import FeedbackPage from "./pages/car/FeedbackPage";
 import UpdateCar from "./pages/car/UpdateCar";
+import "./styles/General.css";
+import FinancePage from "./pages/admin/Finance";
+import UserManagementPage from "./pages/admin/UserManagement";
+import AdminCarRegistrations from "./pages/admin/AdminCarRegistrations";
+import CarTemplatePage from "./pages/admin/CarTemplate";
 import Login from "./pages/login/login";
 import Register from "./pages/login/register";
 import "./styles/General.css";
@@ -21,18 +26,32 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/garage" element={<Garage garageID={0}/>} />
-        <Route path="/rentalrequest" element={<RentalRequest garageID={1}/>} />
-        <Route path="/rental-history" element={<RentalHistory garageID={3} />} />
-        <Route path="/rentaldetail" element={<RentalDetail />} />
-        <Route path="/carlist" element={<CarList />} />
-        <Route path="/carstatus" element={<CarStatus id={5} />} />
-        <Route path="/carregistration" element={<CarRegistration />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/finance" element={<FinancePage />} />
+        <Route path="/garage" element={<Garage garageID={3} />} />
+        <Route
+          path="/rental-request"
+          element={<RentalRequest garageID={1} />}
+        />
+        <Route
+          path="/rental-history"
+          element={<RentalHistory garageID={1} />}
+        />
+        <Route path="/rental-detail" element={<RentalDetail />} />
+        <Route path="/car-list" element={<CarList />} />
+        <Route path="/car-status" element={<CarStatus id={5} />} />
+        <Route path="/car-registration" element={<CarRegistration />} />
         <Route path="/feedback" element={<FeedbackPage />} />
-        <Route path="/updatecar" element={<UpdateCar />} />
+        <Route path="/update-car" element={<UpdateCar />} />
+        <Route path="/user-management" element={<UserManagementPage />} />
+        <Route
+          path="/admin-car-registration"
+          element={<AdminCarRegistrations />}
+        />
+        <Route path="/car-template" element={<CarTemplatePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/cardetail" element={<CarDetail id={8} />} />
+        <Route path="/car-detail" element={<CarDetail id={8} />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,156 +1,154 @@
 .car-order-container {
-    z-index: 0;
-    width: 90%;
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-    background-color: #333;
-    border-radius: 10px;
-    color: #fff;
-    margin: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 0;
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  background-color: #333;
+  border-radius: 10px;
+  color: #fff;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.car-order-container .title{
-    color: #ffffff;
-    font-size: 36px;
-    padding: 20px;
-    margin-left: 2vw;
+.car-order-container .title {
+  max-height: 3vh;
+  color: #ffffff;
+  font-size: 36px;
+  padding: 20px;
+  margin-left: 2vw;
 }
-.car-order-content{
-    display: flex;
-    flex-direction: row;
+.car-order-content {
+  display: flex;
+  flex-direction: row;
 }
 .car-image-section {
-    margin: 20px;
-    width: 45%;
-    height: auto;
+  margin: 20px;
+  width: 45%;
+  height: auto;
 }
 
 .car-details-section {
-    width: auto;
-    margin-left: 50px;
-    align-items: start;
-    text-align: left;
+  width: auto;
+  margin-left: 50px;
+  align-items: start;
+  text-align: left;
 }
-.car-details-section h1{
-    font-size: 36px;
-    color: #ffffff;
+.car-details-section h1 {
+  font-size: 36px;
+  color: #ffffff;
 }
 .car-order-content .car-image {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
 }
 
 .car-details-section h2 {
-    margin-bottom: 10px;
-    color: #fff;
+  margin-bottom: 10px;
+  color: #fff;
 }
 
 .stars .rate-value {
-    color: rgb(182, 182, 182);
+  color: rgb(182, 182, 182);
 }
-.car-order-content .car-info{
-    margin: 0;
+.car-order-content .car-info {
+  margin: 0;
+  max-height: 15vh;
 }
-.car-order-content .car-info .item{
-    width: 30vw;
-    display: flex;
-    justify-content: space-between;
-    margin: 2vh 0;
+.car-order-content .car-info .item {
+  width: 30vw;
+  display: flex;
+  justify-content: space-between;
+  margin: 2vh 0;
 }
-.car-info .item h5{
-    justify-content: space-between;
-    color: white;
-    
+.car-info .item h5 {
+  justify-content: space-between;
+  color: white;
 }
 
 /* Progress Bar */
 .progress-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 5vh 0;
-
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5vh 0;
 }
-.progress-item{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
-.progress-item h5{
-    text-align: center;
-    color: white;
+.progress-item h5 {
+  text-align: center;
+  color: white;
 }
 .progress-step {
-    margin: 0 3vw;
-    width: 50px;
-    height: 50px;
-    background-color: #777;
-    color: #fff;
-    text-align: center;
-    border-radius: 50%;
-    padding: 5px;
-    font-size: 14px;
-    position: relative;
+  margin: 0 3vw;
+  width: 50px;
+  height: 50px;
+  background-color: #777;
+  color: #fff;
+  text-align: center;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 14px;
+  position: relative;
 }
 
-
-.isBook{
-    background-color: #4caf50;
+.isBook {
+  background-color: #4caf50;
 }
 
-.isConfirm{
-    background-color: #27b42c;
+.isConfirm {
+  background-color: #27b42c;
 }
 
-.isRent{
-    background-color: #00ff95;
+.isRent {
+  background-color: #00ff95;
 }
 
-.isWaiting{
-    background-color: #36f4e4;
+.isWaiting {
+  background-color: #36f4e4;
 }
-.isComplete{
-    background-color: #36cbf4;
+.isComplete {
+  background-color: #36cbf4;
 }
 .progress-step::after {
-    z-index: -1;
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 0;
-    height: 10px;
-    width: 18vw;
-    background-color: inherit;
-    transform: translateY(-50%);
+  z-index: -1;
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  height: 10px;
+  width: 18vw;
+  background-color: inherit;
+  transform: translateY(-50%);
 }
 
 .progress-item:first-child .progress-step::after {
-    width: 0;
+  width: 0;
 }
 /* Cancel Order Button */
 .cancel-section {
-    text-align: right;
+  text-align: right;
 }
 
 .cancel-btn {
-    background-color: #f44336;
-    color: #fff;
-    border: none;
-    padding: 20px 30px;
-    margin-right: 50px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  padding: 20px 30px;
+  margin-right: 50px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .cancel-btn:hover {
-    background-color: #d32f2f;
+  background-color: #d32f2f;
 }
-.car-order-container
-h1,
+.car-order-container h1,
 h2,
 h3,
 h4,

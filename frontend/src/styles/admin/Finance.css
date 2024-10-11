@@ -1,0 +1,51 @@
+/* Khung nội dung chính */
+.finance-container {
+  width: 100%;
+  background-color: #333;
+  border-radius: 10px;
+  color: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Tiêu đề */
+.finance-container .title {
+  font-size: 36px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* Bộ lọc */
+.finance-container .filters {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.finance-container .filter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.finance-container .filter-item label {
+  color: white;
+  margin-bottom: 5px;
+}
+
+.finance-container .filter-item select {
+  padding: 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.finance-container .chart-container {
+  max-height: 20vh;
+  background-color: #fff; /* Nền trắng cho biểu đồ */
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: auto;
+  height: 100%; /* Điều chỉnh chiều cao để không bị "tàn" */
+}

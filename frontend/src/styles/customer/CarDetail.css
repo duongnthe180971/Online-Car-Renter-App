@@ -1,150 +1,154 @@
 /* Main container */
 .car-detail-container {
-    display: flex;
-    justify-content: center;
-    gap: 2vw;
-    padding: 20px;
-    margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 2vw;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+/* Car detail card styling */
+.car-detail-card-container {
+  width: 50%;
+  background-color: #333;
+  color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.car-detail-card-container .car-image {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.car-detail-card-container .car-info {
+  margin-top: 20px;
+}
+
+.car-detail-card-container .car-info h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.car-detail-card-container .characteristics {
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  white-space: pre;
+}
+
+.car-detail-card-container .characteristics p {
+  font-size: 18px;
+}
+
+.car-detail-card-container .features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 80%;
+}
+
+.car-detail-card-container .features p {
+  background-color: #444;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 0;
+}
+
+.car-detail-card-container .address,
+.description {
+  width: 90%;
+  margin-top: 20px;
+}
+
+.car-detail-card-container .address h5,
+.description h5 {
+  margin-bottom: 5px;
+}
+
+.car-detail-card-container .address p,
+.description p {
+  margin: 0;
+}
+
+/* Rental card styling */
+.rental-card-container {
+  width: 25vw;
+  height: fit-content;
+  background-color: #333;
+  color: #fff;
+  border-radius: 10px;
+  padding: 30px 50px;
+  text-align: center;
+}
+
+.rental-card-container h1 {
+  text-align: left;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+.rental-card-container h3 {
+  text-align: left;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.rental-card-container .rental-period {
+  width: 25vw;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.rental-card-container .rental-date {
+  display: flex;
+  white-space: nowrap;
+  flex-direction: column;
+  background-color: #1f1f1f;
+  padding: 10px 1vw;
+  border-radius: 10px;
+}
+
+.rental-card-container .price-details {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  background-color: #1f1f1f;
+  padding: 10px 1vw;
+  border-radius: 10px;
+}
+.rental-card-container .price-details .item {
+  display: flex;
+  justify-content: space-between;
+}
+.rental-card-container .price-details h7 {
+  font-size: 0.8rem;
+  margin: 10px 0;
+}
+.rental-card-container .price-details h5 {
+  margin: 30px 0;
+}
+.rental-card-container .book-button {
+  width: 70%;
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: auto;
+}
+
+.rental-card-container .book-button:hover {
+  background-color: #218838;
+}
+
+@media (max-width: 768px) {
+  .car-detail-container {
+    flex-direction: column;
   }
-  
-  /* Car detail card styling */
-  .car-detail-card-container {
-    width: 50%;
-    background-color: #333;
-    color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-  }
-  
-  .car-detail-card-container .car-image {
-    width: 100%;
-    border-radius: 10px;
-  }
-  
-  .car-detail-card-container .car-info {
-    margin-top: 20px;
-  }
-  
-  .car-detail-card-container .car-info h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  .car-detail-card-container .characteristics {
-    display: flex;
-    width: 80%;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    white-space: pre;
-  }
-  
-  .car-detail-card-container .characteristics p {
-    font-size: 18px;
-  }
-  
-  .car-detail-card-container .features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    width: 80%;
-  }
-  
-  .car-detail-card-container .features p {
-    background-color: #444;
-    padding: 5px;
-    border-radius: 5px;
-    margin: 0;
-  }
-  
-  .car-detail-card-container .address, .description {
-    width: 90%;
-    margin-top: 20px;
-  }
-  
-  .car-detail-card-container .address h5, .description h5 {
-    margin-bottom: 5px;
-  }
-  
-  .car-detail-card-container .address p, .description p {
-    margin: 0;
-  }
-  
-  /* Rental card styling */
+
+  .car-detail-card-container,
   .rental-card-container {
-    width: 25vw;
-    height: fit-content;
-    background-color: #333;
-    color: #fff;
-    border-radius: 10px;
-    padding: 30px 50px;
-    text-align: center;
-  }
-  
-  .rental-card-container h1 {
-    text-align: left;
-    font-size: 28px;
-    margin-bottom: 10px;
-  }
-  .rental-card-container h3 {
-    text-align: left;
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  .rental-card-container .rental-period {
-    display: flex;
-    gap: 5.5vw;
+    width: 100%;
     margin-bottom: 20px;
   }
-  .rental-card-container .rental-date {
-    display: flex;
-    white-space: nowrap;
-    flex-direction: column;
-    background-color: #1f1f1f;
-    padding: 10px 1vw;
-    border-radius: 10px;
-  }
-  
-  .rental-card-container .price-details {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-    background-color: #1f1f1f;
-    padding: 10px 1vw;
-    border-radius: 10px;
-  }
-  .rental-card-container .price-details .item{
-    display: flex;
-    justify-content: space-between;
-  }
-  .rental-card-container .price-details h7{
-    font-size: 0.8rem;
-    margin: 10px 0;
-  }
-  .rental-card-container .price-details h5 {
-    margin: 30px 0;
-  }
-  .rental-card-container .book-button {
-    width: 70%;
-    padding: 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    margin: auto;
-  }
-  
-  .rental-card-container .book-button:hover {
-    background-color: #218838;
-  }
-  
-  @media (max-width: 768px) {
-    .car-detail-container {
-      flex-direction: column;
-    }
-  
-    .car-detail-card-container, .rental-card-container {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-  }
-  
+}

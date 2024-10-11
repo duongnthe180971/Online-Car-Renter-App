@@ -11,8 +11,8 @@ const CarList = () => {
     <>
       <Helmet title="Cars">
         {/* <Header/> */}
-        <section/>
-        <Filter/>
+        <section />
+        <Filter />
         <section>
           <Container>
             <Row>
