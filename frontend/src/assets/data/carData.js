@@ -151,11 +151,14 @@ const carData = [
     rating: 5,
     carName: 'Lamborghini Revuelto',
     imgUrl: 'https://www.mclarenlife.com/attachments/2024-lamborghini-aventador-successor-rendering-v1-jpg.228772/',
-    type: 'Sports',
+    type: 'Sport',
     price: 10000000,
     seats: 2,
     gear: 'Auto',
     fuel: 'Gasoline',
+    address: "250 Le Duan, Hoan Kiem, Ha Noi",
+    description:
+      "The Rolls Royce Colorado combines luxury and ruggedness, making it a standout choice for anyone who needs an SUV that offers both comfort and capability on all terrains.",
     status: 'Idle',
     
   },
@@ -166,11 +169,14 @@ const carData = [
     rating: 5,
     carName: 'Bugatti Centodieci',
     imgUrl: 'https://cdn.motor1.com/images/mgl/zxp3Jb/s3/bugatti-centodieci-2022-zehntes-und-letztes-exemplar.jpg',
-    type: 'Sports',
+    type: 'Sport',
     price: 10000000,
     seats: 2,
     gear: 'Auto',
     fuel: 'Gasoline',
+    address: "250 Le Duan, Hoan Kiem, Ha Noi",
+    description:
+      "The Rolls Royce Colorado combines luxury and ruggedness, making it a standout choice for anyone who needs an SUV that offers both comfort and capability on all terrains.",
     status: 'Renting',
   },
 ];

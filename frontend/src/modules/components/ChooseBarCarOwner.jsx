@@ -27,7 +27,7 @@ export class ChooseBarCarOwner extends Component {
             </Link>
           </li>
           <li>
-            <Link to="/rentalrequest">
+            <Link to="/rental-request">
               <FaCheckSquare className="icon" /> Rental Requests
             </Link>
           </li>

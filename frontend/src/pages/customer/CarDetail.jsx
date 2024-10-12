@@ -1,9 +1,11 @@
-import React from 'react'
-import { parse } from 'date-fns';
+import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import DatePicker from "react-datepicker";
 import carData from "../../assets/data/carData"
-import {getNumOfDay, formatPrice} from "../../assets/format/numberFormat"
+import { getNumOfDay, formatPrice, formatDate_vn } from "../../assets/format/numberFormat"
 import rentalData from "../../assets/data/rentalData"
 import "../../styles/customer/CarDetail.css"
+import 'react-datepicker/dist/react-datepicker.css';
 
 const CarDetailCard = ({ car }) => {
     const { imgUrl, carName, rating, seat, type, gear, fuel, address, description } = car;
@@ -24,10 +26,10 @@ const CarDetailCard = ({ car }) => {
                 </div>
                 <h5>Characteristics</h5>
                 <div className="characteristics">
-                    <p>Seats:   {seat}</p>
-                    <p>Type:    {type}</p>
-                    <p>Gear:    {gear}</p>
-                    <p>Fuel:    {fuel}</p>
+                    <p>🪑Seats: {seat}</p>
+                    <p>🚘Type: {type}</p>
+                    <p>⚙️Gear: {gear}</p>
+                    <p>⛽Fuel: {fuel}</p>
                 </div>
                 <h5>Features</h5>
                 <div className="features">
@@ -50,10 +52,48 @@ const CarDetailCard = ({ car }) => {
 }
 
 const RentalCard = ({ car, rental }) => {
+    const navigate = useNavigate();
     const { price } = car;
     const insurance = 60000;
-    const { startDate, returnDate } = rental;
-    const total_renting_price = price * getNumOfDay(startDate, returnDate);
+
+
+    const [data, setData] = useState(rentalData);
+
+    const [formData, setFormData] = useState({
+
+        startDate: new Date(),
+        returnDate: new Date(),
+
+    });
+    const total_renting_price = price * getNumOfDay(formData.startDate, formData.returnDate);
+    const handleDateChange = (name, date) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: date,
+        }));
+    };
+
+    const updateRentalData = () => {
+        const updatedRental = {
+            id: car.id,
+            bookDate: formatDate_vn(new Date()),
+            startDate: formatDate_vn(formData.startDate),
+            returnDate: formatDate_vn(formData.returnDate),
+            Customer: "Name123",
+            carID: car.id,
+            status: 1,
+        };
+
+        const updatedData = data.map((rental) =>
+            rental.id === updatedRental.id ? updatedRental : rental
+        );
+
+        setData(updatedData);
+
+        rentalData.length = 0;
+        rentalData.push(...updatedData);
+        navigate("/car-status");
+    };
     return (
         <div className="rental-card-container">
             <h1>{formatPrice(price)} vnd / day</h1>
@@ -61,11 +101,11 @@ const RentalCard = ({ car, rental }) => {
             <div className="rental-period">
                 <div className="rental-date">
                     <h5>Pick Up</h5>
-                    <h5>{startDate}</h5>
+                    <DatePicker value={formData.startDate} selected={formData.startDate} onChange={(date) => handleDateChange('startDate', date)} dateFormat="dd/MM/yyyy" />
                 </div>
                 <div className="rental-date">
                     <h5>Return</h5>
-                    <h5>{returnDate}</h5>
+                    <DatePicker value={formData.returnDate} selected={formData.returnDate} onChange={(date) => handleDateChange('returnDate', date)} dateFormat="dd/MM/yyyy" />
                 </div>
             </div>
             <div className="price-details">
@@ -74,7 +114,7 @@ const RentalCard = ({ car, rental }) => {
                 <div className="item"><h5>Total:</h5><h5>{formatPrice(total_renting_price + insurance)} vnd</h5></div>
             </div>
             <div className='button-container'>
-                <button className="book-button">Book</button>
+                <button className="book-button" onClick={updateRentalData}>Book</button>
             </div>
         </div>
     )

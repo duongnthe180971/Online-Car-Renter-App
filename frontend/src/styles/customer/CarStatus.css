@@ -10,6 +10,9 @@
   margin: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+.sidefix{
+  align-items: center;
+}
 .car-order-container .title {
   max-height: 3vh;
   color: #ffffff;
@@ -59,7 +62,7 @@
   width: 30vw;
   display: flex;
   justify-content: space-between;
-  margin: 2vh 0;
+  margin: 3vh 0;
 }
 .car-info .item h5 {
   justify-content: space-between;
