@@ -3,6 +3,7 @@ import "../../styles/home/home.css";
 import carData from "../../assets/data/carData";
 import CarPlot from "../../modules/components/CarPlot";
 import HomeHeader from "./homeheader";
+import Notification from "./notification";
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Home() {
@@ -60,29 +61,29 @@ function Home() {
     <div className="home-container">
       <HomeHeader></HomeHeader>
       {/* Advertisement section */}
-      <div className="advertisement">
+      <div className="home-advertisement">
         {images.map((image, index) => (
           <img
             key={index}
             src={image}
-            alt={`Advertisement ${index + 1}`}
+            alt={`home-Advertisement ${index + 1}`}
             className={index === currentIndex ? "active" : ""}
           />
         ))}
-        <div className="dots">
+        <div className="home-dots">
           {images.map((_, index) => (
             <div
               key={index}
-              className={`dot ${index === currentIndex ? "active" : ""}`}
+              className={`home-dot ${index === currentIndex ? "active" : ""}`}
               onClick={() => showImage(index)}
             />
           ))}
         </div>
       </div>
       {/* show car */}
-      <div className="popular-cars">
+      <div className="home-popular-cars">
         <h2>Popular Cars</h2>
-        <div className="car-list">
+        <div className="home-car-list">
           {<CarPlot item={carData.find((item) => item.id === 1)} />}
           {<CarPlot item={carData.find((item) => item.id === 2)} />}
           {<CarPlot item={carData.find((item) => item.id === 3)} />}
@@ -90,14 +91,14 @@ function Home() {
         </div>
       </div>
 
-      <div className="rent-now">
+      <div className="home-rent-now">
         <img
           src="https://storage.googleapis.com/a1aa/image/uuufUh0pGjQRPCfpPXZ6GUv1smHoCX44eeSKmO93eAoeqOP5E.jpg"
           alt="Toyota land cruiser V8"
           height="200"
           width="300"
         />
-        <div className="content">
+        <div className="home-content">
           <h2>Don’t Have a Car? Rent a Car Right Away!</h2>
           <p>
             Immerse yourself in a world of possibilities with our extensive
@@ -105,16 +106,16 @@ function Home() {
             convertibles, we have the perfect wheels to match your style,
             preferences, and the demands of your adventure.
           </p>
-          <button className="rent-button">
+          <button className="home-rent-button">
             <a href="./car-list">Rent Now</a>
           </button>
         </div>
       </div>
-
-      <div className="about">
+      <Notification></Notification>
+      <div className="home-about">
         <h2>About Our Company</h2>
-        <button className="about-button">
-          <a href="./">About Us</a>
+        <button className="home-about-button">
+          <a href="./aboutus">About Us</a>
         </button>
       </div>
     </div>

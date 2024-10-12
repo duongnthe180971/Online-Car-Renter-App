@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import logo from "../../assets/icon/logo.png";
-import "../../styles/payment/qrcode.css";
+import "../../styles/payment/payment.css";
 import qrcode from "../../assets/icon/qrcode.png";
+import insurance from "../../pages/customer/CarDetail";
+import total_renting_price from "../../pages/customer/CarDetail";
+import { formatPrice } from "../../assets/format/numberFormat";
+
 import {
   vietcombank,
   vietinbank,
@@ -17,7 +21,7 @@ import {
   vpbank,
 } from "../../assets/icon";
 
-function App() {
+function Payment() {
   const [activeMenu, setActiveMenu] = useState("qr-code");
 
   const showBankCard = () => {
@@ -29,11 +33,13 @@ function App() {
   };
 
   return (
-    <div className="body-payment">
+    <div className="payment-body">
       <div className="payment-container">
-        <div className="sidebar-payment">
+        <div className="payment-sidebar">
           <div
-            className={`menu-item ${activeMenu === "qr-code" ? "active" : ""}`}
+            className={`payment-menu-item ${
+              activeMenu === "qr-code" ? "active" : ""
+            }`}
             id="qr-code-menu"
             onClick={showQRCode}
           >
@@ -41,7 +47,7 @@ function App() {
             <span>QR Code</span>
           </div>
           <div
-            className={`menu-item ${
+            className={`payment-menu-item ${
               activeMenu === "bank-card" ? "active" : ""
             }`}
             id="bank-card-menu"
@@ -50,14 +56,14 @@ function App() {
             <i className="fas fa-credit-card"></i>
             <span>Bank card</span>
           </div>
-          <div className="footer">
+          <div className="payment-footer">
             <p>Powered by</p>
             <img alt="Cardio Logo" src={logo} />
           </div>
         </div>
-        <div className="content-payment" id="content-payment">
+        <div className="payment-content" id="content-payment">
           <h1>You are about to pay</h1>
-          <h2>Pay 1.499.000 to BookCar</h2>
+          <h2>Pay {formatPrice(total_renting_price + insurance)} to BookCar</h2>
           {activeMenu === "qr-code" && (
             <>
               <div className="info">
@@ -70,10 +76,10 @@ function App() {
               <div className="qr-code">
                 <img alt="Qr Code" src={qrcode} />
               </div>
-              <div className="footer-text">
+              <div className="payment-footer-text">
                 <span>Compartible parter apps</span>
               </div>
-              <div className="partners">
+              <div className="payment-partners">
                 <img src={vietcombank} alt="vietcombank" />
                 <img src={techcombank} alt="techcombank" />
                 <img src={bidv} alt="bidv" />
@@ -100,17 +106,38 @@ function App() {
               </div>
               <div class="payment-details">
                 <p>
+                  Bank Name:
+                  <span class="highlight"> Vietcombank</span>
+                </p>
+                <p>
                   Payment account number (VA):
-                  <span class="highlight">0000000000</span>
+                  <span class="highlight"> 0000000000</span>
                 </p>
                 <p>
                   Account name:
-                  <span class="highlight">Fukume</span>
+                  <span class="highlight"> Fukume</span>
                 </p>
                 <p>
                   Bank notes:
-                  <span class="highlight">xxxxxx</span>
+                  <span class="highlight"> xxxxxx</span>
                 </p>
+              </div>
+              <div className="payment-footer-text">
+                <span>Compartible parter apps</span>
+              </div>
+              <div className="payment-partners">
+                <img src={vietcombank} alt="vietcombank" />
+                <img src={techcombank} alt="techcombank" />
+                <img src={bidv} alt="bidv" />
+                <img src={tpbank} alt="tpbank" />
+                <img src={vietinbank} alt="vietinbank" />
+                <img src={vib} alt="vib" />
+                <img src={hdbank} alt="hdbank" />
+                <img src={vpbank} alt="vpbank" />
+                <img src={acb} alt="acb" />
+                <img src={lienvietpostbank} alt="lienvietpostbank" />
+                <img src={mbbank} alt="mbbank" />
+                <img src={sacombank} alt="sacombank" />
               </div>
             </>
           )}
@@ -120,4 +147,4 @@ function App() {
   );
 }
 
-export default App;
+export default Payment;

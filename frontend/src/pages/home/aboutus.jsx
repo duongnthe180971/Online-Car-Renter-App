@@ -5,9 +5,9 @@ import HomeHeader from "./homeheader";
 
 function App() {
   return (
-    <div className="body-aboutus">
+    <div className="aboutus-body">
       <HomeHeader></HomeHeader>
-      <div className="container-aboutus">
+      <div className="aboutus-container">
         <div className="image-section">
           <img alt="Ảnh GIF động" src={aboutus} />
         </div>
@@ -17,8 +17,13 @@ function App() {
           </div>
           <h1>CONTACT US</h1>
           <p>
-            Planning to visit Indonesia soon? Get insider tips on where to go,
-            things to do and find best deals for your next adventure.
+            <h5>
+              Mỗi chuyến đi là một hành trình khám phá cuộc sống và thế giới
+              xung quanh, là cơ hội học hỏi và chinh phục những điều mới lạ của
+              mỗi cá nhân để trở nên tốt hơn. Do đó, chất lượng trải nghiệm của
+              khách hàng là ưu tiên hàng đầu và là nguồn cảm hứng của đội ngũ
+              CARDIO.
+            </h5>
           </p>
           <form>
             <label htmlFor="name">FULL NAME</label>
@@ -33,6 +38,20 @@ function App() {
             ></textarea>
             <button type="submit">SEND</button>
           </form>
+          <div class="social-icons">
+            <a href="./aboutus" title="Contact">
+              <i class="fas fa-phone"></i> 1900.1234
+            </a>
+            <a href="https://facebook.com/" title="Facebook">
+              <i class="fab fa-facebook-f"></i> Facebook
+            </a>
+            <a href="./aboutus" title="Zalo">
+              <i class="fas fa-comment-dots"></i> Message
+            </a>
+            <a href="https://tiktok.com/" title="TikTok">
+              <i class="fab fa-tiktok"></i> Tiktok
+            </a>
+          </div>
         </div>
       </div>
     </div>
