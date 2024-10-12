@@ -1,11 +1,11 @@
-import React from 'react'
+import React, {useState} from 'react'
 import ChooseBarCustomer from '../../modules/components/ChooseBarCustomer'
 import carData from "../../assets/data/carData"
 import rentalData from "../../assets/data/rentalData"
 import {formatPrice} from "../../assets/format/numberFormat"
 import "../../styles/customer/CarStatus.css"
 
-const CarOrderDetails = ({ car, rental }) => {
+const CarOrderDetails = ({ car, rental, handleCancel }) => {
     const { imgUrl, carName, rating, price } = car;
     const { bookDate, startDate, returnDate, status } = rental;
     return (
@@ -43,7 +43,7 @@ const CarOrderDetails = ({ car, rental }) => {
             </div>
             <ProgressBar id={status} />
             <div className="cancel-section">
-                <button className="cancel-btn">Cancel Order</button>
+                <button className="cancel-btn" onClick={handleCancel}>Cancel Order</button>
             </div>
         </div>
     );
@@ -77,8 +77,12 @@ const ProgressBar = ({ id }) => {
 };
 
 const CarStatus = ({ id }) => {
-    const car_data = carData.find(item => item.id === id);
-    const rental_data = rentalData.find(item => item.id === id);
+    const [id_, setId] = useState(id);
+    const car_data = carData.find(item => item.id === id_);
+    const rental_data = rentalData.find(item => item.id === id_);
+    const handleCancel = () => {
+        setId(0);
+    };
     return (
         <div class="AllPage">
             <div class="LeftSide">
@@ -86,8 +90,10 @@ const CarStatus = ({ id }) => {
                     <ChooseBarCustomer />
                 </div>
             </div>
-            <div class="RightSide">
-                <CarOrderDetails car={car_data} rental={rental_data} />
+            <div class="RightSide sidefix">
+                {id_ > 0 ? 
+                <CarOrderDetails car={car_data} rental={rental_data} handleCancel={handleCancel}/> : 
+                <h1>You have not rented any car yet</h1>}
             </div>
 
 

@@ -14,12 +14,12 @@ export class ChooseBarCustomer extends Component {
           </Link>
         </li>
         <li>
-          <Link to="/carstatus">
+          <Link to="/car-status">
             <FaCar className="icon" /> My Renting Car
           </Link>
         </li>
         <li>
-          <Link to="/carhistory">
+          <Link to="/rental-history">
             <FaHistory className="icon" /> Car History
           </Link>
         </li>

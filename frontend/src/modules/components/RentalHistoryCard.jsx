@@ -16,7 +16,7 @@ function RentalHistoryCard({ rental }) {
                 <div className="rental-history-customer">
                     <span>Customer: {customer}</span>
                     <div className="rental-history-actions">
-                        <button className="view-customer-btn">View Rental Order</button>
+                        <button className="view-customer-btn">View Rental Partner</button>
                     </div>
                 </div>
                 <div className="rental-history-details">

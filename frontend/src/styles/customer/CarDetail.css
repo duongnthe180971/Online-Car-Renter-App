@@ -106,7 +106,19 @@
   padding: 10px 1vw;
   border-radius: 10px;
 }
-
+.rental-date input{
+  width: 8vw;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  margin: auto;
+  padding: auto;
+  overflow-clip-margin: none;
+  overflow: none;
+  border: none;
+  background-color: #1f1f1f;
+  text-align: center;
+}
 .rental-card-container .price-details {
   display: flex;
   flex-direction: column;
