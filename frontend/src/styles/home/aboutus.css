@@ -1,11 +1,11 @@
-.body-aboutus {
+.aboutus-body {
   height: 100%;
   margin: 0;
   font-family: "Arial", sans-serif;
   background-color: #0d0d0d;
   color: #ffffff;
 }
-.container-aboutus {
+.aboutus-container {
   display: flex;
   height: 100vh;
 }
@@ -105,4 +105,16 @@
 }
 .form-section .toggle-switch input:checked + label .slider::before {
   transform: translateX(20px);
+}
+.social-icons {
+  display: flex;
+  justify-content: center;
+  margin-top: 15vh;
+}
+.social-icons a {
+  font-family: "Courier New", Courier, monospace;
+  color: #ffffff;
+  font-size: 20px;
+  margin: 0 10px;
+  text-decoration: none;
 }

@@ -20,7 +20,7 @@ import AdminCarRegistrations from "./pages/admin/AdminCarRegistrations";
 import CarTemplatePage from "./pages/admin/CarTemplate";
 import Login from "./pages/login/login";
 import Register from "./pages/login/register";
-import QrCode from "./pages/payment/qrcode";
+import Payment from "./pages/payment/payment";
 import "./styles/General.css";
 
 const App = () => {
@@ -54,8 +54,8 @@ const App = () => {
         <Route path="/car-template" element={<CarTemplatePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/payment" element={<QrCode />} />
-        <Route path="/car-detail" element={<CarDetail id={8} />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/car-detail" element={<CarDetail id={5} />} />
       </Routes>
     </BrowserRouter>
   );
