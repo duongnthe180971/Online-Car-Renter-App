@@ -8,7 +8,8 @@ import "../../styles/customer/CarDetail.css"
 import 'react-datepicker/dist/react-datepicker.css';
 
 const CarDetailCard = ({ car }) => {
-    const { imgUrl, carName, rating, seat, type, gear, fuel, address, description } = car;
+    const { imgUrl, carName, rating, seat, type, gear, fuel, features, address, description } = car;
+    const featureList = Array.isArray(features) ? features : [];
     return (
         <div className="car-detail-card-container">
             <img src={imgUrl} alt="Car" className="car-image" />
@@ -33,12 +34,7 @@ const CarDetailCard = ({ car }) => {
                 </div>
                 <h5>Features</h5>
                 <div className="features">
-                    <p>Map</p>
-                    <p>GPS</p>
-                    <p>Bluetooth</p>
-                    <p>Reverse cam</p>
-                    <p>Airbag</p>
-                    <p>DVD Player</p>
+                    {featureList.map((item) => <p>{item}</p>)}
                 </div>
                 <div className="address">
                     <h5>Address:</h5> <p>{address}</p>
