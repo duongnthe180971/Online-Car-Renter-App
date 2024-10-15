@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/General.css";
 import "../../styles/car/CarRegistration.css";
+import carData from "../../assets/data/carData"
 
 const CarRegistration = () => {
+  const { garageID } = useParams();
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
   const [price, setPrice] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const [imageName, setImageName] = useState("");
   const [features, setFeatures] = useState({});
   const [carTypes, setCarTypes] = useState([]);
   const [seatOptions, setSeatOptions] = useState([]);
   const [gearOptions, setGearOptions] = useState([]);
   const [fuelOptions, setFuelOptions] = useState([]);
 
-  useEffect(() => {
-    document.body.style.backgroundColor = "#000";
-    return () => {
-      document.body.style.backgroundColor = "";
-    };
-  }, []);
+
 
   useEffect(() => {
-    // Simulate fetching data from an API
     const fetchFeatures = async () => {
-      // Replace with your actual API call
       const featuresData = {
         "Map": false,
         "GPS": false,
@@ -40,13 +38,11 @@ const CarRegistration = () => {
     };
 
     const fetchOptions = async () => {
-      // Simulate fetching car options
       const types = ["SUV", "Sedan", "Truck"];
       const seats = ["4", "5", "7"];
       const gears = ["Auto", "Manual"];
       const fuels = ["Gasoline", "Diesel", "Electric"];
       
-      // Replace these with actual API responses if needed
       setCarTypes(types);
       setSeatOptions(seats);
       setGearOptions(gears);
@@ -73,16 +69,46 @@ const CarRegistration = () => {
       reader.readAsDataURL(event.target.files[0]);
     }
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const imgUrl1 = imageName
+      ? `../img/car/${imageName}` 
+      : "https://via.placeholder.com/150";
+    const newCarId = carData.length + 1;
+
+    const newCar = {
+        id: newCarId,
+        GarageID: parseInt(garageID),
+        carName: name,
+        imgUrl: imgUrl1,
+        description: description,
+        price: parseInt(price),
+        address: address,
+        features: Object.keys(features).filter(key => features[key]),
+        type: carTypes[0],
+        seat: seatOptions[0],
+        gear: gearOptions[0],
+        fuel: fuelOptions[0],
+        status: 'Idle',
+    };
+
+    carData.push(newCar);
+
+    // if changed 
+    // navigate("/garage/${garageID}`");
+    navigate("/garage");
+};
 
   return (
     <div className="car-container">
       <div className="car-header">
-        <button className="backButton">&lt; Back</button>
+        <button className="backButton" onClick={() => navigate(-1)}>&lt; Back</button>
         <h1 className="heading">Car Registration</h1>
       </div>
 
       <div className="formContainer">
-        <form className="form">
+        <form className="form" onSubmit={handleSubmit}>
           <label className="label">Enter Name</label>
           <input
             type="text"

@@ -1,9 +1,11 @@
 // CarCard.js
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/component/CarCard.css';
 
 const CarCard = ({ car, onStatusChange }) => {
     const [isAvailable, setIsAvailable] = useState(car.status === 'Idle');
+    const navigate = useNavigate();
 
     useEffect(() => {
         setIsAvailable(car.status === 'Idle');
@@ -15,6 +17,11 @@ const CarCard = ({ car, onStatusChange }) => {
         setIsAvailable(!isAvailable); // Update availability
         onStatusChange(car.id, newStatus); // Inform parent about the status change
     };
+
+    const handleViewCar = () => {
+        // Navigate to UpdateCar component with car details
+        navigate(`/update-car`, { state: { carId: car.id } });
+      };
 
     return (
         <div className={`car-card ${isAvailable ? 'available' : 'unavailable'}`}>
@@ -45,7 +52,7 @@ const CarCard = ({ car, onStatusChange }) => {
                     <span>Fuel: {car.fuel}</span>
                 </div>
                 <div className="car-actions">
-                    <button className="view-car-btn">View Car</button>
+                    <button className="view-car-btn" onClick={handleViewCar}>View Car</button>
                     <button className="delete-car-btn">Delete Car</button>
                     <label className="switch">
                         <input type="checkbox" checked={isAvailable} onChange={handleToggle} />

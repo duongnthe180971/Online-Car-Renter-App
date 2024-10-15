@@ -3,8 +3,10 @@ import ChooseBar from "../../modules/components/ChooseBarCarOwner";
 import "../../styles/cars_owner/Garage.css";
 import CarCard from "../../modules/components/CarCard";
 import carData from "../../assets/data/carData";
+import { useNavigate } from 'react-router-dom';
 
 const Garage = ({ garageID }) => {
+    const navigate = useNavigate();
     // const [cars, setCars] = useState([
     //     {
     //         id: 1,
@@ -49,6 +51,10 @@ const Garage = ({ garageID }) => {
             setCars(filteredCars);
         }
     }, [garageID]); // Re-run the effect if the garageID changes
+    
+    const handleAddCarClick = () => {
+        navigate(`/car-registration/${garageID}`);
+    };
 
     const [cars, setCars] = useState(carData);
 
@@ -70,7 +76,7 @@ const Garage = ({ garageID }) => {
                 <div class="garage">
                     <div className="header">
                         <h1>Garage</h1>
-                        <button className="add-car-btn">Add New Car</button>
+                        <button className="add-car-btn" onClick={handleAddCarClick}>Add New Car</button>
                     </div>
                     <div className="garageCarList">
                         {cars.map((car) => (
