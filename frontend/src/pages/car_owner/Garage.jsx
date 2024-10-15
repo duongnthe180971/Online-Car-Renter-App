@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import ChooseBar from "../../modules/components/ChooseBarCarOwner";
 import "../../styles/cars_owner/Garage.css";
 import CarCard from "../../modules/components/CarCard";
-import carData from "../../assets/data/carData";
+import carDemo1 from "../../assets/data/carDemo";
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 const Garage = ({ garageID }) => {
     const navigate = useNavigate();
@@ -42,21 +43,29 @@ const Garage = ({ garageID }) => {
     //         imageUrl: 'https://example.com/car1.jpg',
     //     },
     // ]);
-    useEffect(() => {
+    const [carDemo, setDemo] = useState(carDemo1);
+    useEffect(() => {        
+        axios.get("http://localhost:5000/api/data")
         // Filter cars based on the garageID passed from the account
-        const filteredCars = carData.filter(car => car.GarageID === garageID);
-        if (garageID === 0) {
-            setCars(carData)
-        } else {
-            setCars(filteredCars);
-        }
+        
+        .then((response) => {
+            setDemo(response.data);
+            const filteredCars = response.data.filter(car => car.GarageID === garageID);
+            if (garageID === 0) {
+                setCars(response.data)
+            } else {
+                setCars(filteredCars);
+            }
+        })
+        
+        
     }, [garageID]); // Re-run the effect if the garageID changes
     
     const handleAddCarClick = () => {
         navigate(`/car-registration/${garageID}`);
     };
 
-    const [cars, setCars] = useState(carData);
+    const [cars, setCars] = useState(carDemo);
 
     const handleStatusChange = (carId, newStatus) => {
         const updatedCars = cars.map((car) =>
