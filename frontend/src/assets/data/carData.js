@@ -23,7 +23,8 @@ const carData = [
     address: "123 Tran Duy Hung, Cau Giay, Ha Noi",
     description:
       "Tesla Malibu offers a smooth and quiet ride with an all-electric powertrain. It's ideal for those seeking a luxurious, eco-friendly vehicle with advanced technology and premium comfort.",
-      status: 'Idle',
+    status: 'Idle',
+    features: ["Bluetooth", "GPS", "Airbag", "Reverse Cam", "USB Port"],
   },
   {
     id: 2,
@@ -39,8 +40,9 @@ const carData = [
     fuel: "Gasoline",
     address: "45 Nguyen Chi Thanh, Dong Da, Ha Noi",
     description:
-    "Toyota Aventador is the ultimate van for family road trips or group travels. Spacious, reliable, and loaded with safety features, it provides comfort for long journeys.",
+      "Toyota Aventador is the ultimate van for family road trips or group travels. Spacious, reliable, and loaded with safety features, it provides comfort for long journeys.",
     status: 'Idle',
+    features: ["Bluetooth", "USB Port", "Map", "Airbag"],
   },
   {
     id: 3,
@@ -57,8 +59,9 @@ const carData = [
     address: "67 Pham Hung, Nam Tu Liem, Ha Noi",
     description:
       "The BMW X3 is an SUV that blends luxury with performance. Its powerful diesel engine ensures excellent fuel efficiency, while the advanced interior offers premium comfort and connectivity.",
-      status: 'Idle',
-    },
+    status: 'Idle',
+    features: ["Airbag", "GPS", "Bluetooth", "Reverse Cam", "USB Port"],
+  },
   {
     id: 4,
     GarageID: 2,
@@ -74,8 +77,9 @@ const carData = [
     address: "89 Hoang Quoc Viet, Cau Giay, Ha Noi",
     description:
       "Nissan Mercielago is a reliable and affordable SUV with a spacious interior and great handling. Ideal for those who need a practical vehicle for both city and off-road driving.",
-      status: 'Idle',
-    },
+    status: 'Idle',
+    features: ["Airbag", "Reverse Cam", "USB Port"],
+  },
   {
     id: 5,
     GarageID: 2,
@@ -91,8 +95,9 @@ const carData = [
     address: "101 Doi Can, Ba Dinh, Ha Noi",
     description:
       "The Ferrari Camry combines luxury and power, making it perfect for those who crave performance and style. With seating for up to 8, it’s ideal for a grand family road trip.",
-      status: 'Idle',
-    },
+    status: 'Idle',
+    features: ["Bluetooth", "USB Port", "Airbag", "Map", "DVD Player"],
+  },
   {
     id: 6,
     GarageID: 2,
@@ -108,8 +113,9 @@ const carData = [
     address: "200 Kim Ma, Ba Dinh, Ha Noi",
     description:
       "Mercedes Benz XC90 offers an unmatched driving experience with its elegant design and advanced diesel engine. It's a luxury SUV with state-of-the-art technology and superior comfort.",
-      status: 'Idle',
-    },
+    status: 'Idle',
+    features: ["Bluetooth", "Reverse Cam", "DVD Player", "GPS"],
+  },
   {
     id: 7,
     GarageID: 3,
@@ -125,8 +131,9 @@ const carData = [
     address: "300 Lang Ha, Dong Da, Ha Noi",
     description:
       "Audi Fiesta is a sporty vehicle with great handling and an eye-catching design. It’s perfect for those who want a fun driving experience with extra room for passengers.",
-      status: 'Idle',
-    },
+    status: 'Idle',
+    features: ["Airbag", "USB Port", "Map"],
+  },
   {
     id: 8,
     GarageID: 3,
@@ -142,43 +149,45 @@ const carData = [
     address: "250 Le Duan, Hoan Kiem, Ha Noi",
     description:
       "The Rolls Royce Colorado combines luxury and ruggedness, making it a standout choice for anyone who needs an SUV that offers both comfort and capability on all terrains.",
-      status: 'Idle',
-    },
+    status: 'Idle',
+    features: ["Airbag", "Reverse Cam", "DVD Player"],
+  },
   {
     id: 9,
     GarageID: 3,
     brand: "Lamborghini",
     rating: 5,
-    carName: 'Lamborghini Revuelto',
-    imgUrl: 'https://www.mclarenlife.com/attachments/2024-lamborghini-aventador-successor-rendering-v1-jpg.228772/',
-    type: 'Sport',
+    carName: "Lamborghini Revuelto",
+    imgUrl: "https://www.mclarenlife.com/attachments/2024-lamborghini-aventador-successor-rendering-v1-jpg.228772/",
+    type: "Sport",
     price: 10000000,
     seats: 2,
-    gear: 'Auto',
-    fuel: 'Gasoline',
+    gear: "Auto",
+    fuel: "Gasoline",
     address: "250 Le Duan, Hoan Kiem, Ha Noi",
     description:
       "The Rolls Royce Colorado combines luxury and ruggedness, making it a standout choice for anyone who needs an SUV that offers both comfort and capability on all terrains.",
     status: 'Idle',
-    
+    features: ["Bluetooth", "Airbag", "Map"],
   },
   {
     id: 10,
     GarageID: 3,
     brand: "Bugatti",
     rating: 5,
-    carName: 'Bugatti Centodieci',
-    imgUrl: 'https://cdn.motor1.com/images/mgl/zxp3Jb/s3/bugatti-centodieci-2022-zehntes-und-letztes-exemplar.jpg',
-    type: 'Sport',
+    carName: "Bugatti Centodieci",
+    imgUrl: "https://cdn.motor1.com/images/mgl/zxp3Jb/s3/bugatti-centodieci-2022-zehntes-und-letztes-exemplar.jpg",
+    type: "Sport",
     price: 10000000,
     seats: 2,
-    gear: 'Auto',
-    fuel: 'Gasoline',
+    gear: "Auto",
+    fuel: "Gasoline",
     address: "250 Le Duan, Hoan Kiem, Ha Noi",
     description:
       "The Rolls Royce Colorado combines luxury and ruggedness, making it a standout choice for anyone who needs an SUV that offers both comfort and capability on all terrains.",
-    status: 'Renting',
-  },
+    status: "Renting",
+    features: ["GPS", "Airbag", "USB Port", "DVD Player"],
+  }
 ];
 
 export default carData;
