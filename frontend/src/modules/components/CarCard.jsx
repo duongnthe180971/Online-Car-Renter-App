@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/component/CarCard.css';
-import axios from 'axios';
 const CarCard = ({ car, onStatusChange }) => {
     const [isAvailable, setIsAvailable] = useState(car.CarStatus === 'Idle');
     const navigate = useNavigate();
