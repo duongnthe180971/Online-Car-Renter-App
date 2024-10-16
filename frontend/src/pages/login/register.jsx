@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../../styles/login/register.css";
 
 function Register() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -19,10 +21,22 @@ function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here
-    console.log(formData);
+    try {
+      // Send a POST request to the backend API to insert data into the Account table
+      const response = await axios.post(
+        "http://localhost:5000/api/register",
+        formData
+      );
+      console.log(response.data);
+
+      // Redirect to login after successful registration
+      navigate("/login");
+    } catch (error) {
+      console.error("Error registering user:", error);
+      alert("Failed to register. Please try again.");
+    }
   };
 
   return (
@@ -37,6 +51,7 @@ function Register() {
             name="username"
             value={formData.username}
             onChange={handleChange}
+            required
           />
 
           <label htmlFor="password">Password:</label>
@@ -46,6 +61,7 @@ function Register() {
             name="password"
             value={formData.password}
             onChange={handleChange}
+            required
           />
 
           <label>Gender:</label>
@@ -57,6 +73,7 @@ function Register() {
               value="male"
               checked={formData.gender === "male"}
               onChange={handleChange}
+              required
             />
             <label htmlFor="male">Male</label>
             <input
@@ -66,6 +83,7 @@ function Register() {
               value="female"
               checked={formData.gender === "female"}
               onChange={handleChange}
+              required
             />
             <label htmlFor="female">Female</label>
           </div>
@@ -77,6 +95,7 @@ function Register() {
             name="dob"
             value={formData.dob}
             onChange={handleChange}
+            required
           />
 
           <label htmlFor="phone">Phone:</label>
@@ -86,6 +105,7 @@ function Register() {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
+            required
           />
 
           <label htmlFor="email">Email:</label>
@@ -95,6 +115,7 @@ function Register() {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            required
           />
 
           <div className="buttons">
@@ -102,7 +123,7 @@ function Register() {
               Confirm
             </button>
             <button type="button" className="cancel">
-              <Link to="/Login">Cancle</Link>
+              <Link to="/login">Cancel</Link>
             </button>
           </div>
         </form>
