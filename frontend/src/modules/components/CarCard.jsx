@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/component/CarCard.css';
+import axios from 'axios';
 const CarCard = ({ car, onStatusChange }) => {
     const [isAvailable, setIsAvailable] = useState(car.CarStatus === 'Idle');
     const navigate = useNavigate();
@@ -40,6 +41,23 @@ const CarCard = ({ car, onStatusChange }) => {
         navigate(`/update-car`, { state: { carId: car.CarID } });
       };
 
+      const handleDeleteCar = async () => {
+        try {
+            // Delete associated records first
+            await axios.delete(`http://localhost:5000/api/car/deleteAssociations/${car.CarID}`);
+    
+            // Then delete the car itself
+            await axios.delete(`http://localhost:5000/api/car/${car.CarID}`);
+    
+            console.log('Car deleted successfully');
+            window.location.reload();  // Refresh the page after deletion
+        } catch (error) {
+            console.error('Error deleting car:', error);
+            alert('Failed to delete the car. Please try again.');
+        }
+    };
+
+
     return (
         <div className={`car-card ${isAvailable ? 'available' : 'unavailable'}`}>
             <div className="car-image">
@@ -70,7 +88,7 @@ const CarCard = ({ car, onStatusChange }) => {
                 </div>
                 <div className="car-actions">
                     <button className="view-car-btn" onClick={handleViewCar}>View Car</button>
-                    <button className="delete-car-btn">Delete Car</button>
+                    <button className="delete-car-btn" onClick={handleDeleteCar}>Delete Car</button>
                     <label className="switch">
                         <input type="checkbox" 
                                checked={isAvailable} 

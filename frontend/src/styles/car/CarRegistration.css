@@ -207,5 +207,9 @@
     text-align: center;
   }
 
-
-  
+  .brand{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    width: 50%;
+  }
