@@ -1,47 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChooseBarCustomer from '../../modules/components/ChooseBarCustomer';
-import rentalData from "../../assets/data/rentalData";
-import { formatPrice } from "../../assets/format/numberFormat";
+import { formatPrice, formatDate_vn } from "../../assets/format/numberFormat";
 import "../../styles/customer/CarStatus.css";
 
 const CarOrderDetails = ({ car, rental, handleCancel }) => {
     const { CarImage, CarName, Rate, Price } = car;
-    const { bookDate, startDate, returnDate, status } = rental;
+    const { RentalStart, RentalEnd, RentalStatus } = rental;
 
     return (
         <div className="car-order-container">
             <div className="title">My Renting Car:</div>
             <div className="car-order-content">
                 <div className="car-image-section">
-                    <img
-                        className="car-image"
-                        src={process.env.PUBLIC_URL + CarImage}
-                        alt={CarName}
-                    />
+                    <img className="car-image" src={CarImage} alt={CarName} />
                 </div>
-
                 <div className="car-details-section">
                     <h1>{CarName}</h1>
                     <div className="stars">
                         {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                                key={star}
-                                className={star <= Rate ? 'filled' : 'empty'}
-                            >
+                            <span key={star} className={star <= Rate ? 'filled' : 'empty'}>
                                 {star <= Rate ? '★' : '☆'}
                             </span>
                         ))}
                     </div>
                     <div className="car-info">
-                        <div className="item"><h5>Book Date:</h5> <h5>{bookDate}</h5></div>
-                        <div className="item"><h5>Starting Date:</h5> <h5>{startDate}</h5></div>
-                        <div className="item"><h5>Return Date:</h5> <h5>{returnDate}</h5></div>
+                        <div className="item"><h5>Start Date:</h5> <h5>{formatDate_vn(RentalStart)}</h5></div>
+                        <div className="item"><h5>Return Date:</h5> <h5>{formatDate_vn(RentalEnd)}</h5></div>
                         <div className="item"><h5>Price:</h5> <h5>{formatPrice(Price)} VND</h5></div>
                     </div>
                 </div>
             </div>
-            <ProgressBar id={status} />
+            <ProgressBar status={RentalStatus} />
             <div className="cancel-section">
                 <button className="cancel-btn" onClick={handleCancel}>Cancel Order</button>
             </div>
@@ -49,28 +39,28 @@ const CarOrderDetails = ({ car, rental, handleCancel }) => {
     );
 };
 
-const ProgressBar = ({ id }) => {
+const ProgressBar = ({ status }) => {
     return (
         <div className="progress-bar">
-            <div className="progress-item" >
-                <h5>Book</h5>
-                <div className={id < 1 ? 'progress-step' : 'progress-step isBook'} />
+            <div className="progress-item">
+                <h5>Booked</h5>
+                <div className={status >= 1 ? 'progress-step isBook' : 'progress-step'} />
             </div>
             <div className="progress-item">
                 <h5>Confirmed</h5>
-                <div className={id < 2 ? 'progress-step' : 'progress-step isConfirm'} />
+                <div className={status >= 2 ? 'progress-step isConfirm' : 'progress-step'} />
             </div>
             <div className="progress-item">
                 <h5>Renting</h5>
-                <div className={id < 3 ? 'progress-step' : 'progress-step isRent'} />
+                <div className={status >= 3 ? 'progress-step isRent' : 'progress-step'} />
             </div>
             <div className="progress-item">
                 <h5>Waiting Return</h5>
-                <div className={id < 4 ? 'progress-step' : 'progress-step isWaiting'} />
+                <div className={status >= 4 ? 'progress-step isWaiting' : 'progress-step'} />
             </div>
             <div className="progress-item">
                 <h5>Completed</h5>
-                <div className={id < 5 ? 'progress-step' : 'progress-step isComplete'} />
+                <div className={status >= 5 ? 'progress-step isComplete' : 'progress-step'} />
             </div>
         </div>
     );
@@ -79,22 +69,27 @@ const ProgressBar = ({ id }) => {
 const CarStatus = ({ id }) => {
     const [id_, setId] = useState(id);
     const [car, setCar] = useState(null);
+    const [rental, setRental] = useState(null);
+
+    // Fetch car data
     useEffect(() => {
         const fetchCarData = async () => {
             const response = await axios.get("http://localhost:5000/api/car");
-            const car_ = response.data.find((item) => item.CarID === id_);
-            setCar(car_)
+                const car_ = response.data.find((item) => item.CarID === id_);
+                setCar(car_);
         };
-
+        const fetchRentalData = async () => {
+            const response = await axios.get("http://localhost:5000/api/rental");
+                const rental_ = response.data.find((item) => item.CarID === id_);
+                setRental(rental_);
+        };
         fetchCarData();
+        fetchRentalData();
     }, [id_]);
-
-    const rental_data = rentalData.find(item => item.id === id_);
 
     const handleCancel = () => {
         setId(0);
     };
-
 
     return (
         <div className="AllPage">
@@ -104,8 +99,8 @@ const CarStatus = ({ id }) => {
                 </div>
             </div>
             <div className="RightSide sidefix">
-                {id_ > 0 && car ? (
-                    <CarOrderDetails car={car} rental={rental_data} handleCancel={handleCancel} />
+                {id_ > 0 && car && rental ? (
+                    <CarOrderDetails car={car} rental={rental} handleCancel={handleCancel} />
                 ) : (
                     <h1>You have not rented any car yet</h1>
                 )}

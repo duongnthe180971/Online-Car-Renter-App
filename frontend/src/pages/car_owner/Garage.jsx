@@ -68,7 +68,7 @@ const Garage = ({ garageID }) => {
 
     const handleStatusChange = (carId, newStatus) => {
         const updatedCars = cars.map((car) =>
-            car.id === carId ? { ...car, status: newStatus } : car
+            car.CarID === carId ? { ...car, CarStatus: newStatus } : car
         );
         setCars(updatedCars);
     };

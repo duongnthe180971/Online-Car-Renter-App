@@ -1,11 +1,12 @@
 // src/RentalHistory.js
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import "../../styles/cars_owner/RentalHistory.css"; // Import the main styles
 import RentalHistoryCard from "../../modules/components/RentalHistoryCard"; // Import the RentalCard component
 import ChooseBar from "../../modules/components/ChooseBarCarOwner";
-import carData from "../../assets/data/carData";
-import rentalData from "../../assets/data/rentalData";
-import { formatPrice } from "../../assets/format/numberFormat";
+//import carData from "../../assets/data/carData";
+import rentalDemo from "../../assets/data/rentalDemo";
+import { formatPrice, formatDate_String } from "../../assets/format/numberFormat";
 
 const getStatusLabel = (status) => {
   switch (status) {
@@ -19,8 +20,10 @@ const getStatusLabel = (status) => {
       return 'Renting';
     case 5:
       return 'Success';
-    default:
+    case 6:
       return 'Canceled';
+    default:
+      return 'Unknown';
   }
 };
 
@@ -43,22 +46,36 @@ const RentalHistory = ({ garageID }) => {
   //     status: 'Canceled'
   //   }
   // ];
-  const filteredRentalHistory = rentalData
-    .map((rental) => {
-      // Find the corresponding car from carData using carID
-      const car = carData.find((car) => car.id === rental.carID);
-      if (car) {
-        return {
-          ...rental,
-          carName: car.carName,
-          price: car.price,
-          GarageID: car.GarageID, // Add GarageID from car data
-        };
-      }
-      return null; // Return null if no matching car is found (though this shouldn't happen)
-    })
-    .filter((rental) => rental && rental.GarageID === garageID); // Step 2: Filter by GarageID
+  const [filteredRentalHistory, setRentalHistory] = useState(rentalDemo);
+  useEffect(() => {
+    const fetchRentalData = async () => {
+        const responseAccount = await axios.get("http://localhost:5000/api/account");
+        const responseCar = await axios.get("http://localhost:5000/api/car");
+        const response = await axios.get("http://localhost:5000/api/rental");
 
+        console.log('Rental API Response:', response.data);
+        setRentalHistory(response.data
+        .map((rental) => {
+          // Find the corresponding car from carData using carID
+          const customer = responseAccount.data.find((customer) => customer.id === rental.CustomerID);
+          const car = responseCar.data.find((car) => car.CarID === rental.CarID);         
+          if (car) {
+            return {
+              ...rental,
+              carName: car.CarName,
+              price: car.Price,
+              GarageID: car.GarageID, // Add GarageID from car data
+              Customer: customer.UserName,
+              CustomerID: customer.id
+            };
+          }
+          return null; // Return null if no matching car is found (though this shouldn't happen)
+        })
+        .filter((rental) => rental && rental.GarageID === garageID)) // Step 2: Filter by GarageID
+    };
+
+    fetchRentalData();
+}, [garageID]);
   return (
     <div class="AllPage">
       <div class="LeftSide">
@@ -79,11 +96,10 @@ const RentalHistory = ({ garageID }) => {
                 rental={{
                   vehicle: request.carName,
                   customer: request.Customer,
-                  status: getStatusLabel(request.status), // Helper function to convert status to text
-                  bookDate: request.bookDate,
-                  timePeriod: `${request.startDate} To ${request.returnDate}`,
-                  price: `${formatPrice(request.price)} VND`,
-                  isWaiting: request.status === 1, // Example: Set waiting if status is '1'
+                  status: getStatusLabel(request.RentalStatus), // Helper function to convert status to text
+                  bookDate: `${formatDate_String(request.RentalStart)}`,
+                  timePeriod: `${formatDate_String(request.RentalStart)} To ${formatDate_String(request.RentalEnd)}`,
+                  price: `${formatPrice(request.price)} VND`
                 }}
               />
             ))}
