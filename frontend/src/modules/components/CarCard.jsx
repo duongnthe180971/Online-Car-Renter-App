@@ -1,5 +1,6 @@
 // CarCard.js
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/component/CarCard.css';
 const CarCard = ({ car, onStatusChange }) => {
@@ -10,11 +11,28 @@ const CarCard = ({ car, onStatusChange }) => {
         setIsAvailable(car.CarStatus === 'Idle');
     }, [car.CarStatus]);
 
-    const handleToggle = () => {
-        // Toggle the status and set it locally
+    const handleToggle = async () => {
         const newStatus = isAvailable ? 'Closed' : 'Idle'; // Change status accordingly
         setIsAvailable(!isAvailable); // Update availability
-        onStatusChange(car.CarID, newStatus); // Inform parent about the status change
+        try {
+            // Send PUT request to update the car status in the database
+            const response = await axios.put(`http://localhost:5000/api/cars/${car.CarID}`, {
+                newStatus: newStatus,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json', // Ensure the Content-Type header is set
+                },
+            }
+        );
+
+            // Update the parent component that the status has changed
+            if (response.status === 200) {
+                onStatusChange(car.CarID, newStatus); // Inform the parent about the status change
+            }
+        } catch (error) {
+        } finally {
+        }
     };
 
     const handleViewCar = () => {
@@ -54,7 +72,9 @@ const CarCard = ({ car, onStatusChange }) => {
                     <button className="view-car-btn" onClick={handleViewCar}>View Car</button>
                     <button className="delete-car-btn">Delete Car</button>
                     <label className="switch">
-                        <input type="checkbox" checked={isAvailable} onChange={handleToggle} />
+                        <input type="checkbox" 
+                               checked={isAvailable} 
+                               onChange={handleToggle} />
                         <span className="slider round"></span>
                     </label>
                 </div>
