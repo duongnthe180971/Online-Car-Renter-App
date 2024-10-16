@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../../modules/components/Helmet";
 //import Header from "../../modules/components/Header";
 import Filter from "../../modules/components/Filter";
 import CarPlot from "../../modules/components/CarPlot";
-import carData from "../../assets/data/carData";
+import carDemo from "../../assets/data/carDemo";
 
 const CarList = () => {
-  const defaultFilters = 
-    {
+  const defaultFilters =
+  {
     type: "",
     gear: "",
     brand: "",
@@ -30,14 +31,22 @@ const CarList = () => {
       ...defaultFilters,
     }));
   };
+  const [cars, SetCars] = useState(carDemo)
+  useEffect(() => {
+    const fetchCarData = async () => {
+      const response = await axios.get("http://localhost:5000/api/car");
+      SetCars(response.data)
+    };
 
-  const filteredData = carData.filter((car) => {
-    const matchesType = filters.type === "" || car.type === filters.type;
-    const matchesGear = filters.gear === "" || car.gear === filters.gear;
-    const matchesBrand = filters.brand === "" || car.brand === filters.brand;
+    fetchCarData();
+  });
+  const filteredData = cars.filter((car) => {
+    const matchesType = filters.type === "" || car.CarType === filters.type;
+    const matchesGear = filters.gear === "" || car.Gear === filters.gear;
+    const matchesBrand = filters.brand === "" || car.Brand === filters.brand;
     const matchesLocation = filters.location === "" || car.address.split(",")[1].trim() === filters.location;
-    const matchesMinPrice = !filters.minPrice || car.price >= parseFloat(filters.minPrice);
-    const matchesMaxPrice = !filters.maxPrice || car.price <= parseFloat(filters.maxPrice);
+    const matchesMinPrice = !filters.minPrice || car.Price >= parseFloat(filters.minPrice);
+    const matchesMaxPrice = !filters.maxPrice || car.Price <= parseFloat(filters.maxPrice);
 
     return matchesType && matchesGear && matchesBrand && matchesLocation && matchesMinPrice && matchesMaxPrice;
   });
