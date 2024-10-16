@@ -3,9 +3,13 @@ const cors = require('cors');
 const sql = require('mssql');
 const app = express();
 const PORT = 5000;
+const multer = require('multer');
+const path = require('path');
 
 app.use(express.json());
 app.use(cors());
+app.use(express.json());
+app.use('/img', express.static(path.join(__dirname, 'img')));
 
 const sqlConfig = {
   user: 'sa',
@@ -206,6 +210,192 @@ app.get('/api/notification-description', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, 'img'));  // Ensure correct path
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);  // Keep the original file name
+  },
+});
+
+const upload = multer({ storage });
+
+app.get('/api/car/:carId', async (req, res) => {
+  const { carId } = req.params;
+  
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(`SELECT * FROM Car WHERE CarID = ${carId}`);
+    
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Car not found' });
+    }
+
+    res.json(result.recordset[0]); // Return the car data
+  } catch (err) {
+    console.error('Error fetching car data:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// Add this route to get the list of features for a specific car
+app.get('/api/car-features/:carId', async (req, res) => {
+  const { carId } = req.params;
+
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(`
+      SELECT FeatureID FROM CarFeature WHERE CarID = ${carId}
+    `);
+    
+    // Return the list of feature IDs
+    res.json(result.recordset.map(row => row.FeatureID));
+  } catch (err) {
+    console.error('Error fetching car features:', err);
+    res.status(500).send('Server error');
+  }
+});
+app.put('/api/updateCar/:carId', upload.single('image'), async (req, res) => {
+  const { carId } = req.params;
+  const { name, description, price, address, features, type, seat, gear, fuel, brand } = req.body;
+
+  try {
+    await sql.connect(sqlConfig);
+    console.log('Connected to DB');
+
+    // Check if the car exists
+    const checkCarQuery = `SELECT * FROM Car WHERE CarID = ${carId}`;
+    const carResult = await sql.query(checkCarQuery);
+
+    if (carResult.recordset.length === 0) {
+      return res.status(404).json({ message: 'Car not found' });
+    }
+
+    // Handle image update only if a new image is uploaded
+    let imagePath = carResult.recordset[0].CarImage; // Keep existing image path by default
+    if (req.file) {
+      const imageName = req.file.filename;
+      imagePath = `http://localhost:5000/img/${imageName}`; // Update with new image path
+
+      console.log(`New image uploaded: ${imageName}`);
+    }
+
+    // Update car details, including the image path if a new image is provided
+    const updateCarQuery = `
+      UPDATE Car 
+      SET 
+        CarName = '${name}', 
+        Brand = '${brand}', 
+        Price = ${price}, 
+        CarType = '${type}', 
+        Seats = ${seat}, 
+        Gear = '${gear}', 
+        Fuel = '${fuel}', 
+        CarImage = '${imagePath}', 
+        CarDescription = '${description}'
+      WHERE CarID = ${carId};
+    `;
+
+    await sql.query(updateCarQuery);
+
+    // Update car features
+    const selectedFeatures = JSON.parse(features);
+
+    // First, delete the existing features for this car
+    const deleteFeaturesQuery = `DELETE FROM CarFeature WHERE CarID = ${carId}`;
+    await sql.query(deleteFeaturesQuery);
+
+    // Insert the new set of features
+    for (const featureID of selectedFeatures) {
+      const insertFeatureQuery = `INSERT INTO CarFeature (CarID, FeatureID) VALUES (${carId}, ${featureID})`;
+      await sql.query(insertFeatureQuery);
+    }
+
+    res.json({ message: 'Car updated successfully!' });
+  } catch (err) {
+    console.error('Error updating car:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+
+
+app.post('/api/registerCar', upload.single('image'), async (req, res) => {
+  const { name, description, price, address, features, type, seat, gear, fuel, brand, garageID } = req.body;
+
+  if (!req.file) {
+    console.error('No image uploaded');
+    return res.status(400).json({ message: 'No image uploaded' });
+  }
+
+  const imageName = req.file.filename;
+  const imagePath = `http://localhost:5000/img/${imageName}`; // Store image path correctly
+
+  try {
+    await sql.connect(sqlConfig);
+    console.log('Connected to DB');
+    
+    const carInsertQuery = `
+      INSERT INTO Car (GarageID, CarName, Brand, Price, CarType, Seats, Gear, Fuel, CarStatus, CarImage, CarDescription)
+      VALUES (${garageID}, '${name}', '${brand}', ${price}, '${type}', ${seat}, '${gear}', '${fuel}', 'Idle', '${imagePath}','${description}');
+      SELECT SCOPE_IDENTITY() AS CarID;
+    `;
+    
+    const carInsertResult = await sql.query(carInsertQuery);
+    const newCarId = carInsertResult.recordset[0].CarID;
+
+    const selectedFeatures = JSON.parse(features);
+    for (const featureID of selectedFeatures) {
+      const featureInsertQuery = `
+        INSERT INTO CarFeature (CarID, FeatureID) 
+        VALUES (${newCarId}, ${featureID});
+      `;
+      await sql.query(featureInsertQuery);
+    }
+
+    res.json({ message: 'Car registered successfully!' });
+  } catch (err) {
+    console.error('Error inserting data:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.delete('/api/car/deleteAssociations/:carId', async (req, res) => {
+  const { carId } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+
+    // Delete related records from CarFeature, Rental, Feedback tables
+    await sql.query(`DELETE FROM CarFeature WHERE CarID = ${carId}`);
+    await sql.query(`DELETE FROM Rental WHERE CarID = ${carId}`);
+    await sql.query(`DELETE FROM Feedback WHERE CarID = ${carId}`);
+
+    res.status(200).send({ message: 'Car associations deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting car associations:', error);
+    res.status(500).send({ message: 'Error deleting car or associated records' });
+  }
+});
+
+app.delete('/api/car/:carId', async (req, res) => {
+  const { carId } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+
+    // Delete the car itself
+    await sql.query(`DELETE FROM Car WHERE CarID = ${carId}`);
+
+    res.status(200).send({ message: 'Car deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting car:', error);
+    res.status(500).send({ message: 'Error deleting car' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
