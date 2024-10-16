@@ -1,12 +1,14 @@
+//home
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../../styles/home/home.css";
-import carData from "../../assets/data/carData";
 import CarPlot from "../../modules/components/CarPlot";
 import HomeHeader from "./homeheader";
+import carDemo from "../../assets/data/carDemo";
 import "../../styles/home/notification.css";
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function Home({ id }) {
+const Home = ({ id }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [
     "https://wallpapersmug.com/download/2048x1152/6906f8/bmw-car-headlight.jpg",
@@ -25,6 +27,16 @@ function Home({ id }) {
   useEffect(() => {
     const interval = setInterval(showNextImage, 3000);
     return () => clearInterval(interval);
+  });
+  const [cars, SetCars] = useState(carDemo);
+  useEffect(() => {
+    const fetchCarData = async () => {
+      const response = await axios.get("http://localhost:5000/api/car");
+      const filteredCars = response.data.filter((car) => car.CarID < 5);
+      SetCars(filteredCars);
+    };
+
+    fetchCarData();
   });
   // const CarDetail = ({ id }) => ({
   // const cars = [
@@ -84,10 +96,9 @@ function Home({ id }) {
       <div className="home-popular-cars">
         <h2>Popular Cars</h2>
         <div className="home-car-list">
-          {<CarPlot item={carData.find((item) => item.id === 1)} />}
-          {<CarPlot item={carData.find((item) => item.id === 2)} />}
-          {<CarPlot item={carData.find((item) => item.id === 3)} />}
-          {<CarPlot item={carData.find((item) => item.id === 4)} />}
+          {cars.map((item) => (
+            <CarPlot item={item} />
+          ))}
         </div>
       </div>
 
@@ -119,6 +130,6 @@ function Home({ id }) {
       </div>
     </div>
   );
-}
+};
 
 export default Home;
