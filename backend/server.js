@@ -97,6 +97,26 @@ app.post('/api/rental', async (req, res) => {
   }
 });
 
+app.put('/api/rentals/:id', async (req, res) => {
+  const rentalId = req.params.id;
+  const { status } = req.body; // Get the new status from the request body
+
+  try {
+    await sql.connect(sqlConfig); // Ensure you are connected to the database
+
+    const result = await sql.query`UPDATE Rental SET RentalStatus = 2 WHERE RentalID = ${rentalId}`;
+
+    if (result.rowsAffected[0] > 0) {
+      res.status(200).json({ message: 'Rental status updated successfully' });
+    } else {
+      res.status(404).json({ message: 'Rental not found' });
+    }
+  } catch (error) {
+    console.error('Error updating rental status:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+//Account
 app.get('/api/account', async (req, res) => {
   try {
     await sql.connect(sqlConfig);
