@@ -1,7 +1,8 @@
 import React from "react";
 import "../../styles/home/homeheader.css";
 import logo from "../../assets/icon/logo.png";
-function HomeHeader() {
+import Notification from "./notification";
+function HomeHeader({ id }) {
   return (
     <div className="header-home">
       <div className="logo">
@@ -16,7 +17,9 @@ function HomeHeader() {
         <a href="./aboutus">About Us</a>
         <a href="./car-status">Your Renting Car</a>
       </div>
+
       <div className="user">
+        <Notification id={id}></Notification>
         <i className="fas fa-user-circle"></i>
 
         <a href="../login"> Login</a>
