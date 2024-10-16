@@ -10,6 +10,7 @@ import RentalDetail from "./pages/customer/RentalDeltail";
 import CarList from "./pages/customer/CarList";
 import CarStatus from "./pages/customer/CarStatus";
 import CarDetail from "./pages/customer/CarDetail";
+import CustomerMap from "./pages/customer/CustomerMap"
 import CarRegistration from "./pages/car/CarRegistration";
 import FeedbackPage from "./pages/car/FeedbackPage";
 import UpdateCar from "./pages/car/UpdateCar";
@@ -23,6 +24,7 @@ import Register from "./pages/login/register";
 import Payment from "./pages/payment/payment";
 import "./styles/General.css";
 
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -34,7 +36,7 @@ const App = () => {
         <Route path="/garage" element={<Garage garageID={1} />} />
         <Route
           path="/rental-request"
-          element={<RentalRequest garageID={1} />}
+          element={<RentalRequest garageID={3} />}
         />
         <Route
           path="/rental-history"
@@ -56,6 +58,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/car-detail" element={<CarDetail id={5} />} />
+        <Route path="/customer-map" element={<CustomerMap/>} />
       </Routes>
     </BrowserRouter>
   );

@@ -51,7 +51,7 @@ const RentalRequests = ({ garageID }) => {
           }
           return null; // Return null if no matching car is found (though this shouldn't happen)
         })
-        .filter((rental) => rental && rental.GarageID === garageID)) // Step 2: Filter by GarageID
+        .filter((rental) => rental && rental.GarageID === garageID && rental.RentalStatus !== 5)) // Step 2: Filter by GarageID
     };
 
     fetchRentalData();

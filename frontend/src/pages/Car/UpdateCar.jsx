@@ -1,133 +1,172 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../../styles/General.css";
 import "../../styles/car/CarRegistration.css";
-import carData from "../../assets/data/carData";
 
 const UpdateCar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { carId } = location.state || {};
 
+  // Car details
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
   const [price, setPrice] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const predefinedFeatures = ["Map", "GPS", "DVD Player", "Bluetooth", "Airbag", "Reverse Cam", "USB Port", "ITPMS"];
+  // Feature options
   const [features, setFeatures] = useState({});
 
+  // Dropdown options and selections
   const [carType, setCarType] = useState("");
   const [seatOption, setSeatOption] = useState("");
   const [gearOption, setGearOption] = useState("");
-  const [fuelOption, setFuelOption] = useState([]);
-  
-  const [oldCarData, setOldCarData] = useState(null); 
+  const [fuelOption, setFuelOption] = useState("");
+  const [brandOption, setBrandOption] = useState("");
 
+  // Dropdown options (static for demo purposes)
   const [carTypes, setCarTypes] = useState([]);
   const [seatOptions, setSeatOptions] = useState([]);
   const [gearOptions, setGearOptions] = useState([]);
   const [fuelOptions, setFuelOptions] = useState([]);
+  const [brandOptions, setBrandOptions] = useState([]);
 
+  // Fetch car details and dropdown options on component mount
   useEffect(() => {
     const fetchCarDetails = async () => {
-      const car = carData.find((c) => c.id === carId);
-      if (car) {
-        setOldCarData(car);
-        setName(car.carName);
-        setDescription(car.description);
-        setAddress(car.address);
-        setPrice(car.price);
-        setSelectedImage(car.imgUrl);
+      try {
+        const carResponse = await axios.get(`http://localhost:5000/api/car/${carId}`);
+        const car = carResponse.data;
 
-        const initialFeatures = predefinedFeatures.reduce((acc, feature) => {
-          acc[feature] = car.features.includes(feature); 
-          return acc;
-        }, {});
-        setFeatures(initialFeatures);
+        // Set car details
+        setName(car.CarName);
+        setDescription(car.CarDescription);
+        setAddress(car.Address);
+        setPrice(car.Price);
+        setSelectedImage(car.CarImage);  // Handle existing image path
 
-        setCarType(car.type);
-        setSeatOption(car.seat);
-        setGearOption(car.gear);
-        setFuelOption(car.fuel);
+        // Set dropdown values
+        setCarType(car.CarType);
+        setSeatOption(car.Seats);
+        setGearOption(car.Gear);
+        setFuelOption(car.Fuel);
+        setBrandOption(car.Brand);
+
+        // Fetch the car's features
+        const carFeaturesResponse = await axios.get(`http://localhost:5000/api/car-features/${carId}`);
+        const carFeatureIDs = carFeaturesResponse.data;
+        const allFeaturesResponse = await fetchFeatures(carFeatureIDs);
+        setFeatures(allFeaturesResponse);
+      } catch (err) {
+        console.error("Error fetching car details:", err);
       }
     };
 
+    // Fetch dropdown options (simulated static values or from backend)
     const fetchOptions = async () => {
       const types = ["SUV", "Sedan", "Truck"];
-      const seats = ["4", "5", "7"];
+      const seats = ["2", "4", "5", "7"];
       const gears = ["Auto", "Manual"];
       const fuels = ["Gasoline", "Diesel", "Electric"];
+      const brands = ["Toyota", "Tesla", "BMW", "Nissan", "Ferrari", "Mercedes", "Audi", "Lamborghini", "Bugatti"];
+
       setCarTypes(types);
       setSeatOptions(seats);
       setGearOptions(gears);
       setFuelOptions(fuels);
+      setBrandOptions(brands);
     };
 
     fetchCarDetails();
     fetchOptions();
   }, [carId]);
 
-  const handleFeatureChange = (feature) => {
+  const fetchFeatures = async (carFeatureIDs) => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/feature');
+      const data = response.data;
+
+      const featureOptions = {};
+      data.forEach((feature) => {
+        featureOptions[feature.FeatureID] = {
+          selected: carFeatureIDs.includes(feature.FeatureID),
+          name: feature.Name,
+        };
+      });
+      return featureOptions;
+    } catch (error) {
+      console.error("Error fetching features:", error);
+      return {};
+    }
+  };
+
+  const handleFeatureChange = (featureID) => {
     setFeatures((prevFeatures) => ({
       ...prevFeatures,
-      [feature]: !prevFeatures[feature],
+      [featureID]: {
+        ...prevFeatures[featureID],
+        selected: !prevFeatures[featureID].selected,
+      },
     }));
   };
 
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      setSelectedImage(file);
+
       const reader = new FileReader();
       reader.onload = (e) => {
         setSelectedImage(e.target.result);
       };
-      reader.readAsDataURL(event.target.files[0]);
+      reader.readAsDataURL(file);
     }
   };
 
-  const updateCarData = (updatedCar) => {
-    const index = carData.findIndex((car) => car.id === updatedCar.id);
-    if (index !== -1) {
-      carData[index] = {
-        ...carData[index],
-        ...updatedCar,
-      };
-      console.log("Updated Car Data:", carData[index]);
-    }
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const selectedFeatures = Object.keys(features).filter((feature) => features[feature]);
+    const selectedFeatures = Object.keys(features)
+      .filter((featureID) => features[featureID].selected)
+      .map(Number);
 
-    const updatedCar = {
-      id: carId,
-      carName: name || oldCarData.carName, 
-      description: description || oldCarData.description, 
-      address: address || oldCarData.address,
-      price: price || oldCarData.price,
-      imgUrl: selectedImage || oldCarData.imgUrl,
-      features: selectedFeatures, 
-      type: carType || oldCarData.type, 
-      seat: seatOption || oldCarData.seat, 
-      gear: gearOption || oldCarData.gear, 
-      fuel: fuelOption || oldCarData.fuel, 
-      status: oldCarData.status || "Idle", 
-    };
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("address", address);
+      formData.append("price", price);
+      formData.append("features", JSON.stringify(selectedFeatures));
+      formData.append("type", carType);
+      formData.append("seat", seatOption);
+      formData.append("gear", gearOption);
+      formData.append("fuel", fuelOption);
+      formData.append("brand", brandOption);
 
-    updateCarData(updatedCar);
+      if (selectedImage && typeof selectedImage !== "string") {
+        formData.append("image", selectedImage);
+      }
 
-    navigate("/garage");
+      await axios.put(`http://localhost:5000/api/updateCar/${carId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Car updated successfully!");
+      navigate("/garage");
+    } catch (err) {
+      console.error("Error updating car:", err);
+      alert(`Failed to update the car. Error: ${err.response?.data.message || err.message}`);
+    }
   };
 
   return (
     <div className="car-container">
       <div className="car-header">
-        <button className="backButton" onClick={() => navigate(-1)}>
-          &lt; Back
-        </button>
+        <button className="backButton" onClick={() => navigate(-1)}>&lt; Back</button>
         <h1 className="heading">Update Car</h1>
       </div>
 
@@ -142,10 +181,20 @@ const UpdateCar = () => {
             className="input"
           />
 
+          <label className="label">Choose Brand</label>
+          <select className="dropdown select brand" value={brandOption} onChange={(e) => setBrandOption(e.target.value)} required>
+            <option value="">Select a brand</option>
+            {brandOptions.map((brand) => (
+              <option key={brand} value={brand}>{brand}</option>
+            ))}
+          </select>
+
           <label className="label">Choose Picture</label>
           <div className="imageUpload">
-            {selectedImage ? (
+            {selectedImage && typeof selectedImage === 'string' ? (
               <img src={selectedImage} alt="Selected" className="imagePreview" />
+            ) : selectedImage ? (
+              <img src={URL.createObjectURL(selectedImage)} alt="Selected" className="imagePreview" />
             ) : (
               <div className="imagePlaceholder">No Image</div>
             )}
@@ -155,57 +204,40 @@ const UpdateCar = () => {
           <div className="characteristics">
             <div className="selectGroup">
               <label className="label">Type:</label>
-              <select
-                className="dropdown select"
-                value={carType}
-                onChange={(e) => setCarType(e.target.value)}
-              >
+              <select className="dropdown select" value={carType} onChange={(e) => setCarType(e.target.value)}>
+                <option value="">Select a type</option>
                 {carTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
+                  <option key={type} value={type}>{type}</option>
                 ))}
               </select>
             </div>
+
             <div className="selectGroup">
               <label className="label">Seats:</label>
-              <select
-                className="dropdown select"
-                value={seatOption}
-                onChange={(e) => setSeatOption(e.target.value)}
-              >
+              <select className="dropdown select" value={seatOption} onChange={(e) => setSeatOption(e.target.value)}>
+                <option value="">Select seats</option>
                 {seatOptions.map((seat) => (
-                  <option key={seat} value={seat}>
-                    {seat}
-                  </option>
+                  <option key={seat} value={seat}>{seat}</option>
                 ))}
               </select>
             </div>
+
             <div className="selectGroup">
               <label className="label">Gear:</label>
-              <select
-                className="dropdown select"
-                value={gearOption}
-                onChange={(e) => setGearOption(e.target.value)}
-              >
+              <select className="dropdown select" value={gearOption} onChange={(e) => setGearOption(e.target.value)}>
+                <option value="">Select gear</option>
                 {gearOptions.map((gear) => (
-                  <option key={gear} value={gear}>
-                    {gear}
-                  </option>
+                  <option key={gear} value={gear}>{gear}</option>
                 ))}
               </select>
             </div>
+
             <div className="selectGroup">
               <label className="label">Fuel:</label>
-              <select
-                className="dropdown select"
-                value={fuelOption}
-                onChange={(e) => setFuelOption(e.target.value)}
-              >
+              <select className="dropdown select" value={fuelOption} onChange={(e) => setFuelOption(e.target.value)}>
+                <option value="">Select fuel</option>
                 {fuelOptions.map((fuel) => (
-                  <option key={fuel} value={fuel}>
-                    {fuel}
-                  </option>
+                  <option key={fuel} value={fuel}>{fuel}</option>
                 ))}
               </select>
             </div>
@@ -221,37 +253,17 @@ const UpdateCar = () => {
 
           <label className="label">Features:</label>
           <div className="features">
-            {predefinedFeatures.map((feature) => (
-              <label
-                key={feature}
-                className={`featureCheckbox ${features[feature] ? "activeFeature" : ""}`}
-              >
+            {Object.keys(features).map((featureID) => (
+              <label key={featureID} className={`featureCheckbox ${features[featureID].selected ? "activeFeature" : ""}`}>
                 <input
                   type="checkbox"
-                  checked={features[feature]}
-                  onChange={() => handleFeatureChange(feature)}
+                  checked={features[featureID].selected}
+                  onChange={() => handleFeatureChange(featureID)}
                   className="checkbox"
                 />
-                {feature}
+                {features[featureID].name}
               </label>
             ))}
-          </div>
-
-          <label className="label">Address</label>
-          <input
-            type="text"
-            placeholder="Enter Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="input"
-          />
-          <div className="mapSection">
-            <img
-              src="https://via.placeholder.com/400x200"
-              alt="map"
-              className="mapImage"
-            />
-            <button className="chooseMapButton">Choose From Map</button>
           </div>
 
           <label className="label">Price</label>
@@ -267,9 +279,7 @@ const UpdateCar = () => {
           </div>
 
           <div className="confirmButtonContainer">
-            <button type="submit" className="confirmButton">
-              Confirm
-            </button>
+            <button type="submit" className="confirmButton">Confirm</button>
           </div>
         </form>
       </div>
