@@ -3,10 +3,10 @@ import "../../styles/home/home.css";
 import carData from "../../assets/data/carData";
 import CarPlot from "../../modules/components/CarPlot";
 import HomeHeader from "./homeheader";
-import Notification from "./notification";
+import "../../styles/home/notification.css";
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function Home() {
+function Home({ id }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [
     "https://wallpapersmug.com/download/2048x1152/6906f8/bmw-car-headlight.jpg",
@@ -59,7 +59,7 @@ function Home() {
   //
   return (
     <div className="home-container">
-      <HomeHeader></HomeHeader>
+      <HomeHeader id={id}></HomeHeader>
       {/* Advertisement section */}
       <div className="home-advertisement">
         {images.map((image, index) => (
@@ -111,7 +111,6 @@ function Home() {
           </button>
         </div>
       </div>
-      <Notification></Notification>
       <div className="home-about">
         <h2>About Our Company</h2>
         <button className="home-about-button">

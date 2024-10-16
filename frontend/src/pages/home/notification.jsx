@@ -1,40 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/home/notification.css";
+import notificationData from "../../assets/data/notificationData";
 
-function Notification() {
-  // ... (rest of your code)
-
-  // State for managing the notification
+function Notification({ id }) {
   const [showNotification, setShowNotification] = useState(false);
-
-  // Function to show the notification
   const handleShowNotification = () => {
     setShowNotification(true);
   };
-
-  // Function to close the notification
   const handleCloseNotification = () => {
     setShowNotification(false);
   };
+  useEffect(() => {
+    const notifications = notificationData.filter((item) => item.AccID === id);
+    setData(notifications);
+  }, [id]);
 
+  const [notifications, setData] = useState(notificationData);
   return (
     <div className="notification-container">
-      {/* ... (rest of your code) */}
-
       {/* Notification Popup */}
       {showNotification && (
         <div className="notification-popup">
           <div className="notification-content">
-            <p>This is a notification message!</p>
-            <button onClick={handleCloseNotification}>Close</button>
+            <p>
+              {notifications[0].Notifications.map((item) => (
+                <p>{item.Description}</p>
+              ))}
+            </p>
+
+            <button
+              className="notification-close"
+              onClick={handleCloseNotification}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
 
-      {/* Button to trigger the notification */}
-      <button onClick={handleShowNotification}>Show Notification</button>
-
-      {/* ... (rest of your code) */}
+      <button className="notification-show" onClick={handleShowNotification}>
+        Notification
+      </button>
     </div>
   );
 }

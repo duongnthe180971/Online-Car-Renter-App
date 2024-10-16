@@ -11,6 +11,10 @@
   align-items: center;
   transition: 0.5s ease;
 }
+.header-home .user {
+  display: flex;
+  justify-content: right;
+}
 .header-logo {
   padding: 0 1vw;
   color: #fd5826;
