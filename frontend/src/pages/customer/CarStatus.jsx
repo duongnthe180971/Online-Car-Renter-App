@@ -1,13 +1,14 @@
-import React, {useState} from 'react'
-import ChooseBarCustomer from '../../modules/components/ChooseBarCustomer'
-import carData from "../../assets/data/carData"
-import rentalData from "../../assets/data/rentalData"
-import {formatPrice} from "../../assets/format/numberFormat"
-import "../../styles/customer/CarStatus.css"
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import ChooseBarCustomer from '../../modules/components/ChooseBarCustomer';
+import rentalData from "../../assets/data/rentalData";
+import { formatPrice } from "../../assets/format/numberFormat";
+import "../../styles/customer/CarStatus.css";
 
 const CarOrderDetails = ({ car, rental, handleCancel }) => {
-    const { imgUrl, carName, rating, price } = car;
+    const { CarImage, CarName, Rate, Price } = car;
     const { bookDate, startDate, returnDate, status } = rental;
+
     return (
         <div className="car-order-container">
             <div className="title">My Renting Car:</div>
@@ -15,20 +16,20 @@ const CarOrderDetails = ({ car, rental, handleCancel }) => {
                 <div className="car-image-section">
                     <img
                         className="car-image"
-                        src={imgUrl}
-                        alt={carName}
+                        src={process.env.PUBLIC_URL + CarImage}
+                        alt={CarName}
                     />
                 </div>
 
                 <div className="car-details-section">
-                    <h1>{carName}</h1>
+                    <h1>{CarName}</h1>
                     <div className="stars">
                         {[1, 2, 3, 4, 5].map((star) => (
                             <span
                                 key={star}
-                                className={star <= (rating) ? 'filled' : 'empty'}
+                                className={star <= Rate ? 'filled' : 'empty'}
                             >
-                                {star <= (rating) ? '★' : '☆'}
+                                {star <= Rate ? '★' : '☆'}
                             </span>
                         ))}
                     </div>
@@ -36,10 +37,9 @@ const CarOrderDetails = ({ car, rental, handleCancel }) => {
                         <div className="item"><h5>Book Date:</h5> <h5>{bookDate}</h5></div>
                         <div className="item"><h5>Starting Date:</h5> <h5>{startDate}</h5></div>
                         <div className="item"><h5>Return Date:</h5> <h5>{returnDate}</h5></div>
-                        <div className="item"><h5>Price:</h5> <h5>{formatPrice(price)} VND</h5></div>
+                        <div className="item"><h5>Price:</h5> <h5>{formatPrice(Price)} VND</h5></div>
                     </div>
                 </div>
-
             </div>
             <ProgressBar id={status} />
             <div className="cancel-section">
@@ -78,27 +78,40 @@ const ProgressBar = ({ id }) => {
 
 const CarStatus = ({ id }) => {
     const [id_, setId] = useState(id);
-    const car_data = carData.find(item => item.id === id_);
+    const [car, setCar] = useState(null);
+    useEffect(() => {
+        const fetchCarData = async () => {
+            const response = await axios.get("http://localhost:5000/api/car");
+            const car_ = response.data.find((item) => item.CarID === id_);
+            setCar(car_)
+        };
+
+        fetchCarData();
+    }, [id_]);
+
     const rental_data = rentalData.find(item => item.id === id_);
+
     const handleCancel = () => {
         setId(0);
     };
+
+
     return (
-        <div class="AllPage">
-            <div class="LeftSide">
-                <div class="Bar">
+        <div className="AllPage">
+            <div className="LeftSide">
+                <div className="Bar">
                     <ChooseBarCustomer />
                 </div>
             </div>
-            <div class="RightSide sidefix">
-                {id_ > 0 ? 
-                <CarOrderDetails car={car_data} rental={rental_data} handleCancel={handleCancel}/> : 
-                <h1>You have not rented any car yet</h1>}
+            <div className="RightSide sidefix">
+                {id_ > 0 && car ? (
+                    <CarOrderDetails car={car} rental={rental_data} handleCancel={handleCancel} />
+                ) : (
+                    <h1>You have not rented any car yet</h1>
+                )}
             </div>
-
-
         </div>
-    )
+    );
 };
 
 export default CarStatus;

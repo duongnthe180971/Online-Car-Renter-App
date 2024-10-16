@@ -1,46 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import DatePicker from "react-datepicker";
-import carData from "../../assets/data/carData"
-import { getNumOfDay, formatPrice, formatDate_vn } from "../../assets/format/numberFormat"
-import rentalData from "../../assets/data/rentalData"
-import "../../styles/customer/CarDetail.css"
+import { getNumOfDay, formatPrice, formatDate_vn } from "../../assets/format/numberFormat";
+import rentalData from "../../assets/data/rentalData";
+import "../../styles/customer/CarDetail.css";
 import 'react-datepicker/dist/react-datepicker.css';
 
 const CarDetailCard = ({ car }) => {
-    const { imgUrl, carName, rating, seat, type, gear, fuel, features, address, description } = car;
+    const { CarImage, CarName, Rate, Seats, CarType, Gear, Fuel, Description } = car;
+    const features = ["Bluetooth", "GPS", "Airbag", "Reverse Cam", "USB Port"];
+    const address = "123 Tran Duy Hung, Cau Giay, Ha Noi";
     const featureList = Array.isArray(features) ? features : [];
+
     return (
         <div className="car-detail-card-container">
-            <img src={imgUrl} alt="Car" className="car-image" />
+            <img src={process.env.PUBLIC_URL + CarImage} alt="Car" className="car-image" />
             <div className="car-info">
-                <h3>{carName}</h3>
+                <h3>{CarName}</h3>
                 <div className="stars">
                     {[1, 2, 3, 4, 5].map((star) => (
                         <span
                             key={star}
-                            className={star <= (rating) ? 'filled' : 'empty'}
+                            className={star <= Rate ? 'filled' : 'empty'}
                         >
-                            {star <= (rating) ? '★' : '☆'}
+                            {star <= Rate ? '★' : '☆'}
                         </span>
                     ))}
                 </div>
                 <h5>Characteristics</h5>
                 <div className="characteristics">
-                    <p>🪑Seats: {seat}</p>
-                    <p>🚘Type: {type}</p>
-                    <p>⚙️Gear: {gear}</p>
-                    <p>⛽Fuel: {fuel}</p>
+                    <p>🪑Seats: {Seats}</p>
+                    <p>🚘Type: {CarType}</p>
+                    <p>⚙️Gear: {Gear}</p>
+                    <p>⛽Fuel: {Fuel}</p>
                 </div>
                 <h5>Features</h5>
                 <div className="features">
-                    {featureList.map((item) => <p>{item}</p>)}
+                    {featureList.map((item, index) => <p key={index}>{item}</p>)}
                 </div>
                 <div className="address">
                     <h5>Address:</h5> <p>{address}</p>
                 </div>
                 <div className="description">
-                    <h5>Description:</h5> <p>{description}</p>
+                    <h5>Description:</h5> <p>{Description}</p>
                 </div>
             </div>
         </div>
@@ -49,19 +52,18 @@ const CarDetailCard = ({ car }) => {
 
 const RentalCard = ({ car, rental }) => {
     const navigate = useNavigate();
-    const { price } = car;
+    const { Price } = car;
     const insurance = 60000;
-
 
     const [data, setData] = useState(rentalData);
 
     const [formData, setFormData] = useState({
-
         startDate: new Date(),
         returnDate: new Date(),
-
     });
-    const total_renting_price = price * getNumOfDay(formData.startDate, formData.returnDate);
+
+    const total_renting_price = Price * getNumOfDay(formData.startDate, formData.returnDate);
+
     const handleDateChange = (name, date) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -71,12 +73,12 @@ const RentalCard = ({ car, rental }) => {
 
     const updateRentalData = () => {
         const updatedRental = {
-            id: car.id,
+            id: car.CarID,
             bookDate: formatDate_vn(new Date()),
             startDate: formatDate_vn(formData.startDate),
             returnDate: formatDate_vn(formData.returnDate),
             Customer: "Name123",
-            carID: car.id,
+            carID: car.CarID,
             status: 1,
         };
 
@@ -90,9 +92,10 @@ const RentalCard = ({ car, rental }) => {
         rentalData.push(...updatedData);
         navigate("/car-status");
     };
+
     return (
         <div className="rental-card-container">
-            <h1>{formatPrice(price)} vnd / day</h1>
+            <h1>{formatPrice(Price)} vnd / day</h1>
             <h3>Choose rental period</h3>
             <div className="rental-period">
                 <div className="rental-date">
@@ -113,19 +116,32 @@ const RentalCard = ({ car, rental }) => {
                 <button className="book-button" onClick={updateRentalData}>Book</button>
             </div>
         </div>
-    )
+    );
 }
+
 const CarDetail = ({ id }) => {
-    const car_data = carData.find(item => item.id === id);
+    const [car, setCar] = useState(null);
+
+    useEffect(() => {
+        const fetchCarData = async () => {
+            const response = await axios.get("http://localhost:5000/api/car");
+            const car_ = response.data.find((item) => item.CarID === id);
+            setCar(car_);
+        };
+
+        fetchCarData();
+    }, [id]);
+
     const rental_data = rentalData.find(item => item.id === id);
+
+    if (!car) return <div>Car not found.</div>;
+
     return (
         <div className="car-detail-container">
-            <CarDetailCard car={car_data} />
-            <RentalCard car={car_data} rental={rental_data} />
+            <CarDetailCard car={car} />
+            <RentalCard car={car} rental={rental_data} />
         </div>
-    )
+    );
 }
 
-export default CarDetail
-
-
+export default CarDetail;
