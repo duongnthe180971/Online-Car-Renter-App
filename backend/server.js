@@ -4,6 +4,7 @@ const sql = require('mssql');
 const app = express();
 const PORT = 5000;
 
+app.use(express.json());
 app.use(cors());
 
 const sqlConfig = {
@@ -40,6 +41,32 @@ app.get('/api/rental', async (req, res) => {
   }
 });
 
+app.post('/api/rental', async (req, res) => {
+  try {
+    await sql.connect(sqlConfig);
+    const { CarID, CustomerID, RentalStart, RentalEnd, RentalStatus } = req.body;
+
+    const query = `
+      INSERT INTO Rental (CarID, CustomerID, RentalStart, RentalEnd, RentalStatus)
+      VALUES (@CarID, @CustomerID, @RentalStart, @RentalEnd, @RentalStatus)
+    `;
+
+    const request = new sql.Request();
+    request.input('CarID', sql.Int, CarID);
+    request.input('CustomerID', sql.Int, CustomerID);
+    request.input('RentalStart', sql.Date, RentalStart);
+    request.input('RentalEnd', sql.Date, RentalEnd);
+    request.input('RentalStatus', sql.Int, RentalStatus);
+
+    await request.query(query);
+
+    res.status(201).send('New rental added successfully');
+  } catch (err) {
+    console.error('Error adding new rental:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 app.get('/api/account', async (req, res) => {
   try {
     await sql.connect(sqlConfig);
@@ -72,14 +99,21 @@ app.get('/api/feature', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-app.get('/api/car-feature', async (req, res) => {
+
+app.get('/api/features/:carID', async (req, res) => {
   try {
-    await sql.connect(sqlConfig);
-    const result = await sql.query('SELECT * FROM CarFeature');
-    res.json(result.recordset);
+      await sql.connect(sqlConfig);
+      const { carID } = req.params;
+      const result = await sql.query(`
+          SELECT f.Name 
+          FROM CarFeature cf 
+          JOIN Feature f ON cf.FeatureID = f.FeatureID 
+          WHERE cf.CarID = ${carID}`);
+      
+      res.json(result.recordset); // Send the list of features as JSON
   } catch (err) {
-    console.error('Error connecting to the database:', err);
-    res.status(500).send('Server error');
+      console.error('Error fetching car features:', err);
+      res.status(500).send('Server error');
   }
 });
 

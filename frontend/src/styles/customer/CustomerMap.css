@@ -1,0 +1,61 @@
+.map-page-container {
+    display: flex;
+    height: 100vh;
+}
+
+.map-page-container .form {
+    display: flex;
+    flex-direction: column;
+    padding-top: 8vh;
+    width: 25vw;
+    background-color: #2d2d2d;
+    color: white;
+    align-items: center;
+}
+
+.map-page-container .form-group {
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.map-page-container .form label {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.map-page-container .form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+}
+
+.map-page-container .show-way-button {
+    width: 50%;
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 1.1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.map-page-container .show-way-button:hover {
+    background-color: #218838;
+}
+
+/* Styling for the map section */
+.map-page-container .map-container {
+    flex: 1;
+    height: 100%;
+    position: relative;
+}
+
+.map-page-container .map {
+    height: 100%;
+    width: 100%;
+}
