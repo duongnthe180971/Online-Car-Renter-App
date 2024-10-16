@@ -40,6 +40,10 @@ const CarCard = ({ car, onStatusChange }) => {
         navigate(`/update-car`, { state: { carId: car.CarID } });
       };
 
+      const handleViewFeedback = () => {
+        navigate(`/feedback`, { state: { carId: car.CarID } }); 
+      };
+
       const handleDeleteCar = async () => {
         try {
             // Delete associated records first
@@ -87,6 +91,7 @@ const CarCard = ({ car, onStatusChange }) => {
                 </div>
                 <div className="car-actions">
                     <button className="view-car-btn" onClick={handleViewCar}>View Car</button>
+                    <button className="view-car-btn" onClick={handleViewFeedback}>Feedback</button>
                     <button className="delete-car-btn" onClick={handleDeleteCar}>Delete Car</button>
                     <label className="switch">
                         <input type="checkbox" 

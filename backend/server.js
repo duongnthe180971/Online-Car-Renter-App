@@ -387,6 +387,7 @@ app.delete('/api/car/:carId', async (req, res) => {
     await sql.connect(sqlConfig);
 
     // Delete the car itself
+    
     await sql.query(`DELETE FROM Car WHERE CarID = ${carId}`);
 
     res.status(200).send({ message: 'Car deleted successfully' });
@@ -395,6 +396,37 @@ app.delete('/api/car/:carId', async (req, res) => {
     res.status(500).send({ message: 'Error deleting car' });
   }
 });
+
+app.get('/api/feedback/:carId', async (req, res) => { 
+  const { carId } = req.params; 
+
+  if (!carId) {
+    return res.status(400).json({ error: "CarID is required" });
+  }
+
+  try {
+    await sql.connect(sqlConfig);
+
+    // Modify the query to join with the Account table to get the UserName
+    const result = await sql.query(`
+      SELECT f.*, a.UserName 
+      FROM Feedback f
+      JOIN Account a ON f.CustomerID = a.id
+      WHERE f.CarID = ${carId}
+    `);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: "No feedback found for this CarID" });
+    }
+
+    res.json(result.recordset);  // Send the filtered feedback data
+  } catch (err) {
+    console.error('Error connecting to the database:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
