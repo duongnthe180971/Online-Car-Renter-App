@@ -28,7 +28,8 @@
 .register-container input[type="password"],
 .register-container input[type="date"],
 .register-container input[type="email"],
-.register-container input[type="tel"] {
+.register-container input[type="tel"],
+.register-container input[type="address"] {
   width: calc(100% - 20px);
   padding: 10px;
   margin-bottom: 15px;

@@ -23,15 +23,15 @@ const sqlConfig = {
   },
 };
 app.post("/api/register", async (req, res) => {
-  const { username, password, gender, dob, phone, email } = req.body;
+  const { username, password, gender, dob, phone, email, address } = req.body;
 
   try {
     await sql.connect(sqlConfig);
 
     // Insert the user details into the Account table
     const insertQuery = `
-      INSERT INTO Account (UserName, PassWord, Role, DOB, Phone, Email)
-      VALUES ('${username}', '${password}', 2, '${dob}', '${phone}', '${email}');
+      INSERT INTO Account (UserName, PassWord, Gender, Role, DOB, Phone, Email, Address)
+      VALUES ('${username}', '${password}', '${gender}', 2, '${dob}', '${phone}', '${email}', '${address}');
     `;
 
     await sql.query(insertQuery);

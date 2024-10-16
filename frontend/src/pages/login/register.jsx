@@ -70,8 +70,8 @@ function Register() {
               type="radio"
               id="male"
               name="gender"
-              value="male"
-              checked={formData.gender === "male"}
+              value="0"
+              checked={formData.gender === "0"}
               onChange={handleChange}
               required
             />
@@ -80,8 +80,8 @@ function Register() {
               type="radio"
               id="female"
               name="gender"
-              value="female"
-              checked={formData.gender === "female"}
+              value="1"
+              checked={formData.gender === "1"}
               onChange={handleChange}
               required
             />
@@ -114,6 +114,15 @@ function Register() {
             id="email"
             name="email"
             value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <label htmlFor="address">Address:</label>
+          <input
+            type="address"
+            id="address"
+            name="address"
+            value={formData.address}
             onChange={handleChange}
             required
           />
