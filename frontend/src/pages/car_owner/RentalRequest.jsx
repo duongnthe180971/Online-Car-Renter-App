@@ -27,7 +27,8 @@ const getStatusLabel = (status) => {
 
 const RentalRequests = ({ garageID }) => {
 
-  const [filteredRentalRequests, setRentalRequest] = useState(rentalDemo);
+  const [filteredRentalRequests, setRentalRequest] = useState([]);
+  
   useEffect(() => {
     const fetchRentalData = async () => {
         const responseAccount = await axios.get("http://localhost:5000/api/account");
@@ -47,6 +48,7 @@ const RentalRequests = ({ garageID }) => {
               GarageID: car.GarageID, // Add GarageID from car data
               Customer: customer.UserName,
               CustomerID: customer.id
+
             };
           }
           return null; // Return null if no matching car is found (though this shouldn't happen)
@@ -55,7 +57,7 @@ const RentalRequests = ({ garageID }) => {
     };
 
     fetchRentalData();
-}, [garageID]);
+}, [garageID]); 
 
   // const filteredRentalRequests = rentalData
   //   .map((rental) => {
@@ -113,6 +115,7 @@ const RentalRequests = ({ garageID }) => {
                   bookDate: `${formatDate_String(request.RentalStart)}`,
                   timePeriod: `${formatDate_String(request.RentalStart)} To ${formatDate_String(request.RentalEnd)}`,
                   price: `${formatPrice(request.price)} VND`,
+                  rentalId: request.RentalID,
                   isWaiting: request.status === 1, // Example: Set waiting if status is '1'
                 }}
               />

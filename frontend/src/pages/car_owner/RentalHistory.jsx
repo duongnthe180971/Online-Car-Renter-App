@@ -46,7 +46,7 @@ const RentalHistory = ({ garageID }) => {
   //     status: 'Canceled'
   //   }
   // ];
-  const [filteredRentalHistory, setRentalHistory] = useState(rentalDemo);
+  const [filteredRentalHistory, setRentalHistory] = useState([]);
   useEffect(() => {
     const fetchRentalData = async () => {
         const responseAccount = await axios.get("http://localhost:5000/api/account");
