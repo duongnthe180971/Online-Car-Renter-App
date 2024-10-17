@@ -77,7 +77,7 @@ const CarCard = ({ car, onStatusChange }) => {
                         ))}
                     </div>
                     <span className={`status ${car.CarStatus.toLowerCase()}`}>
-                        Status: {car.CarStatus}
+                        Status: {car.CarStatus  || 'Unknown'}
                     </span>
                 </div>
                 <div className="car-details">
