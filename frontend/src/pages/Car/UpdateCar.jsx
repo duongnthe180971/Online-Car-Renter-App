@@ -9,52 +9,43 @@ const UpdateCar = () => {
   const location = useLocation();
   const { carId } = location.state || {};
 
-  // Car details
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [address, setAddress] = useState("");
   const [price, setPrice] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [currentImage, setCurrentImage] = useState("");
 
-  // Feature options
   const [features, setFeatures] = useState({});
 
-  // Dropdown options and selections
   const [carType, setCarType] = useState("");
   const [seatOption, setSeatOption] = useState("");
   const [gearOption, setGearOption] = useState("");
   const [fuelOption, setFuelOption] = useState("");
   const [brandOption, setBrandOption] = useState("");
 
-  // Dropdown options (static for demo purposes)
   const [carTypes, setCarTypes] = useState([]);
   const [seatOptions, setSeatOptions] = useState([]);
   const [gearOptions, setGearOptions] = useState([]);
   const [fuelOptions, setFuelOptions] = useState([]);
   const [brandOptions, setBrandOptions] = useState([]);
 
-  // Fetch car details and dropdown options on component mount
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
         const carResponse = await axios.get(`http://localhost:5000/api/car/${carId}`);
         const car = carResponse.data;
 
-        // Set car details
         setName(car.CarName);
         setDescription(car.CarDescription);
-        setAddress(car.Address);
         setPrice(car.Price);
-        setSelectedImage(car.CarImage);  // Handle existing image path
+        setCurrentImage(car.CarImage); 
 
-        // Set dropdown values
         setCarType(car.CarType);
         setSeatOption(car.Seats);
         setGearOption(car.Gear);
         setFuelOption(car.Fuel);
         setBrandOption(car.Brand);
 
-        // Fetch the car's features
         const carFeaturesResponse = await axios.get(`http://localhost:5000/api/car-features/${carId}`);
         const carFeatureIDs = carFeaturesResponse.data;
         const allFeaturesResponse = await fetchFeatures(carFeatureIDs);
@@ -64,10 +55,9 @@ const UpdateCar = () => {
       }
     };
 
-    // Fetch dropdown options (simulated static values or from backend)
     const fetchOptions = async () => {
-      const types = ["SUV", "Sedan", "Truck"];
-      const seats = ["2", "4", "5", "7"];
+      const types = ["SUV", "Sedan", "Truck","Van","Sport"];
+      const seats = ["2", "4", "5","6", "7"];
       const gears = ["Auto", "Manual"];
       const fuels = ["Gasoline", "Diesel", "Electric"];
       const brands = ["Toyota", "Tesla", "BMW", "Nissan", "Ferrari", "Mercedes", "Audi", "Lamborghini", "Bugatti"];
@@ -114,14 +104,7 @@ const UpdateCar = () => {
 
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      setSelectedImage(file);
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target.result);
-      };
-      reader.readAsDataURL(file);
+      setSelectedImage(event.target.files[0]);
     }
   };
 
@@ -136,7 +119,6 @@ const UpdateCar = () => {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
-      formData.append("address", address);
       formData.append("price", price);
       formData.append("features", JSON.stringify(selectedFeatures));
       formData.append("type", carType);
@@ -145,7 +127,7 @@ const UpdateCar = () => {
       formData.append("fuel", fuelOption);
       formData.append("brand", brandOption);
 
-      if (selectedImage && typeof selectedImage !== "string") {
+      if (selectedImage) {
         formData.append("image", selectedImage);
       }
 
@@ -171,7 +153,7 @@ const UpdateCar = () => {
       </div>
 
       <div className="formContainer">
-        <form className="form" onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit} encType="multipart/form-data">
           <label className="label">Enter Name</label>
           <input
             type="text"
@@ -191,12 +173,10 @@ const UpdateCar = () => {
 
           <label className="label">Choose Picture</label>
           <div className="imageUpload">
-            {selectedImage && typeof selectedImage === 'string' ? (
-              <img src={selectedImage} alt="Selected" className="imagePreview" />
-            ) : selectedImage ? (
+            {selectedImage ? (
               <img src={URL.createObjectURL(selectedImage)} alt="Selected" className="imagePreview" />
             ) : (
-              <div className="imagePlaceholder">No Image</div>
+              <img src={currentImage} alt="Current" className="imagePreview" />
             )}
             <input type="file" onChange={handleImageChange} className="fileInput" />
           </div>
