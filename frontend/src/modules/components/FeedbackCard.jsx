@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../../styles/component/FeedbackCard.css";
+import img from "../../assets/img/user.png";
 
 
 const FeedbackCard = ({ userName, starRate, date, content }) => {
@@ -12,18 +13,15 @@ const FeedbackCard = ({ userName, starRate, date, content }) => {
     return (
       <div className="feedback-card">
         <div className="feedback-top">
-          {/* Profile Picture and Name */}
-          <img src={"../img/user.png"} alt={userName} className="profile-pic" />
+          <img src={img} alt={userName} className="profile-pic" />
           <h4 className="user-name">{userName}</h4>
         </div>
   
         <div className="rating-info">
-          {/* Star Rating and Date */}
           <div className="stars">{renderStars(starRate)}</div>
           <p className="date">{date}</p>
         </div>
   
-        {/* Feedback Content */}
         <p className="content">{content}</p>
       </div>
     );

@@ -28,7 +28,6 @@ app.post("/api/register", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
 
-    // Insert the user details into the Account table
     const insertQuery = `
       INSERT INTO Account (UserName, PassWord, Gender, Role, DOB, Phone, Email, Address)
       VALUES ('${username}', '${password}', '${gender}', 2, '${dob}', '${phone}', '${email}', '${address}');
@@ -54,10 +53,9 @@ app.get("/api/car", async (req, res) => {
   }
 });
 
-// Update car status by ID (PUT request)
 app.put("/api/cars/:id", async (req, res) => {
   const carId = req.params.id;
-  const { newStatus } = req.body; // Get the new status from the request body
+  const { newStatus } = req.body; 
 
   if (!newStatus) {
     return res.status(400).json({ error: "CarStatus is required" });
@@ -119,10 +117,10 @@ app.post("/api/rental", async (req, res) => {
 
 app.put("/api/rentals/:id", async (req, res) => {
   const rentalId = req.params.id;
-  const { status } = req.body; // Get the new status from the request body
+  const { status } = req.body;
 
   try {
-    await sql.connect(sqlConfig); // Ensure you are connected to the database
+    await sql.connect(sqlConfig);
 
     const result =
       await sql.query`UPDATE Rental SET RentalStatus = 2 WHERE RentalID = ${rentalId}`;
@@ -137,7 +135,7 @@ app.put("/api/rentals/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-//Account
+
 app.get("/api/account", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
@@ -181,7 +179,7 @@ app.get("/api/features/:carID", async (req, res) => {
           JOIN Feature f ON cf.FeatureID = f.FeatureID 
           WHERE cf.CarID = ${carID}`);
 
-    res.json(result.recordset); // Send the list of features as JSON
+    res.json(result.recordset); 
   } catch (err) {
     console.error("Error fetching car features:", err);
     res.status(500).send("Server error");
@@ -234,10 +232,14 @@ app.get("/api/notification-description", async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "img")); // Ensure correct path
+    cb(null, path.join(__dirname, "img"));
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname); // Keep the original file name
+    const timestamp = Date.now(); 
+    const originalName = file.originalname;
+    const extension = path.extname(originalName); 
+    const fileName = `${timestamp}_${originalName}`;
+    cb(null, fileName); 
   },
 });
 
@@ -254,14 +256,13 @@ app.get("/api/car/:carId", async (req, res) => {
       return res.status(404).json({ message: "Car not found" });
     }
 
-    res.json(result.recordset[0]); // Return the car data
+    res.json(result.recordset[0]); 
   } catch (err) {
     console.error("Error fetching car data:", err);
     res.status(500).send("Server error");
   }
 });
 
-// Add this route to get the list of features for a specific car
 app.get("/api/car-features/:carId", async (req, res) => {
   const { carId } = req.params;
 
@@ -271,7 +272,6 @@ app.get("/api/car-features/:carId", async (req, res) => {
       SELECT FeatureID FROM CarFeature WHERE CarID = ${carId}
     `);
 
-    // Return the list of feature IDs
     res.json(result.recordset.map((row) => row.FeatureID));
   } catch (err) {
     console.error("Error fetching car features:", err);
@@ -284,7 +284,6 @@ app.put("/api/updateCar/:carId", upload.single("image"), async (req, res) => {
     name,
     description,
     price,
-    address,
     features,
     type,
     seat,
@@ -297,7 +296,6 @@ app.put("/api/updateCar/:carId", upload.single("image"), async (req, res) => {
     await sql.connect(sqlConfig);
     console.log("Connected to DB");
 
-    // Check if the car exists
     const checkCarQuery = `SELECT * FROM Car WHERE CarID = ${carId}`;
     const carResult = await sql.query(checkCarQuery);
 
@@ -305,16 +303,14 @@ app.put("/api/updateCar/:carId", upload.single("image"), async (req, res) => {
       return res.status(404).json({ message: "Car not found" });
     }
 
-    // Handle image update only if a new image is uploaded
-    let imagePath = carResult.recordset[0].CarImage; // Keep existing image path by default
+    let imagePath = carResult.recordset[0].CarImage;
     if (req.file) {
       const imageName = req.file.filename;
-      imagePath = `http://localhost:5000/img/${imageName}`; // Update with new image path
+      imagePath = `http://localhost:5000/img/${imageName}`; 
 
       console.log(`New image uploaded: ${imageName}`);
     }
 
-    // Update car details, including the image path if a new image is provided
     const updateCarQuery = `
       UPDATE Car 
       SET 
@@ -332,14 +328,11 @@ app.put("/api/updateCar/:carId", upload.single("image"), async (req, res) => {
 
     await sql.query(updateCarQuery);
 
-    // Update car features
     const selectedFeatures = JSON.parse(features);
 
-    // First, delete the existing features for this car
     const deleteFeaturesQuery = `DELETE FROM CarFeature WHERE CarID = ${carId}`;
     await sql.query(deleteFeaturesQuery);
 
-    // Insert the new set of features
     for (const featureID of selectedFeatures) {
       const insertFeatureQuery = `INSERT INTO CarFeature (CarID, FeatureID) VALUES (${carId}, ${featureID})`;
       await sql.query(insertFeatureQuery);
@@ -357,7 +350,6 @@ app.post("/api/registerCar", upload.single("image"), async (req, res) => {
     name,
     description,
     price,
-    address,
     features,
     type,
     seat,
@@ -373,7 +365,7 @@ app.post("/api/registerCar", upload.single("image"), async (req, res) => {
   }
 
   const imageName = req.file.filename;
-  const imagePath = `http://localhost:5000/img/${imageName}`; // Store image path correctly
+  const imagePath = `http://localhost:5000/img/${imageName}`; 
 
   try {
     await sql.connect(sqlConfig);
@@ -409,7 +401,6 @@ app.delete("/api/car/deleteAssociations/:carId", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
 
-    // Delete related records from CarFeature, Rental, Feedback tables
     await sql.query(`DELETE FROM CarFeature WHERE CarID = ${carId}`);
     await sql.query(`DELETE FROM Rental WHERE CarID = ${carId}`);
     await sql.query(`DELETE FROM Feedback WHERE CarID = ${carId}`);
@@ -428,7 +419,6 @@ app.delete("/api/car/:carId", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
 
-    // Delete the car itself
     
     await sql.query(`DELETE FROM Car WHERE CarID = ${carId}`);
 
@@ -448,8 +438,6 @@ app.get('/api/feedback/:carId', async (req, res) => {
 
   try {
     await sql.connect(sqlConfig);
-
-    // Modify the query to join with the Account table to get the UserName
     const result = await sql.query(`
       SELECT f.*, a.UserName 
       FROM Feedback f
@@ -461,7 +449,7 @@ app.get('/api/feedback/:carId', async (req, res) => {
       return res.status(404).json({ error: "No feedback found for this CarID" });
     }
 
-    res.json(result.recordset);  // Send the filtered feedback data
+    res.json(result.recordset); 
   } catch (err) {
     console.error('Error connecting to the database:', err);
     res.status(500).send('Server error');

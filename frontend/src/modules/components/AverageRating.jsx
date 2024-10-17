@@ -5,11 +5,9 @@ import "../../styles/General.css";
 const AverageRating = ({ feedbackData }) => {
   const totalRatings = feedbackData.length;
 
-  // Sum ratings (Rate field from each feedback) and calculate the average
   const sumRatings = feedbackData.reduce((acc, feedback) => acc + (feedback.Rate || 0), 0);
   const averageRating = totalRatings === 0 ? 0 : (sumRatings / totalRatings).toFixed(1);
 
-  // Count the number of ratings for each star level (1 to 5 stars)
   const ratingCounts = [0, 0, 0, 0, 0];
   feedbackData.forEach(feedback => {
     if (feedback.Rate >= 1 && feedback.Rate <= 5) {

@@ -71,7 +71,7 @@ const CarRegistration = () => {
 
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setSelectedImage(event.target.files[0]); // Save the file itself for upload
+      setSelectedImage(event.target.files[0]); 
     }
   };
 
@@ -91,12 +91,11 @@ const CarRegistration = () => {
     formData.append('garageID', garageID);
 
     if (selectedImage) {
-      formData.append('image', selectedImage);  // Add the image file
+      formData.append('image', selectedImage); 
     } else {
       console.log('No image selected');
     }
 
-    // Get selected features
     const selectedFeatures = Object.keys(features).filter(
       (featureID) => features[featureID].selected
     );

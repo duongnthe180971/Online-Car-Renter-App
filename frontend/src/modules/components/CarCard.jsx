@@ -36,7 +36,6 @@ const CarCard = ({ car, onStatusChange }) => {
     };
 
     const handleViewCar = () => {
-        // Navigate to UpdateCar component with car details
         navigate(`/update-car`, { state: { carId: car.CarID } });
       };
 
@@ -46,14 +45,12 @@ const CarCard = ({ car, onStatusChange }) => {
 
       const handleDeleteCar = async () => {
         try {
-            // Delete associated records first
             await axios.delete(`http://localhost:5000/api/car/deleteAssociations/${car.CarID}`);
     
-            // Then delete the car itself
             await axios.delete(`http://localhost:5000/api/car/${car.CarID}`);
     
             console.log('Car deleted successfully');
-            window.location.reload();  // Refresh the page after deletion
+            window.location.reload();
         } catch (error) {
             console.error('Error deleting car:', error);
             alert('Failed to delete the car. Please try again.');

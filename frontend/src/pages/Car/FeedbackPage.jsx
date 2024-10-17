@@ -8,14 +8,14 @@ import "../../styles/car/FeedbackPage.css";
 const FeedbackPage = () => {
   const [feedbackData, setFeedbackData] = useState([]);
   const location = useLocation();
-  const {carId} = location.state // Get CarID from navigation state
+  const {carId} = location.state
 
   useEffect(() => {
     const fetchFeedback = async () => {
       console.log('Fetching feedback for carId:', carId);
       try {
         const response = await axios.get(`http://localhost:5000/api/feedback/${carId}`);
-        setFeedbackData(response.data); // Update state with feedback data
+        setFeedbackData(response.data);
       } catch (err) {
         console.error('Error fetching feedback data:', err);
       }
