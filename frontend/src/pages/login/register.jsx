@@ -65,7 +65,7 @@ function Register() {
           />
 
           <label>Gender:</label>
-          <div className="gender-container">
+          <div className="radio-container">
             <input
               type="radio"
               id="male"
@@ -126,7 +126,29 @@ function Register() {
             onChange={handleChange}
             required
           />
-
+          <label>Role:</label>
+          <div className="radio-container">
+            <input
+              type="radio"
+              id="carowner"
+              name="role"
+              value="1"
+              checked={formData.role === "1"}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="carowner">Car Owner</label>
+            <input
+              type="radio"
+              id="customer"
+              name="role"
+              value="2"
+              checked={formData.role === "2"}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="customer">Customer</label>
+          </div>
           <div className="buttons">
             <button type="submit" className="confirm">
               Confirm

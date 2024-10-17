@@ -38,15 +38,15 @@
   background-color: #666;
   color: white;
 }
-.register-container .gender-container {
+.register-container .radio-container {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
 }
-.register-container .gender-container input[type="radio"] {
+.register-container .radio-container input[type="radio"] {
   margin-right: 5px;
 }
-.register-container .gender-container label {
+.register-container .radio-container label {
   margin-right: 20px;
 }
 .register-container .buttons {
