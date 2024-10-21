@@ -23,3 +23,37 @@
   flex-direction: column;
   gap: 20px;
 }
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+}
+.manage-user-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-list {
+  margin-bottom: 20px;
+}
+
+.user-details {
+  margin-top: 20px;
+  background-color: #f4f4f4;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.user-details h2 {
+  margin-bottom: 10px;
+  color: black;
+}
+
+.user-details p {
+  margin: 5px 0;
+}

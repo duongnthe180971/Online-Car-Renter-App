@@ -56,7 +56,7 @@ app.get("/api/car", async (req, res) => {
 
 app.put("/api/cars/:id", async (req, res) => {
   const carId = req.params.id;
-  const { newStatus } = req.body; 
+  const { newStatus } = req.body;
 
   if (!newStatus) {
     return res.status(400).json({ error: "CarStatus is required" });
@@ -180,7 +180,7 @@ app.get("/api/features/:carID", async (req, res) => {
           JOIN Feature f ON cf.FeatureID = f.FeatureID 
           WHERE cf.CarID = ${carID}`);
 
-    res.json(result.recordset); 
+    res.json(result.recordset);
   } catch (err) {
     console.error("Error fetching car features:", err);
     res.status(500).send("Server error");
@@ -236,11 +236,11 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "img"));
   },
   filename: (req, file, cb) => {
-    const timestamp = Date.now(); 
+    const timestamp = Date.now();
     const originalName = file.originalname;
-    const extension = path.extname(originalName); 
+    const extension = path.extname(originalName);
     const fileName = `${timestamp}_${originalName}`;
-    cb(null, fileName); 
+    cb(null, fileName);
   },
 });
 
@@ -257,7 +257,7 @@ app.get("/api/car/:carId", async (req, res) => {
       return res.status(404).json({ message: "Car not found" });
     }
 
-    res.json(result.recordset[0]); 
+    res.json(result.recordset[0]);
   } catch (err) {
     console.error("Error fetching car data:", err);
     res.status(500).send("Server error");
@@ -281,17 +281,8 @@ app.get("/api/car-features/:carId", async (req, res) => {
 });
 app.put("/api/updateCar/:carId", upload.single("image"), async (req, res) => {
   const { carId } = req.params;
-  const {
-    name,
-    description,
-    price,
-    features,
-    type,
-    seat,
-    gear,
-    fuel,
-    brand,
-  } = req.body;
+  const { name, description, price, features, type, seat, gear, fuel, brand } =
+    req.body;
 
   try {
     await sql.connect(sqlConfig);
@@ -307,7 +298,7 @@ app.put("/api/updateCar/:carId", upload.single("image"), async (req, res) => {
     let imagePath = carResult.recordset[0].CarImage;
     if (req.file) {
       const imageName = req.file.filename;
-      imagePath = `http://localhost:5000/img/${imageName}`; 
+      imagePath = `http://localhost:5000/img/${imageName}`;
 
       console.log(`New image uploaded: ${imageName}`);
     }
@@ -366,7 +357,7 @@ app.post("/api/registerCar", upload.single("image"), async (req, res) => {
   }
 
   const imageName = req.file.filename;
-  const imagePath = `http://localhost:5000/img/${imageName}`; 
+  const imagePath = `http://localhost:5000/img/${imageName}`;
 
   try {
     await sql.connect(sqlConfig);
@@ -420,7 +411,6 @@ app.delete("/api/car/:carId", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
 
-    
     await sql.query(`DELETE FROM Car WHERE CarID = ${carId}`);
 
     res.status(200).send({ message: "Car deleted successfully" });
@@ -430,8 +420,8 @@ app.delete("/api/car/:carId", async (req, res) => {
   }
 });
 
-app.get('/api/feedback/:carId', async (req, res) => { 
-  const { carId } = req.params; 
+app.get("/api/feedback/:carId", async (req, res) => {
+  const { carId } = req.params;
 
   if (!carId) {
     return res.status(400).json({ error: "CarID is required" });
@@ -447,18 +437,199 @@ app.get('/api/feedback/:carId', async (req, res) => {
     `);
 
     if (result.recordset.length === 0) {
-      return res.status(404).json({ error: "No feedback found for this CarID" });
+      return res
+        .status(404)
+        .json({ error: "No feedback found for this CarID" });
     }
 
-    res.json(result.recordset); 
+    res.json(result.recordset);
   } catch (err) {
-    console.error('Error connecting to the database:', err);
-    res.status(500).send('Server error');
+    console.error("Error connecting to the database:", err);
+    res.status(500).send("Server error");
   }
 });
 
+app.get("/api/account/:identifier", async (req, res) => {
+  const identifier = req.params.identifier; // Lấy giá trị của identifier từ URL
 
+  try {
+    await sql.connect(sqlConfig); // Kết nối đến cơ sở dữ liệu
 
+    const query = `
+      SELECT * FROM Account 
+      WHERE UserName = @identifier 
+      OR Email = @identifier
+    `;
+
+    const request = new sql.Request();
+    request.input("identifier", sql.VarChar, identifier); // Gán giá trị cho tham số @identifier
+
+    const result = await request.query(query);
+
+    if (result.recordset.length > 0) {
+      res.json(result.recordset[0]); // Trả về bản ghi đầu tiên nếu có kết quả
+    } else {
+      res.status(404).send("User not found"); // Không tìm thấy người dùng
+    }
+  } catch (err) {
+    console.error("Error fetching user data:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.delete("/api/account/:id", async (req, res) => {
+  const userId = req.params.id; // Lấy ID người dùng từ request parameters
+
+  try {
+    await sql.connect(sqlConfig); // Kết nối đến cơ sở dữ liệu
+
+    const request = new sql.Request();
+    request.input("id", sql.Int, userId); // Gán giá trị cho tham số @id để chống SQL Injection
+
+    const result = await request.query("DELETE FROM Account WHERE id = @id");
+
+    if (result.rowsAffected[0] > 0) {
+      res.status(200).send("User deleted successfully"); // Xóa thành công
+    } else {
+      res.status(404).send("User not found"); // Người dùng không tồn tại
+    }
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    res.status(500).send("Server error");
+  }
+});
+app.get("/api/car", async (req, res) => {
+  try {
+    await sql.connect(sqlConfig); // Connect to the database
+    const result = await sql.query("SELECT * FROM Car"); // Query to get all cars
+    res.json(result.recordset); // Return the result as JSON
+  } catch (err) {
+    console.error("Error fetching car registrations:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+// Approve a Car
+app.put("/api/cars/:id/approve", async (req, res) => {
+  const carId = req.params.id;
+  const adminId = req.body.adminId; // Admin ID passed from frontend
+  try {
+    await sql.connect(sqlConfig);
+
+    // Update CarStatus to 'Approved'
+    await sql.query(
+      `UPDATE Car SET CarStatus = 'Approved' WHERE CarID = ${carId}`
+    );
+
+    // Log the action into CarApprovalLog
+    const logQuery = `
+      INSERT INTO CarApprovalLog (CarID, AdminID, ActionType)
+      VALUES (@carId, @adminId, 'Approved')
+    `;
+    const request = new sql.Request();
+    request.input("carId", sql.Int, carId);
+    request.input("adminId", sql.Int, adminId);
+    await request.query(logQuery);
+
+    res.status(200).send("Car approved successfully and action logged.");
+  } catch (error) {
+    console.error("Error approving car:", error);
+    res.status(500).send("Error approving car");
+  }
+});
+
+// Decline a Car
+app.put("/api/cars/:id/decline", async (req, res) => {
+  const carId = req.params.id;
+  const adminId = req.body.adminId; // Admin ID passed from frontend
+  try {
+    await sql.connect(sqlConfig);
+
+    // Update CarStatus to 'Declined'
+    await sql.query(
+      `UPDATE Car SET CarStatus = 'Declined' WHERE CarID = ${carId}`
+    );
+
+    // Log the action into CarApprovalLog
+    const logQuery = `
+      INSERT INTO CarApprovalLog (CarID, AdminID, ActionType)
+      VALUES (@carId, @adminId, 'Declined')
+    `;
+    const request = new sql.Request();
+    request.input("carId", sql.Int, carId);
+    request.input("adminId", sql.Int, adminId);
+    await request.query(logQuery);
+
+    res.status(200).send("Car declined successfully and action logged.");
+  } catch (error) {
+    console.error("Error declining car:", error);
+    res.status(500).send("Error declining car");
+  }
+});
+
+// Fetch all features
+app.get("/api/features", async (req, res) => {
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query("SELECT * FROM Feature");
+    res.json(result.recordset);
+  } catch (error) {
+    console.error("Error fetching features:", error);
+    res.status(500).json({ message: "Failed to fetch features." });
+  }
+});
+
+// Add a new feature
+app.post("/api/features", async (req, res) => {
+  const { name } = req.body;
+  try {
+    await sql.connect(sqlConfig);
+    const query = `INSERT INTO Feature (Name) OUTPUT INSERTED.* VALUES (@name)`;
+    const request = new sql.Request();
+    request.input("name", sql.VarChar, name);
+    const result = await request.query(query);
+
+    res.status(201).json(result.recordset[0]);
+  } catch (error) {
+    console.error("Error adding feature:", error);
+    res.status(500).json({ message: "Failed to add feature." });
+  }
+});
+
+// Remove a feature by ID
+app.delete("/api/features/:id", async (req, res) => {
+  const featureID = req.params.id;
+  try {
+    await sql.connect(sqlConfig);
+    const query = `DELETE FROM Feature WHERE FeatureID = @featureID`;
+    const request = new sql.Request();
+    request.input("featureID", sql.Int, featureID);
+    const result = await request.query(query);
+
+    if (result.rowsAffected[0] > 0) {
+      res.status(200).json({ message: "Feature removed successfully!" });
+    } else {
+      res.status(404).json({ message: "Feature not found." });
+    }
+  } catch (error) {
+    console.error("Error removing feature:", error);
+    res.status(500).json({ message: "Failed to remove feature." });
+  }
+});
+// Route to fetch finance data for a specific year
+app.get("/api/finance/:year", async (req, res) => {
+  const { year } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(
+      `SELECT Month, Income FROM Finance WHERE Year = ${year}`
+    );
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("Error fetching finance data:", err);
+    res.status(500).json({ error: "Failed to fetch finance data" });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

@@ -105,3 +105,58 @@
 .decline-btn:hover {
   background-color: #c82333;
 }
+
+/* Modal for viewing car details */
+.car-details-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Dark background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.car-details-content {
+  background-color: white;
+  width: 50%;
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  color: #000; /* Black text */
+}
+
+.car-details-content img {
+  width: 100%;
+  max-width: 300px; /* Limit the image size */
+  margin: 0 auto;
+  display: block;
+  border-radius: 10px;
+}
+
+.car-details-right {
+  text-align: left;
+}
+
+.car-details-right h2,
+.car-details-right p {
+  color: #000; /* Set text color to black */
+}
+
+.close-modal-btn {
+  align-self: flex-end;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
