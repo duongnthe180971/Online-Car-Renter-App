@@ -1,11 +1,15 @@
 import React from "react";
 import { Col } from "reactstrap";
+import { useNavigate } from 'react-router-dom';
 import "../../styles/component/CarPlot.css";
 import { formatPrice } from "../../assets/format/numberFormat";
 
 const CarPlot = (props) => {
-  const { CarImage, CarName, Gear, Price, Seats, CarType } = props.item;
-
+  const {CarID, CarImage, CarName, Gear, Price, Seats, CarType } = props.item;
+  const navigate = useNavigate();
+  const handleCheckDetailCar = () => {
+    navigate(`/car-detail`, { state: { id: CarID } });
+  };
   return (
     <>
       <Col md="3" sm="6">
@@ -24,7 +28,7 @@ const CarPlot = (props) => {
                 <h6 className="price">Starting from </h6>
                 <h5>{formatPrice(Price)} vnd</h5>
               </div>
-              <button className="book-btn">Book now</button>
+              <button className="book-btn" onClick={handleCheckDetailCar}>Book now</button>
             </div>
           </div>
         </div>

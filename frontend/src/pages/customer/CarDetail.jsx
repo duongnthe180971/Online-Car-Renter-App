@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import DatePicker from "react-datepicker";
-import { getNumOfDay, formatPrice} from "../../assets/format/numberFormat";
+import { getNumOfDay, formatPrice } from "../../assets/format/numberFormat";
 import "../../styles/customer/CarDetail.css";
 import 'react-datepicker/dist/react-datepicker.css';
 
 const CarDetailCard = ({ car }) => {
     const { CarID, GarageID, CarImage, CarName, Rate, Seats, CarType, Gear, Fuel, CarDescription } = car;
-    const [address, setAddress] = useState("123 Tran Duy Hung, Cau Giay, Ha Noi");
+    const [address, setAddress] = useState("");
     const [features, setFeatures] = useState([]);
 
     useEffect(() => {
@@ -32,7 +32,7 @@ const CarDetailCard = ({ car }) => {
             fetchAddressData();
             fetchFeatureData();
         }
-    }, [CarID, GarageID]); // Include dependencies to avoid unnecessary re-renders
+    }, [CarID, GarageID]);
 
     const featureList = Array.isArray(features) ? features : [];
 
@@ -92,15 +92,15 @@ const RentalCard = ({ car }) => {
     const addNewRental = async () => {
         const newRental = {
             CarID: CarID,
-            CustomerID: 3,  // Adjust dynamically based on logged-in user
+            CustomerID: 3,
             RentalStart: formData.startDate,
             RentalEnd: formData.returnDate,
-            RentalStatus: 1,  // Default to 1 for booked
+            RentalStatus: 1,
         };
 
         try {
             await axios.post('http://localhost:5000/api/rental', newRental);
-            navigate('/car-status');
+            navigate('/car-status', { state: { id: CarID } });
         } catch (error) {
             console.error('Error adding rental:', error);
         }
@@ -140,7 +140,9 @@ const RentalCard = ({ car }) => {
     );
 }
 
-const CarDetail = ({ id }) => {
+const CarDetail = () => {
+    const location = useLocation();
+    const { id } = location.state || {id: 1};
     const [car, setCar] = useState(null);
 
     useEffect(() => {

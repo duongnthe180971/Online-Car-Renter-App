@@ -17,7 +17,6 @@ const CarList = () => {
     minPrice: "",
     maxPrice: "",
   }
-
   const [filters, setFilters] = useState(defaultFilters);
   const handleFilterChange = (newFilters) => {
     setFilters((prevFilters) => ({
@@ -31,15 +30,27 @@ const CarList = () => {
       ...defaultFilters,
     }));
   };
-  const [cars, SetCars] = useState(carDemo)
+  const [cars, setCars] = useState(carDemo)
   useEffect(() => {
     const fetchCarData = async () => {
       const response = await axios.get("http://localhost:5000/api/car");
-      SetCars(response.data)
+      const carsWithAddress = await Promise.all(
+        response.data.map(async (car) => {
+          const resGarage = await axios.get("http://localhost:5000/api/garage");
+          const garage = resGarage.data.find((item) => item.GarageID === car.GarageID);
+          const accID = garage.CarOwnerID;
+          const resAccount = await axios.get("http://localhost:5000/api/account");
+          const account = resAccount.data.find((item) => item.id === accID);
+          car.address = account.Address;
+          return car;
+        })
+      );
+      setCars(carsWithAddress);
     };
 
     fetchCarData();
-  });
+  }, []);
+
   const filteredData = cars.filter((car) => {
     const matchesType = filters.type === "" || car.CarType === filters.type;
     const matchesGear = filters.gear === "" || car.Gear === filters.gear;
