@@ -13,16 +13,95 @@ function Register() {
     phone: "",
     email: "",
   });
+  const [errors, setErrors] = useState({
+    password: "",
+    dob: "",
+    phone: "",
+    email: "",
+  });
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateDOB = (dob) => {
+    const selectedDate = new Date(dob);
+    const today = new Date();
+    return selectedDate < today;
+  };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+    switch (name) {
+      case "password":
+        if (value.length < 6) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: "Password must have at least 6 characters",
+          }));
+        } else {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: "",
+          }));
+        }
+        break;
+      case "dob":
+        if (!validateDOB(value)) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            dob: "Invalid date of birth",
+          }));
+        } else {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            dob: "",
+          }));
+        }
+        break;
+      case "phone":
+        if (!/^\d{10}$/.test(value)) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            phone: "Phone number must be 10 digits",
+          }));
+        } else {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            phone: "",
+          }));
+        }
+        break;
+      case "email":
+        if (!validateEmail(value)) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            email: "Invalid email",
+          }));
+        } else {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            email: "",
+          }));
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (errors.password || errors.dob || errors.phone || errors.email) {
+      alert("Please check the input fields");
+      return;
+    }
     try {
       // Send a POST request to the backend API to insert data into the Account table
       const response = await axios.post(
@@ -63,7 +142,9 @@ function Register() {
             onChange={handleChange}
             required
           />
-
+          {errors.password && (
+            <p className="message-error">{errors.password}</p>
+          )}
           <label>Gender:</label>
           <div className="radio-container">
             <input
@@ -97,7 +178,7 @@ function Register() {
             onChange={handleChange}
             required
           />
-
+          {errors.dob && <p className="message-error">{errors.dob}</p>}
           <label htmlFor="phone">Phone:</label>
           <input
             type="tel"
@@ -107,6 +188,7 @@ function Register() {
             onChange={handleChange}
             required
           />
+          {errors.phone && <p className="message-error">{errors.phone}</p>}
 
           <label htmlFor="email">Email:</label>
           <input
@@ -117,6 +199,7 @@ function Register() {
             onChange={handleChange}
             required
           />
+          {errors.email && <p className="message-error">{errors.email}</p>}
           <label htmlFor="address">Address:</label>
           <input
             type="address"
