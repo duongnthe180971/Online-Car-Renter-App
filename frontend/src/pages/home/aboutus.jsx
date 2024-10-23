@@ -119,7 +119,7 @@ function App() {
               value={formData.name}
               onChange={handleChange}
             />
-            {errors.name && <p className="message-error">{errors.name}</p>}
+            {errors.name && <p className="error-message">{errors.name}</p>}
 
             <label htmlFor="email">EMAIL ADDRESS</label>
             <input
@@ -130,7 +130,7 @@ function App() {
               value={formData.email}
               onChange={handleChange}
             />
-            {errors.email && <p className="message-error">{errors.email}</p>}
+            {errors.email && <p className="error-message">{errors.email}</p>}
 
             <label htmlFor="message">MESSAGE</label>
             <textarea
@@ -142,7 +142,7 @@ function App() {
               onChange={handleChange}
             ></textarea>
             {errors.message && (
-              <p className="message-error">{errors.message}</p>
+              <p className="error-message">{errors.message}</p>
             )}
 
             <button type="submit">SEND</button>

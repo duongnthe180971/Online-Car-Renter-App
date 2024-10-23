@@ -143,7 +143,7 @@ function Register() {
             required
           />
           {errors.password && (
-            <p className="message-error">{errors.password}</p>
+            <p className="error-message">{errors.password}</p>
           )}
           <label>Gender:</label>
           <div className="radio-container">
@@ -178,7 +178,7 @@ function Register() {
             onChange={handleChange}
             required
           />
-          {errors.dob && <p className="message-error">{errors.dob}</p>}
+          {errors.dob && <p className="error-message">{errors.dob}</p>}
           <label htmlFor="phone">Phone:</label>
           <input
             type="tel"
@@ -188,7 +188,7 @@ function Register() {
             onChange={handleChange}
             required
           />
-          {errors.phone && <p className="message-error">{errors.phone}</p>}
+          {errors.phone && <p className="error-message">{errors.phone}</p>}
 
           <label htmlFor="email">Email:</label>
           <input
@@ -199,7 +199,7 @@ function Register() {
             onChange={handleChange}
             required
           />
-          {errors.email && <p className="message-error">{errors.email}</p>}
+          {errors.email && <p className="error-message">{errors.email}</p>}
           <label htmlFor="address">Address:</label>
           <input
             type="address"

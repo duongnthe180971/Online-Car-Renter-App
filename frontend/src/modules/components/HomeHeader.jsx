@@ -1,84 +1,136 @@
-import React,{useState} from 'react';
-import {NavLink, Link} from 'react-router-dom';
-import {FiChevronDown } from "react-icons/fi";
-import logo from '../../assets/icon/logo.png';
-import "../../styles/component/HomeHeaderStyle.css"
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import logo from "../../assets/icon/logo.png";
+import "../../styles/home/homeheader.css";
+import "../../styles/home/notification.css";
 
+const Notification = ({ id }) => {
+  const [showNotification, setShowNotification] = useState(false);
+  const [notifications, setData] = useState([]);
 
-const HomeHeader = () => {
-
-    const [isMenu, setisMenu] = useState(false);
-    const [isResponsiveclose, setResponsiveclose] = useState(false);
-    const toggleClass = () => {
-      setisMenu(isMenu === false ? true : false);
-      setResponsiveclose(isResponsiveclose === false ? true : false);
+  const handleShowNotification = () => {
+    setShowNotification(true);
   };
 
-    let boxClass = ["main-menu menu-right menuq1"];
-    if(isMenu) {
-        boxClass.push('menuq2');
-    }else{
-        boxClass.push('');
-    }
+  const handleCloseNotification = () => {
+    setShowNotification(false);
+  };
 
-    const [isMenuSubMenu, setMenuSubMenu] = useState(false);
-      
-    const toggleSubmenu = () => {
-      setMenuSubMenu(isMenuSubMenu === false ? true : false);
+  useEffect(() => {
+    const fetchNotis = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/notification"
+        );
+        const filteredNotis = response.data.filter(
+          (notification) => notification.AccID === id
+        );
+        setData(filteredNotis);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
     };
-    
-    let boxClassSubMenu = ["sub__menus"];
-    if(isMenuSubMenu) {
-        boxClassSubMenu.push('sub__menus__Active');
-    }else {
-        boxClassSubMenu.push('');
+
+    fetchNotis();
+  }, [id]); // Fetch notifications whenever id changes
+  return (
+    <div className="notification-container">
+      {/* Notification Popup */}
+      {showNotification && (
+        <div className="notification-popup">
+          <div className="notification-content">
+            <ul>
+              {notifications.map((item) => (
+                <li key={item.NotificationID}>
+                  {/* Fetch and display Description from NotificationDescription table */}
+                  {(() => {
+                    const getNotificationDescription = async () => {
+                      try {
+                        const response = await axios.get(
+                          `http://localhost:5000/api/notification-description/${item.NotificationID}`
+                        );
+                        return response.data.Description;
+                      } catch (error) {
+                        console.error(
+                          "Error fetching notification description:",
+                          error
+                        );
+                        return "Error loading notification description";
+                      }
+                    };
+
+                    return getNotificationDescription();
+                  })()}
+                </li>
+              ))}
+            </ul>
+            <button
+              className="notification-close"
+              onClick={handleCloseNotification}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      <button className="notification-show" onClick={handleShowNotification}>
+        Notification
+      </button>
+    </div>
+  );
+};
+
+const HomeHeader = ({ id }) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/account/${id}`
+        );
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    if (id) {
+      fetchUserData();
     }
+  }, [id]);
 
-   
+  return (
+    <div className="header-home">
+      <div className="logo">
+        <div className="header-logo">
+          <a href="../">
+            <img src={logo} alt="logo" />
+          </a>
+        </div>
+      </div>
+      <div className="navbar">
+        <a href="./">Home</a>
+        <a href="./aboutus">About Us</a>
+        <a href="./car-status">Your Renting Car</a>
+      </div>
 
-    return (
-        //Html code
-    <header className="header__middle">
-        <div className="container">
-            <div className="row">
+      <div className="user">
+        <Notification id={id}></Notification>
+        <i className="fas fa-user-circle"></i>
 
-                {/* Add Logo  */}
-                <div className="header__middle__logo">
-                    <NavLink exact activeClassName='is-active' to="/">
-                        <img src={logo} alt="logo" /> 
-                    </NavLink>
-                </div>
-
-                <div className="header__middle__menus">
-                    <nav className="main-nav " >
-                    <ul className={boxClass.join(' ')}>
-                    <li  className="menu-item" >
-                        <NavLink exact activeClassName='is-active' onClick={toggleClass} to={`/`}> Home </NavLink> 
-                    </li>
-                    <li className="menu-item " ><NavLink onClick={toggleClass} activeClassName='is-active' to={`/About`}> About us </NavLink> </li>
-                    <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Infomation <FiChevronDown /> </Link>
-                        <ul className={boxClassSubMenu.join(' ')} > 
-                            <li> <NavLink onClick={toggleClass} activeClassName='is-active'  to={`/Ads`}> Advertisement </NavLink> </li>
-                            <li><NavLink onClick={toggleClass} activeClassName='is-active' to={`/Trending`}> Trending car </NavLink> </li>
-                        </ul>
-                    </li>
-                    <li className="menu-item " ><NavLink onClick={toggleClass} activeClassName='is-active' to={`/Profile`}> User name </NavLink> </li>
-
-                    </ul>
-
-
-                    </nav>     
-                </div>   
-
-
-
-        
-        
-            </div>
-	    </div>
-    </header>
-    //end
-    )
-}
-
-export default HomeHeader
+        {user ? (
+          <div className="user-info">
+            <span>{user.UserName}</span>
+            {/* Hiển thị thêm thông tin nếu cần */}
+            {/* Ví dụ: <span>{user.Email}</span> */}
+          </div>
+        ) : (
+          <a href="../login"> Login</a>
+        )}
+      </div>
+    </div>
+  );
+};
+export default HomeHeader;
