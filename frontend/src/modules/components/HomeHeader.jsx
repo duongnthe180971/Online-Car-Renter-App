@@ -32,36 +32,16 @@ const Notification = ({ id }) => {
     };
 
     fetchNotis();
-  }, [id]); // Fetch notifications whenever id changes
+  }, [id]);
+
   return (
     <div className="notification-container">
-      {/* Notification Popup */}
       {showNotification && (
         <div className="notification-popup">
           <div className="notification-content">
             <ul>
               {notifications.map((item) => (
-                <li key={item.NotificationID}>
-                  {/* Fetch and display Description from NotificationDescription table */}
-                  {(() => {
-                    const getNotificationDescription = async () => {
-                      try {
-                        const response = await axios.get(
-                          `http://localhost:5000/api/notification-description/${item.NotificationID}`
-                        );
-                        return response.data.Description;
-                      } catch (error) {
-                        console.error(
-                          "Error fetching notification description:",
-                          error
-                        );
-                        return "Error loading notification description";
-                      }
-                    };
-
-                    return getNotificationDescription();
-                  })()}
-                </li>
+                <li key={item.NotificationID}>{item.Description}</li>
               ))}
             </ul>
             <button
@@ -73,7 +53,6 @@ const Notification = ({ id }) => {
           </div>
         </div>
       )}
-
       <button className="notification-show" onClick={handleShowNotification}>
         Notification
       </button>
@@ -82,6 +61,7 @@ const Notification = ({ id }) => {
 };
 
 const HomeHeader = ({ id }) => {
+  const [itlogedin, setitlogedin] = useState(false);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -90,7 +70,15 @@ const HomeHeader = ({ id }) => {
         const response = await axios.get(
           `http://localhost:5000/api/account/${id}`
         );
-        setUser(response.data);
+        console.log("Fetched User Data:", response.data); // Log the API response
+
+        // Check if UserName exists and set state
+        if (response.data && response.data.UserName) {
+          setUser(response.data); // Set the user state
+          setitlogedin(true); // Set the login state to true
+        } else {
+          console.log("No UserName found in the response data.");
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -100,6 +88,10 @@ const HomeHeader = ({ id }) => {
       fetchUserData();
     }
   }, [id]);
+
+  // Log the state changes for debugging
+  console.log("itlogedin:", itlogedin); // To track login status
+  console.log("user:", user); // To track user data
 
   return (
     <div className="header-home">
@@ -112,7 +104,7 @@ const HomeHeader = ({ id }) => {
       </div>
       <div className="navbar">
         <a href="./">Home</a>
-        <a href="./aboutus">About Us</a>
+        <a href="./about-us">About Us</a>
         <a href="./car-status">Your Renting Car</a>
       </div>
 
@@ -120,17 +112,16 @@ const HomeHeader = ({ id }) => {
         <Notification id={id}></Notification>
         <i className="fas fa-user-circle"></i>
 
-        {user ? (
+        {itlogedin && user && user.UserName ? (
           <div className="user-info">
             <span>{user.UserName}</span>
-            {/* Hiển thị thêm thông tin nếu cần */}
-            {/* Ví dụ: <span>{user.Email}</span> */}
           </div>
         ) : (
-          <a href="../login"> Login</a>
+          <a href="../login">Login</a>
         )}
       </div>
     </div>
   );
 };
+
 export default HomeHeader;
