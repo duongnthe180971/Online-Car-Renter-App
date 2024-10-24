@@ -448,7 +448,22 @@ app.get("/api/feedback/:carId", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+app.get("/api/account/:AccID", async (req, res) => {
+  const { AccID } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(`select*from Account where id = ${AccID}`);
 
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error("Error fetching account data:", err);
+    res.status(500).send("Server error");
+  }
+});
 app.get("/api/account/:identifier", async (req, res) => {
   const identifier = req.params.identifier; // Lấy giá trị của identifier từ URL
 
