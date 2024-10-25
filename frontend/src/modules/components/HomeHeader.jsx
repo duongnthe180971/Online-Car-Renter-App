@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/icon/logo.png";
 import "../../styles/home/homeheader.css";
 import "../../styles/home/notification.css";
@@ -61,64 +62,109 @@ const Notification = ({ id }) => {
 };
 
 const HomeHeader = ({ id }) => {
+  const navigate = useNavigate();
   const [itlogedin, setitlogedin] = useState(false);
   const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/api/account/${id}`
-        );
-        console.log("Fetched User Data:", response.data); // Log the API response
-
-        // Check if UserName exists and set state
-        if (response.data && response.data.UserName) {
-          setUser(response.data); // Set the user state
-          setitlogedin(true); // Set the login state to true
-        } else {
-          console.log("No UserName found in the response data.");
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    if (id) {
-      fetchUserData();
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser && storedUser.id) {
+      fetchUserData(storedUser.id);
     }
-  }, [id]);
+    // else {
+    //   navigate("/login");
+    // }
+  });
+  const fetchUserData = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/account/${id}`
+      );
+      console.log("Fetched User Data:", response.data); // Log the API response
 
+      // Check if UserName exists and set state
+      if (response.data && response.data.UserName) {
+        setUser(response.data);
+        setitlogedin(true);
+      } else {
+        console.log("No UserName found in the response data.");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
   // Log the state changes for debugging
-  console.log("itlogedin:", itlogedin); // To track login status
-  console.log("user:", user); // To track user data
-
+  // console.log("itlogedin:", itlogedin); // To track login status
+  // console.log("user:", user); // To track user data
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    console.log("Logout clicked");
+    setitlogedin(false);
+    setUser(null);
+    navigate("/login", { state: { id } });
+  };
   return (
     <div className="header-home">
       <div className="logo">
         <div className="header-logo">
-          <a href="../">
+          <div
+            className="header-logo"
+            onClick={() => navigate("/", { state: { id: user?.id } })}
+          >
             <img src={logo} alt="logo" />
-          </a>
+          </div>
         </div>
       </div>
-      <div className="navbar">
-        <a href="./">Home</a>
-        <a href="./about-us">About Us</a>
-        <a href="./car-status">Your Renting Car</a>
+      <div className="header-navbar">
+        <button
+          className="navbar"
+          onClick={() => navigate("/home", { state: { id: user?.id } })}
+        >
+          Home
+        </button>
+        <button
+          className="navbar"
+          onClick={() => navigate("/about-us", { state: { id: user?.id } })}
+        >
+          About Us
+        </button>
+        <button
+          className="navbar"
+          onClick={() => navigate("/car-status", { state: { id: user?.id } })}
+        >
+          Your Renting Car
+        </button>
       </div>
 
       <div className="user">
-        <Notification id={id}></Notification>
-        <i className="fas fa-user-circle"></i>
+        <Notification id={user?.id}></Notification>
+        <div className="header-user-dropdown">
+          <button
+            className="header-user-show"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            <i className="fas fa-user-circle"></i>
+            {itlogedin && user && user.UserName ? (
+              <div className="user-info">
+                <span>{user.UserName}</span>
+              </div>
+            ) : (
+              <a href="../login">Login</a>
+            )}
+          </button>
 
-        {itlogedin && user && user.UserName ? (
-          <div className="user-info">
-            <span>{user.UserName}</span>
-          </div>
-        ) : (
-          <a href="../login">Login</a>
-        )}
+          {showDropdown && (
+            <div className="header-dropdown-menu">
+              <ul>
+                <li>
+                  <a href="/profile">Profile</a>
+                </li>
+                <li onClick={handleLogout}>Logout</li>
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

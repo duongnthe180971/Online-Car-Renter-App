@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/login/register.css";
 
-function Register() {
+const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -244,6 +244,6 @@ function Register() {
       </div>
     </div>
   );
-}
+};
 
 export default Register;

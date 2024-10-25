@@ -42,7 +42,15 @@ const Login = () => {
       const acc = resAccount.data.find((item) => item.UserName === username);
 
       if (acc && acc.PassWord === password) {
-        navigate(`/home`, { state: { id: acc.id } });
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ id: acc.id, role: acc.Role })
+        );
+        if (acc.Role === 0) {
+          navigate(`/homeadmin`, { state: { id: acc.id } });
+        } else {
+          navigate(`/home`, { state: { id: acc.id } });
+        }
       } else {
         alert("Invalid username or password");
       }

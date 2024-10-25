@@ -1,7 +1,7 @@
 //home
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../../styles/home/home.css";
 import CarPlot from "../../modules/components/CarPlot";
 import HomeHeader from "../../modules/components/HomeHeader";
@@ -11,7 +11,8 @@ import "../../styles/home/notification.css";
 
 const Home = ({ id_ }) => {
   const location = useLocation();
-  const { id } = location.state || { id: 1 };
+  const navigate = useNavigate();
+  const { id, role } = location.state || { id: null, role: null };
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [
@@ -42,6 +43,9 @@ const Home = ({ id_ }) => {
 
     fetchCarData();
   });
+  const handleNavigateAboutUs = () => {
+    navigate("/about-us", { state: { id, role } });
+  };
   return (
     <div className="home-container">
       <HomeHeader id={id}></HomeHeader>
@@ -97,8 +101,8 @@ const Home = ({ id_ }) => {
       </div>
       <div className="home-about">
         <h2>About Our Company</h2>
-        <button className="home-about-button">
-          <a href="./about-us">About Us</a>
+        <button className="home-about-button" onClick={handleNavigateAboutUs}>
+          About Us
         </button>
       </div>
     </div>

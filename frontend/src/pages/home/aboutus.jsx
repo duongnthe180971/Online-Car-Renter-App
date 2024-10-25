@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import aboutus from "../../assets/icon/aboutus.gif";
+import { useLocation } from "react-router-dom";
 import "../../styles/home/aboutus.css";
-import "../../styles/General.css";
 import HomeHeader from "../../modules/components/HomeHeader";
 
-function App() {
+const AboutUs = () => {
+  const location = useLocation();
+  const { id } = location.state || { id: 1 };
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -91,7 +93,7 @@ function App() {
   };
   return (
     <div className="aboutus-body">
-      <HomeHeader></HomeHeader>
+      <HomeHeader id={id}></HomeHeader>
       <div className="aboutus-container">
         <div className="image-section">
           <img alt="Ảnh GIF động" src={aboutus} />
@@ -165,6 +167,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
-export default App;
+export default AboutUs;
