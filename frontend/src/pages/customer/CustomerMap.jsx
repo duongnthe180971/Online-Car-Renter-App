@@ -46,7 +46,7 @@ const toIcon = L.divIcon({
     className: '',
 });
 
-const LocationForm = ({ fromLocation, toLocation, setFromLocation, setToLocation, handleShowWay }) => {
+const LocationForm = ({ fromLocation, toLocation, setFromLocation, setToLocation, handleShowWay, error }) => {
     return (
         <div className="form">
             <div className="form-group">
@@ -68,6 +68,7 @@ const LocationForm = ({ fromLocation, toLocation, setFromLocation, setToLocation
                 />
             </div>
             <button className="show-way-button" onClick={handleShowWay}>Show Way</button>
+            {error && <p className="error-message" style={{margin: 2 + 'em'}}>{error}</p>}
         </div>
     );
 };
@@ -165,6 +166,8 @@ const CustomerMap = () => {
         lng: 0,
     });
 
+    const [error, setError] = useState("");
+
     useEffect(() => {
         const geocodeDefaultLocations = async () => {
             const geocodedFrom = await geocodeLocation('Dai Hoc FPT Ha Noi');
@@ -189,6 +192,9 @@ const CustomerMap = () => {
         if (geocodedFrom && geocodedTo) {
             setFromLocation(geocodedFrom);
             setToLocation(geocodedTo);
+            setError("");
+        } else {
+            setError("One or both locations were not found. Please check the inputs.");
         }
     };
 
@@ -200,6 +206,7 @@ const CustomerMap = () => {
                 setFromLocation={setFromLocation}
                 setToLocation={setToLocation}
                 handleShowWay={handleShowWay}
+                error={error}
             />
             <MapComponent fromLocation={fromLocation} toLocation={toLocation} />
         </div>

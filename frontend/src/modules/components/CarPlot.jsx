@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import "../../styles/component/CarPlot.css";
 import { formatPrice } from "../../assets/format/numberFormat";
 
-const CarPlot = (props) => {
+const CarPlot = (props, accID) => {
   const {CarID, CarImage, CarName, Gear, Price, Seats, CarType } = props.item;
   const navigate = useNavigate();
   const handleCheckDetailCar = () => {
-    navigate(`/car-detail`, { state: { id: CarID } });
+    navigate(`/car-detail`, { state: { carID: CarID } });
   };
   return (
     <>

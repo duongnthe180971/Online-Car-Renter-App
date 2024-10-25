@@ -31,3 +31,44 @@
   font-size: 24px;
   margin-right: 10px;
 }
+.header-user-show {
+  width: auto;
+  background-color: #00000000;
+  color: aliceblue;
+  display: flex;
+  gap: 0.2vw;
+}
+.header-user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.header-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 2rem;
+  background-color: rgba(255, 255, 255, 0.11);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 100;
+}
+
+.header-dropdown-menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-dropdown-menu li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.header-dropdown-menu li:hover {
+  background-color: #c7e61c36;
+}
+.navbar {
+  background-color: #00000000;
+  color: #ffffffd3;
+  font-weight: bold;
+}

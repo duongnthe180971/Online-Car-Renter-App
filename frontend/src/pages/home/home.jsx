@@ -1,14 +1,18 @@
-//home
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../../styles/home/home.css";
 import CarPlot from "../../modules/components/CarPlot";
-import HomeHeader from "./homeheader";
+import HomeHeader from "../../modules/components/HomeHeader";
 import carDemo from "../../assets/data/carDemo";
 import "../../styles/home/notification.css";
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Home = ({ id }) => {
+const Home = ({ id_ }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { id, role } = location.state || { id: null, role: null };
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [
     "https://wallpapersmug.com/download/2048x1152/6906f8/bmw-car-headlight.jpg",
@@ -16,6 +20,7 @@ const Home = ({ id }) => {
     "https://png.pngtree.com/thumb_back/fh260/background/20210205/pngtree-car-banner-background-image_547203.jpg",
     "https://img.pikbest.com/background/20220119/car-banner-background_6224454.jpg!sw800",
   ];
+
   const showImage = (index) => {
     setCurrentIndex(index);
   };
@@ -27,48 +32,29 @@ const Home = ({ id }) => {
   useEffect(() => {
     const interval = setInterval(showNextImage, 3000);
     return () => clearInterval(interval);
-  });
-  const [cars, SetCars] = useState(carDemo);
+  }, [currentIndex]); // Add currentIndex as dependency to avoid re-render issues
+
+  const [cars, SetCars] = useState(carDemo); // Initial state with demo data or an empty array
+  
+  // Add try-catch in useEffect
   useEffect(() => {
     const fetchCarData = async () => {
-      const response = await axios.get("http://localhost:5000/api/car");
-      const filteredCars = response.data.filter((car) => car.CarID < 5);
-      SetCars(filteredCars);
+      try {
+        const response = await axios.get("http://localhost:5000/api/car");
+        const filteredCars = response.data.filter((car) => car.CarID < 5);
+        SetCars(filteredCars);
+      } catch (error) {
+        console.error("Error fetching car data:", error); // Log the error
+      }
     };
 
     fetchCarData();
-  });
-  // const CarDetail = ({ id }) => ({
-  // const cars = [
-  //   {
-  //     imageUrl:
-  //       "https://vcdn1-vnexpress.vnecdn.net/2020/12/24/Toyota-Land-Cruiser-VnExpress-19-1608795637.jpg?w=460&h=0&q=100&dpr=2&fit=crop&s=-syfotVQ_sAy4i0cFIIkDQ",
-  //     name: "Toyota Land Cruiser V8",
-  //     details: "4 Seats • SUV • Auto",
-  //     price: "1.000.000 vnd",
-  //   },
-  //   {
-  //     imageUrl: "https://katavina.com/uploaded/tin/BMW-i8/BMW-i8.jpg",
-  //     name: "BMW I8",
-  //     details: "2 Seats • SUV • Auto",
-  //     price: "4.000.000 vnd",
-  //   },
-  //   {
-  //     imageUrl:
-  //       "https://xehay.vn/uploads/images/2022/9/01/xehay-ford%20mustang-01092022-1.jpg",
-  //     name: "Ford Mustang",
-  //     details: "4 Seats • SUV • Auto",
-  //     price: "3.000.000 vnd",
-  //   },
-  //   {
-  //     imageUrl:
-  //       "https://fordlongbien.com/wp-content/uploads/2017/08/Ford-Everest-2023-fordlongbien_com-19.jpg",
-  //     name: "Ford Everest",
-  //     details: "7 Seats • SUV • Auto",
-  //     price: "2.000.000 vnd",
-  //   },
-  // ];
-  //
+  }, []); // Empty array to ensure it runs once
+
+  const handleNavigateAboutUs = () => {
+    navigate("/about-us", { state: { id, role } });
+  };
+
   return (
     <div className="home-container">
       <HomeHeader id={id}></HomeHeader>
@@ -97,7 +83,7 @@ const Home = ({ id }) => {
         <h2>Popular Cars</h2>
         <div className="home-car-list">
           {cars.map((item) => (
-            <CarPlot item={item} />
+            <CarPlot key={item.CarID} item={item} />
           ))}
         </div>
       </div>
@@ -122,10 +108,11 @@ const Home = ({ id }) => {
           </button>
         </div>
       </div>
+
       <div className="home-about">
         <h2>About Our Company</h2>
-        <button className="home-about-button">
-          <a href="./aboutus">About Us</a>
+        <button className="home-about-button" onClick={handleNavigateAboutUs}>
+          About Us
         </button>
       </div>
     </div>
