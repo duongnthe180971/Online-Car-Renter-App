@@ -52,7 +52,6 @@ const App = () => {
           path="/profile-partner"
           element={<ProfileCard/>}
         />
-        <Route path="/rental-detail" element={<RentalDetail />} />
         <Route path="/car-list" element={<CarList />} />
         <Route path="/car-status" element={<CarStatus />} />
         <Route
