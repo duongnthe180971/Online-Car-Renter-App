@@ -6,7 +6,6 @@ import AboutUs from "./pages/home/Aboutus";
 import Garage from "./pages/car_owner/Garage";
 import RentalRequest from "./pages/car_owner/RentalRequest";
 import RentalHistory from "./pages/car_owner/RentalHistory";
-import RentalDetail from "./pages/customer/RentalDeltail";
 import CarList from "./pages/customer/CarList";
 import CarStatus from "./pages/customer/CarStatus";
 import CarDetail from "./pages/customer/CarDetail";
@@ -35,7 +34,6 @@ const App = () => {
         <Route path="/garage" element={<Garage />} />
         <Route path="/rental-request" element={<RentalRequest />} />
         <Route path="/rental-history" element={<RentalHistory />} />
-        <Route path="/rental-detail" element={<RentalDetail />} />
         <Route path="/car-list" element={<CarList />} />
         <Route path="/car-status" element={<CarStatus />} />
         <Route

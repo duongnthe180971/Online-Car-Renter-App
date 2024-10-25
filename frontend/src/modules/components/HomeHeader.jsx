@@ -81,7 +81,6 @@ const HomeHeader = ({ id }) => {
       const response = await axios.get(
         `http://localhost:5000/api/account/${id}`
       );
-      console.log("Fetched User Data:", response.data); // Log the API response
 
       // Check if UserName exists and set state
       if (response.data && response.data.UserName) {

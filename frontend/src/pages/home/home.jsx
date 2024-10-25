@@ -1,4 +1,3 @@
-//home
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -21,6 +20,7 @@ const Home = ({ id_ }) => {
     "https://png.pngtree.com/thumb_back/fh260/background/20210205/pngtree-car-banner-background-image_547203.jpg",
     "https://img.pikbest.com/background/20220119/car-banner-background_6224454.jpg!sw800",
   ];
+
   const showImage = (index) => {
     setCurrentIndex(index);
   };
@@ -32,20 +32,29 @@ const Home = ({ id_ }) => {
   useEffect(() => {
     const interval = setInterval(showNextImage, 3000);
     return () => clearInterval(interval);
-  });
-  const [cars, SetCars] = useState(carDemo);
+  }, [currentIndex]); // Add currentIndex as dependency to avoid re-render issues
+
+  const [cars, SetCars] = useState(carDemo); // Initial state with demo data or an empty array
+  
+  // Add try-catch in useEffect
   useEffect(() => {
     const fetchCarData = async () => {
-      const response = await axios.get("http://localhost:5000/api/car");
-      const filteredCars = response.data.filter((car) => car.CarID < 5);
-      SetCars(filteredCars);
+      try {
+        const response = await axios.get("http://localhost:5000/api/car");
+        const filteredCars = response.data.filter((car) => car.CarID < 5);
+        SetCars(filteredCars);
+      } catch (error) {
+        console.error("Error fetching car data:", error); // Log the error
+      }
     };
 
     fetchCarData();
-  });
+  }, []); // Empty array to ensure it runs once
+
   const handleNavigateAboutUs = () => {
     navigate("/about-us", { state: { id, role } });
   };
+
   return (
     <div className="home-container">
       <HomeHeader id={id}></HomeHeader>
@@ -99,6 +108,7 @@ const Home = ({ id_ }) => {
           </button>
         </div>
       </div>
+
       <div className="home-about">
         <h2>About Our Company</h2>
         <button className="home-about-button" onClick={handleNavigateAboutUs}>

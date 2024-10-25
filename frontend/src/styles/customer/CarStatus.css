@@ -132,13 +132,13 @@
 .progress-item:first-child .progress-step::after {
   width: 0;
 }
-/* Cancel Order Button */
+/* Button */
 .cancel-section {
   text-align: right;
 }
 
 .cancel-btn {
-  background-color: #f44336;
+  background-color: #fc2314;
   color: #fff;
   border: none;
   padding: 20px 30px;
@@ -149,7 +149,36 @@
 }
 
 .cancel-btn:hover {
-  background-color: #d32f2f;
+  background-color: #870000;
+}
+
+.return-btn {
+  background-color: #1488fc;
+  color: #fff;
+  border: none;
+  padding: 20px 40px;
+  margin-right: 50px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.return-btn:hover {
+  background-color: #01458a;
+}
+.in-rent-btn {
+  background-color: #fc8c14;
+  color: #fff;
+  border: none;
+  padding: 20px 50px;
+  margin-right: 50px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.in-rent:hover {
+  background-color: #8a6a01;
 }
 .car-order-container h1,
 h2,
