@@ -10,6 +10,7 @@ app.use(express.json());
 app.use(cors());
 app.use(express.json());
 app.use("/img", express.static(path.join(__dirname, "img")));
+app.use("/license", express.static(path.join(__dirname, "license")));
 
 const sqlConfig = {
   user: "sa",
@@ -344,7 +345,9 @@ app.get("/api/notification-description", async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "img"));
+    // Set different destination for images and license files
+    const filePath = file.fieldname === 'license' ? 'license' : 'img';
+    cb(null, path.join(__dirname, filePath));
   },
   filename: (req, file, cb) => {
     const timestamp = Date.now();
@@ -448,7 +451,7 @@ app.put("/api/updateCar/:carId", upload.single("image"), async (req, res) => {
   }
 });
 
-app.post("/api/registerCar", upload.single("image"), async (req, res) => {
+app.post("/api/registerCar", upload.fields([{ name: "image" }, { name: "license" }]), async (req, res) => {
   const {
     name,
     description,
@@ -462,21 +465,24 @@ app.post("/api/registerCar", upload.single("image"), async (req, res) => {
     garageID,
   } = req.body;
 
-  if (!req.file) {
-    console.error("No image uploaded");
-    return res.status(400).json({ message: "No image uploaded" });
+  if (!req.files.image || !req.files.license) {
+    console.error("Image or license file missing");
+    return res.status(400).json({ message: "Image and license are required" });
   }
 
-  const imageName = req.file.filename;
+  const imageName = req.files.image[0].filename;
+  const licenseName = req.files.license[0].filename;
+
   const imagePath = `http://localhost:5000/img/${imageName}`;
+  const licensePath = `http://localhost:5000/license/${licenseName}`;
 
   try {
     await sql.connect(sqlConfig);
     console.log("Connected to DB");
 
     const carInsertQuery = `
-      INSERT INTO Car (GarageID, CarName, Brand, Price, CarType, Seats, Gear, Fuel, CarStatus, CarImage, CarDescription)
-      VALUES (${garageID}, '${name}', '${brand}', ${price}, '${type}', ${seat}, '${gear}', '${fuel}', 'Idle', '${imagePath}','${description}');
+      INSERT INTO RegisterCar (GarageID, CarName, Brand, Price, CarType, Seats, Gear, Fuel, CarStatus, CarImage, CarDescription, License)
+      VALUES (${garageID}, '${name}', '${brand}', ${price}, '${type}', ${seat}, '${gear}', '${fuel}', 'Idle', '${imagePath}', '${description}', '${licensePath}');
       SELECT SCOPE_IDENTITY() AS CarID;
     `;
 
@@ -486,7 +492,7 @@ app.post("/api/registerCar", upload.single("image"), async (req, res) => {
     const selectedFeatures = JSON.parse(features);
     for (const featureID of selectedFeatures) {
       const featureInsertQuery = `
-        INSERT INTO CarFeature (CarID, FeatureID) 
+        INSERT INTO RegisterCarFeature (CarID, FeatureID) 
         VALUES (${newCarId}, ${featureID});
       `;
       await sql.query(featureInsertQuery);
@@ -760,6 +766,64 @@ app.get("/api/finance/:year", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch finance data" });
   }
 });
+
+app.post("/api/feedback", async (req, res) => {
+  const { CarID, CustomerID, FeedbackDescription, Rate } = req.body;
+
+  try {
+    await sql.connect(sqlConfig);
+    const query = `
+      INSERT INTO Feedback (CarID, CustomerID, FeedbackDescription, FeedbackDate, Rate)
+      VALUES (@CarID, @CustomerID, @FeedbackDescription, GETDATE(), @Rate)
+    `;
+
+    const request = new sql.Request();
+    request.input("CarID", sql.Int, CarID);
+    request.input("CustomerID", sql.Int, CustomerID);
+    request.input("FeedbackDescription", sql.VarChar(255), FeedbackDescription);
+    request.input("Rate", sql.Int, Rate);
+
+    await request.query(query);
+
+    res.status(201).send("Feedback submitted successfully");
+  } catch (error) {
+    console.error("Error submitting feedback:", error);
+    res.status(500).send("Server error");
+  }
+});
+
+app.put("/api/car/update-rating/:carId", async (req, res) => {
+  const { carId } = req.params;
+
+  try {
+    await sql.connect(sqlConfig);
+
+    const result = await sql.query(`
+      SELECT AVG(Rate) AS AvgRate
+      FROM Feedback
+      WHERE CarID = ${carId}
+    `);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: "No feedback found for this car" });
+    }
+
+    const avgRate = Math.round(result.recordset[0].AvgRate);
+
+    await sql.query(`
+      UPDATE Car
+      SET Rate = ${avgRate}
+      WHERE CarID = ${carId}
+    `);
+
+    res.status(200).send("Car rating updated successfully");
+  } catch (error) {
+    console.error("Error updating car rating:", error);
+    res.status(500).send("Server error");
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

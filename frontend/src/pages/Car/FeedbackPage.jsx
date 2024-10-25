@@ -8,7 +8,8 @@ import "../../styles/car/FeedbackPage.css";
 const FeedbackPage = () => {
   const [feedbackData, setFeedbackData] = useState([]);
   const location = useLocation();
-  const {carId} = location.state
+  const { carId } = location.state;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFeedback = async () => {
@@ -26,9 +27,14 @@ const FeedbackPage = () => {
     }
   }, [carId]);
 
+  const handleBackClick = () => {
+    navigate(-1); 
+  };
+
   return (
     <div className='feedback-container'>
       <div className="feedback-page">
+        <button className="backButton" onClick={handleBackClick}>&lt; Back</button> 
         <h2 className="title">Customer Feedback</h2>
         <AverageRating feedbackData={feedbackData} />
         <div className="feedback-list">

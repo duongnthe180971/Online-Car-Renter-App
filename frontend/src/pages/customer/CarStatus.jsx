@@ -74,7 +74,7 @@ const CarStatus = () => {
     const [{id}, setId] = useState(location.state || { id: 1 });
     const [car, setCar] = useState(null);
     const [rental, setRental] = useState(null);
-    const [error, setError] = useState(''); // Add error state
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {

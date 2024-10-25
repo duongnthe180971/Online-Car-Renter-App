@@ -19,11 +19,12 @@ import FinancePage from "./pages/admin/Finance";
 import UserManagementPage from "./pages/admin/UserManagement";
 import AdminCarRegistrations from "./pages/admin/AdminCarRegistrations";
 import CarTemplatePage from "./pages/admin/CarTemplate";
-import Login from "./pages/login/login";
-import Register from "./pages/login/register";
-import Payment from "./pages/payment/payment";
+import Login from "./pages/login/Login";
+import Register from "./pages/login/Register";
+import Payment from "./pages/payment/Payment";
 import MyProfile from "./pages/home/MyProfile";
 import ProfileCard from "./pages/car_owner/ProfilePage";
+import FeedbackForm from "./pages/car/FeedbackForm";
 import "./styles/General.css";
 
 const App = () => {
@@ -52,7 +53,6 @@ const App = () => {
           path="/profile-partner"
           element={<ProfileCard/>}
         />
-        <Route path="/rental-detail" element={<RentalDetail />} />
         <Route path="/car-list" element={<CarList />} />
         <Route path="/car-status" element={<CarStatus />} />
         <Route
@@ -72,6 +72,7 @@ const App = () => {
         <Route path="/payment" element={<Payment />} />
         <Route path="/car-detail" element={<CarDetail />} />
         <Route path="/customer-map" element={<CustomerMap />} />
+        <Route path="/customer-feedback" element={<FeedbackForm />} />
       </Routes>
     </BrowserRouter>
   );

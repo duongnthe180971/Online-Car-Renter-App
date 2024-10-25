@@ -9,9 +9,9 @@ const CarRegistration = () => {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [address, setAddress] = useState("");
   const [price, setPrice] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedLicense, setSelectedLicense] = useState(null);
   const [features, setFeatures] = useState({});
   const [carType, setCarType] = useState("");
   const [seatOption, setSeatOption] = useState("");
@@ -24,6 +24,11 @@ const CarRegistration = () => {
   const [gearOptions, setGearOptions] = useState([]);
   const [fuelOptions, setFuelOptions] = useState([]);
   const [brandOptions, setBrandOptions] = useState([]);
+
+  const [imageError, setImageError] = useState("");
+  const [licenseError, setLicenseError] = useState("");
+  const [isFormValid, setIsFormValid] = useState(true); 
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     const fetchFeatures = async () => {
@@ -38,21 +43,22 @@ const CarRegistration = () => {
         setFeatures(featureOptions);
       } catch (error) {
         console.error('Error fetching features:', error);
+        setSubmitError('Error fetching features: ' + error.message);
       }
     };
 
     const fetchOptions = async () => {
-      const types = ["SUV", "Sedan", "Truck","Sport","Van"];
-      const seats = ["2","4", "5", "6","7"];
+      const types = ["SUV", "Sedan", "Truck", "Sport", "Van"];
+      const seats = ["2", "4", "5", "6", "7"];
       const gears = ["Auto", "Manual"];
       const fuels = ["Gasoline", "Diesel", "Electric"];
-      const brand = ["Toyota", "Tesla", "BMW", "Nissan", "Ferrari", "Mercedes", "Audi", "Colorado", "Lamborghini", "Bugatti"];
+      const brands = ["Toyota", "Tesla", "BMW", "Nissan", "Ferrari", "Mercedes", "Audi", "Lamborghini"];
 
       setCarTypes(types);
       setSeatOptions(seats);
       setGearOptions(gears);
       setFuelOptions(fuels);
-      setBrandOptions(brand);
+      setBrandOptions(brands);
     };
 
     fetchFeatures();
@@ -70,19 +76,60 @@ const CarRegistration = () => {
   };
 
   const handleImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setSelectedImage(event.target.files[0]); 
+    const file = event.target.files[0];
+    if (file) {
+      const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!validImageTypes.includes(file.type)) {
+        setImageError("Invalid image type. Please upload a JPEG, PNG, or GIF image.");
+        setSelectedImage(null);
+        setIsFormValid(false); 
+      } else {
+        setSelectedImage(file);
+        setImageError("");
+        setIsFormValid(true);
+      }
+    }
+  };
+
+  const handleLicenseChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const validLicenseTypes = [
+        "application/msword", 
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/pdf",
+      ];
+      if (!validLicenseTypes.includes(file.type)) {
+        setLicenseError("Invalid license file type. Please upload a DOC, DOCX, XLS, XLSX, or PDF file.");
+        setSelectedLicense(null);
+        setIsFormValid(false);
+      } else {
+        setSelectedLicense(file);
+        setLicenseError(""); 
+        setIsFormValid(true);
+      }
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!isFormValid || !selectedImage || !selectedLicense) {
+      if (!selectedImage) {
+        setImageError("Please upload a valid image.");
+      }
+      if (!selectedLicense) {
+        setLicenseError("Please upload a valid license file.");
+      }
+      return;
+    }
+
     const formData = new FormData();
     formData.append('name', name);
     formData.append('description', description);
     formData.append('price', price);
-    formData.append('address', address);
     formData.append('type', carType);
     formData.append('seat', seatOption);
     formData.append('gear', gearOption);
@@ -90,11 +137,8 @@ const CarRegistration = () => {
     formData.append('brand', brandOption);
     formData.append('garageID', garageID);
 
-    if (selectedImage) {
-      formData.append('image', selectedImage); 
-    } else {
-      console.log('No image selected');
-    }
+    formData.append('image', selectedImage);
+    formData.append('license', selectedLicense); 
 
     const selectedFeatures = Object.keys(features).filter(
       (featureID) => features[featureID].selected
@@ -108,12 +152,18 @@ const CarRegistration = () => {
       });
 
       if (response.ok) {
-        navigate(`/garage`);
+        console.log('Form Submitted:', formData);
+
+        
+        alert('Registration successful!'); 
+        navigate(`/garage`, { state: { garageID: garageID } });
       } else {
         console.error('Error submitting form:', response.statusText);
+        setImageError('Error submitting form: ' + response.statusText);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      setSubmitError('Error submitting form: ' + error.message);
     }
   };
 
@@ -125,35 +175,69 @@ const CarRegistration = () => {
       </div>
 
       <div className="formContainer">
-        <form className="form" onSubmit={handleSubmit} encType="multipart/form-data">
-          <label className="label">Enter Name</label>
+      {submitError && <p className="error-message">{submitError}</p>}
+        <form className="form" onSubmit={handleSubmit} encType="multipart/form-data" data-testid="car-form">
+          <label className="label" htmlFor="car-name">Enter Name</label>
           <input
-            type="text"
+            id="car-name"
+            className="input"
             placeholder="Enter Name"
+            required
+            type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="input"
-            required
           />
 
-          <label className="label">Choose Brand</label>
-          <select className="dropdown select brand" value={brandOption} onChange={(e) => setBrandOption(e.target.value)} required>
+          <label className="label" htmlFor="car-brand">Choose Brand</label>
+          <select
+            id="car-brand"
+            className="dropdown select brand"
+            required
+            value={brandOption}
+            onChange={(e) => setBrandOption(e.target.value)}
+          >
             <option value="">Select a brand</option>
             {brandOptions.map((brand) => (
               <option key={brand} value={brand}>{brand}</option>
             ))}
           </select>
 
-          <label className="label">Choose Picture</label>
+          <label className="label" htmlFor="car-image">Choose Picture</label>
           <div className="imageUpload">
             {selectedImage && <img src={URL.createObjectURL(selectedImage)} alt="Selected" className="imagePreview" />}
-            <input type="file" onChange={handleImageChange} className="fileInput" required />
+            <input
+              id="car-image"
+              className="fileInput"
+              required
+              type="file"
+              onChange={handleImageChange} 
+            />
           </div>
+          {imageError && <p className="error-message">{imageError}</p>}
+
+          <label className="label" htmlFor="car-license">Upload License</label>
+          <div className="licenseUpload">
+            {selectedLicense && <p>{selectedLicense.name}</p>}
+            <input
+              id="car-license"
+              className="fileInput"
+              required
+              type="file"
+              onChange={handleLicenseChange}
+            />
+          </div>
+          {licenseError && <p className="error-message">{licenseError}</p>}
 
           <div className="characteristics">
             <div className="selectGroup">
-              <label className="label">Type:</label>
-              <select className="dropdown select" value={carType} onChange={(e) => setCarType(e.target.value)} required>
+              <label className="label" htmlFor="car-type">Type:</label>
+              <select
+                id="car-type"
+                className="dropdown select"
+                required
+                value={carType}
+                onChange={(e) => setCarType(e.target.value)}
+              >
                 <option value="">Select type</option>
                 {carTypes.map((type) => (
                   <option key={type} value={type}>{type}</option>
@@ -162,8 +246,14 @@ const CarRegistration = () => {
             </div>
 
             <div className="selectGroup">
-              <label className="label">Seats:</label>
-              <select className="dropdown select" value={seatOption} onChange={(e) => setSeatOption(e.target.value)} required>
+              <label className="label" htmlFor="car-seats">Seats:</label>
+              <select
+                id="car-seats"
+                className="dropdown select"
+                required
+                value={seatOption}
+                onChange={(e) => setSeatOption(e.target.value)}
+              >
                 <option value="">Select seats</option>
                 {seatOptions.map((seat) => (
                   <option key={seat} value={seat}>{seat}</option>
@@ -172,8 +262,14 @@ const CarRegistration = () => {
             </div>
 
             <div className="selectGroup">
-              <label className="label">Gear:</label>
-              <select className="dropdown select" value={gearOption} onChange={(e) => setGearOption(e.target.value)} required>
+              <label className="label" htmlFor="car-gear">Gear:</label>
+              <select
+                id="car-gear"
+                className="dropdown select"
+                required
+                value={gearOption}
+                onChange={(e) => setGearOption(e.target.value)}
+              >
                 <option value="">Select gear</option>
                 {gearOptions.map((gear) => (
                   <option key={gear} value={gear}>{gear}</option>
@@ -182,8 +278,14 @@ const CarRegistration = () => {
             </div>
 
             <div className="selectGroup">
-              <label className="label">Fuel:</label>
-              <select className="dropdown select" value={fuelOption} onChange={(e) => setFuelOption(e.target.value)} required>
+              <label className="label" htmlFor="car-fuel">Fuel:</label>
+              <select
+                id="car-fuel"
+                className="dropdown select"
+                required
+                value={fuelOption}
+                onChange={(e) => setFuelOption(e.target.value)}
+              >
                 <option value="">Select fuel</option>
                 {fuelOptions.map((fuel) => (
                   <option key={fuel} value={fuel}>{fuel}</option>
@@ -192,16 +294,17 @@ const CarRegistration = () => {
             </div>
           </div>
 
-          <label className="label">Description</label>
+          <label className="label" htmlFor="car-description">Description</label>
           <textarea
+            id="car-description"
+            className="textarea"
             placeholder="Description"
+            required
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="textarea"
-            required
           />
 
-          <label className="label">Features:</label>
+          <label className="label" htmlFor="car-features">Features:</label>
           <div className="features">
             {Object.keys(features).map((featureID) => (
               <label key={featureID} className={`featureCheckbox ${features[featureID].selected ? "activeFeature" : ""}`}>
@@ -216,21 +319,22 @@ const CarRegistration = () => {
             ))}
           </div>
 
-          <label className="label">Price</label>
+          <label className="label" htmlFor="car-price">Price</label>
           <div className="priceInput">
             <input
-              type="number"
+              id="car-price"
+              className="input"
               placeholder="Price"
+              required
+              type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="input"
-              required
             />
             <span className="priceUnit">vnd/day</span>
           </div>
 
           <div className="confirmButtonContainer">
-            <button type="submit" className="confirmButton">
+            <button type="submit" className="confirmButton" disabled={!isFormValid}>
               Confirm
             </button>
           </div>
