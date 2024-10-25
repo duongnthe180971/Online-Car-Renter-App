@@ -5,6 +5,7 @@ import Home from "./pages/home/home";
 import AboutUs from "./pages/home/aboutus";
 import Garage from "./pages/car_owner/Garage";
 import RentalRequest from "./pages/car_owner/RentalRequest";
+import RentalOrder from "./pages/car_owner/RentalOrder";
 import RentalHistory from "./pages/car_owner/RentalHistory";
 import RentalDetail from "./pages/customer/RentalDeltail";
 import CarList from "./pages/customer/CarList";
@@ -22,6 +23,8 @@ import CarTemplatePage from "./pages/admin/CarTemplate";
 import Login from "./pages/login/login";
 import Register from "./pages/login/register";
 import Payment from "./pages/payment/payment";
+import MyProfile from "./pages/home/MyProfile";
+import ProfileCard from "./pages/car_owner/ProfilePage";
 import "./styles/General.css";
 
 
@@ -33,14 +36,23 @@ const App = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/finance" element={<FinancePage />} />
+        <Route path="/profile" element={<MyProfile id={1}/>}/>
         <Route path="/garage" element={<Garage garageID={1} />} />
         <Route
           path="/rental-request"
           element={<RentalRequest garageID={3} />}
         />
         <Route
+          path="/rental-order"
+          element={<RentalOrder/>}
+        />
+        <Route
           path="/rental-history"
           element={<RentalHistory garageID={1} />}
+        />
+        <Route
+          path="/profile-partner"
+          element={<ProfileCard/>}
         />
         <Route path="/rental-detail" element={<RentalDetail />} />
         <Route path="/car-list" element={<CarList />} />

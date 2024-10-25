@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import '../../styles/component/RentalHistoryCard.css';
+import { useNavigate } from 'react-router-dom';
 
 function RentalHistoryCard({ rental }) {
-    const { vehicle, customer, bookDate, timePeriod, price } = rental;
-
+    const { vehicle, customer, bookDate, timePeriod, price, customerID } = rental;
+    const navigate = useNavigate();
     // Initialize the state to "Waiting to confirm" or whatever the rental status is
     const [status] = useState(rental.status);
-
+    const handleRentalPartner = () => {
+        navigate(`/profile-partner`, { state: { profileID: rental.customerID } });
+      };
 
     return (
         <div className={`rental-history-card `}>
@@ -16,7 +19,7 @@ function RentalHistoryCard({ rental }) {
                 <div className="rental-history-customer">
                     <span>Customer: {customer}</span>
                     <div className="rental-history-actions">
-                        <button className="view-customer-btn">View Rental Partner</button>
+                        <button className="view-customer-btn" onClick={handleRentalPartner}>View Rental Partner</button>
                     </div>
                 </div>
                 <div className="rental-history-details">

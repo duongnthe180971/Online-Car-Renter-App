@@ -89,6 +89,23 @@ app.get("/api/rental", async (req, res) => {
   }
 });
 
+app.get("/api/rental/:rentalId", async (req, res) => {
+  const { rentalId } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(`select*from Rental a join Car b on a.CarID = b.CarID join Account c on a.CustomerID = c.id where RentalID = ${rentalId}`);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: "Rental not found" });
+    }
+
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error("Error fetching rental data:", err);
+    res.status(500).send("Server error");
+  }
+});
+
 app.post("/api/rental", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
@@ -137,6 +154,40 @@ app.put("/api/rentals/:id", async (req, res) => {
   }
 });
 
+app.delete("/api/rentals/:id", async (req, res) => {
+  const { id }= req.params;
+
+  try {
+    await sql.connect(sqlConfig);
+    await sql.query(`Delete from Payment WHERE RentalID = ${id}`);
+    await sql.query(`Delete from Rental WHERE RentalID = ${id}`);
+
+    res.status(200).send({ message: "Rental deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting rental:", error);
+    res.status(500).send({ message: "Error deleting rental" });
+  }
+});
+
+app.delete("/api/car/:carId", async (req, res) => {
+  const { carId } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+
+    await sql.query(`DELETE FROM CarFeature WHERE CarID = ${carId}`);
+    await sql.query(`DELETE FROM Feedback WHERE CarID = ${carId}`);
+    await sql.query(`DELETE FROM Payment WHERE RentalID IN (SELECT RentalID FROM Rental WHERE CarID = ${carId})`);
+    await sql.query(`DELETE from Rental where CarID = ${carId}`);
+    await sql.query(`DELETE FROM Car WHERE CarID = ${carId}`);
+
+    res.status(200).send({ message: "Car deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting car:", error);
+    res.status(500).send({ message: "Error deleting car" });
+  }
+});
+
+//Account
 app.get("/api/account", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
@@ -146,6 +197,66 @@ app.get("/api/account", async (req, res) => {
     console.error("Error connecting to the database:", err);
     res.status(500).send("Server error");
   }
+});
+
+app.get("/api/account/:AccID", async (req, res) => {
+  const { AccID } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(`select*from Account where id = ${AccID}`);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error("Error fetching account data:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.put("/api/account/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, gender, dob, phone, email } = req.body;
+
+  try {
+    await sql.connect(sqlConfig);
+    const query = `
+          UPDATE Account
+          SET UserName = '${name}',
+          Gender = '${gender}',
+          DOB ='${dob}',
+          Phone = '${phone}',
+          Email = '${email}'
+          WHERE id = ${id}
+      `;
+    const result = await sql.query(query);
+
+    if (result.rowsAffected[0] > 0) {
+      res.status(200).send("Car status updated successfully");
+    } else {
+    }
+  } catch (error) {}
+});
+
+app.put("/api/account/:id/change-password", async (req, res) => {
+  const { id } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    await sql.connect(sqlConfig);
+    const query = `
+          UPDATE Account
+          SET PassWord = '${newPassword}' WHERE id = ${id}
+      `;
+    const result = await sql.query(query);
+
+    if (result.rowsAffected[0] > 0) {
+      res.status(200).send("Car status updated successfully");
+    } else {
+    }
+  } catch (error) {}
 });
 
 app.get("/api/garage", async (req, res) => {
@@ -411,6 +522,10 @@ app.delete("/api/car/:carId", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
 
+    await sql.query(`DELETE FROM CarFeature WHERE CarID = ${carId}`);
+    await sql.query(`DELETE FROM Feedback WHERE CarID = ${carId}`);
+    await sql.query(`DELETE FROM Payment WHERE RentalID IN (SELECT RentalID FROM Rental WHERE CarID = ${carId})`);
+    await sql.query(`DELETE from Rental where CarID = ${carId}`);
     await sql.query(`DELETE FROM Car WHERE CarID = ${carId}`);
 
     res.status(200).send({ message: "Car deleted successfully" });

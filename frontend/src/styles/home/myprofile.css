@@ -1,0 +1,56 @@
+
+  
+.profile-info {
+    margin-top: 10vh;
+    display: flex;
+    width: 100%;
+    align-items: center;
+
+  }
+  
+  .profile-avatar img {
+    width: 15vw;
+    border-radius: 10px;
+    margin-left: 5vw;
+    margin-right: 5vw;
+  }
+  
+  .profile-details p {
+    margin: 1vh 0;
+    font-size: 3vh;
+  }
+  
+  .profile-details .Profile-Right {
+    display: inline-table;
+    width: 15vw;
+    text-align: left;  
+  }
+
+  .profile-details .Profile-Left {
+    display: inline-table;
+    width: 31vw;
+    text-align: right;  
+  }
+  
+  .profile-actions {
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 25vw;
+    margin-top: 2vh;
+  }
+  
+  .edit-profile-btn,
+  .change-password-btn {
+    background-color: #666;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-profile-btn:hover,
+  .change-password-btn:hover {
+    background-color: #999;
+  }
+  
