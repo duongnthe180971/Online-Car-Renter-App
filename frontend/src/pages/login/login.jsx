@@ -47,9 +47,9 @@ const Login = () => {
           JSON.stringify({ id: acc.id, role: acc.Role })
         );
         if (acc.Role === 0) {
-          navigate(`/homeadmin`, { state: { id: acc.id } });
+          navigate(`/homeadmin`);
         } else {
-          navigate(`/home`, { state: { id: acc.id } });
+          navigate(`/home`);
         }
       } else {
         alert("Invalid username or password");

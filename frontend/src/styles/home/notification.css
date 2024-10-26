@@ -11,9 +11,51 @@
   align-items: center;
   z-index: 1000; /* Ensure it's on top */
 }
-.notification-close {
-  margin-top: 40vh;
+
+.notification-content {
+  width: 30vw;
+  max-height: 60vh;
+  background-color: #00000049;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
+.notification-messages {
+  overflow-y: auto;
+  padding-right: 10px; /* Spacing for scrollbar */
+  height: 45vh; /* Limit the height for scrolling */
+}
+
+/* Custom scrollbar styling */
+.notification-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.notification-messages::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.notification-messages::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.notification-close {
+  margin-top: 10px;
+  background-color: #33333349;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
 .notification-show {
   background-color: #00000046;
   color: aliceblue;
@@ -21,13 +63,6 @@
   font-size: 13px;
   height: 4vh;
   width: 7vw;
-}
-.notification-content {
-  width: 25vw;
-  height: 50vh;
-  background-color: #00000049;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-  text-align: center;
+  align-items: center;
+  justify-content: center;
 }

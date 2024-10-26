@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import logo from "../../assets/icon/logo.png";
 import "../../styles/payment/payment.css";
 import qrcode from "../../assets/icon/qrcode.png";
-import insurance from "../../pages/customer/CarDetail";
-import total_renting_price from "../../pages/customer/CarDetail";
+import insurance from "../customer/CarDetail";
+import total_renting_price from "../customer/CarDetail";
 import { formatPrice } from "../../assets/format/numberFormat";
 
 import {
@@ -21,7 +21,9 @@ import {
   vpbank,
 } from "../../assets/icon";
 
-function Payment() {
+const Payment = () => {
+  // const totalRentingPrice =
+  //   Price * getNumOfDay(formData.startDate, formData.returnDate);
   const [activeMenu, setActiveMenu] = useState("qr-code");
 
   const showBankCard = () => {
@@ -145,6 +147,6 @@ function Payment() {
       </div>
     </div>
   );
-}
+};
 
 export default Payment;
