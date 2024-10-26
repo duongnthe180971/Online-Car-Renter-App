@@ -1,4 +1,4 @@
-/* Khung nội dung chính */
+/* Khung chứa chính cho phần tài chính */
 .finance-container {
   width: 100%;
   background-color: #333;
@@ -6,6 +6,7 @@
   color: #fff;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-left: 20px; /* Căn chỉnh khoảng cách cho phần bên phải */
 }
 
 /* Tiêu đề */
@@ -13,15 +14,17 @@
   font-size: 36px;
   color: white;
   margin-bottom: 20px;
+  font-weight: bold;
 }
 
-/* Bộ lọc */
+/* Khung chứa các bộ lọc */
 .finance-container .filters {
   display: flex;
-  gap: 20px;
+  gap: 20px; /* Thêm khoảng cách giữa các mục bộ lọc */
   margin-bottom: 20px;
 }
 
+/* Các mục bộ lọc riêng lẻ */
 .finance-container .filter-item {
   display: flex;
   flex-direction: column;
@@ -30,6 +33,7 @@
 .finance-container .filter-item label {
   color: white;
   margin-bottom: 5px;
+  font-size: 14px;
 }
 
 .finance-container .filter-item select {
@@ -38,14 +42,35 @@
   color: white;
   border: none;
   border-radius: 5px;
+  font-size: 14px;
 }
 
+/* Khung chứa biểu đồ */
 .finance-container .chart-container {
-  max-height: 20vh;
   background-color: #fff; /* Nền trắng cho biểu đồ */
   padding: 5px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: auto;
-  height: 100%; /* Điều chỉnh chiều cao để không bị "tàn" */
+  height: 100%; /* Đảm bảo chiều cao khớp với khung chứa */
+  max-height: 400px; /* Giới hạn chiều cao tối đa của biểu đồ */
+  width: 100%; /* Chiều rộng toàn phần của khung chứa */
+}
+
+/* Cấu trúc trang */
+.AllPage {
+  display: flex;
+}
+
+.LeftSide {
+  width: 250px; /* Giữ cho sidebar có độ rộng cố định */
+}
+
+.RightSide {
+  flex: 1;
+  padding: 20px;
+}
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
 }

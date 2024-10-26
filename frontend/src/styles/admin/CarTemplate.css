@@ -11,6 +11,7 @@
   align-items: center;
 }
 
+/* Tiêu đề của trang */
 .page-title {
   font-size: 32px;
   font-weight: bold;
@@ -62,6 +63,7 @@
   margin-top: 20px;
 }
 
+/* Phần tử tính năng */
 .feature-item {
   color: black;
   display: flex;
@@ -74,6 +76,7 @@
   margin: 0 auto; /* Căn giữa khung */
 }
 
+/* Nút xóa */
 .remove-btn {
   background-color: #f44336;
   color: white;
@@ -83,6 +86,7 @@
   cursor: pointer;
 }
 
+/* Nút thêm tính năng */
 .add-feature-btn {
   background-color: #28a745;
   color: white;
@@ -94,6 +98,8 @@
   align-self: flex-end; /* Đặt nút ở cuối và căn phải */
   width: auto; /* Đảm bảo kích thước của nút tự động theo nội dung */
 }
+
+/* Danh sách các tính năng */
 .feature-list {
   display: flex;
   flex-direction: column;

@@ -1,0 +1,47 @@
+/* User card with background image */
+.user-card {
+  background-image: url(../../assets/img/user1.jpg); /* Background image for user cards */
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white; /* White text for better readability on background */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+  object-fit: cover;
+}
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.view-btn,
+.remove-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.view-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.remove-btn {
+  background-color: #dc3545;
+  color: white;
+}

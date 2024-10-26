@@ -8,8 +8,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
 }
 
+/* Page title */
 .car-registration-list .page-title {
   font-size: 32px;
   font-weight: bold;
@@ -19,10 +21,8 @@
   width: 100%;
 }
 
-/* Khung bao quanh danh sách xe */
+/* Container for car list */
 .car-registration-list {
-  overflow-y: auto;
-  max-height: 70vh;
   width: 100%;
   max-width: 800px;
   display: flex;
@@ -31,23 +31,28 @@
   margin-bottom: 20px;
 }
 
-/* Thẻ xe (car card) */
+/* Car card */
 .car-registration-list .car-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: #f2f2f2;
-  padding: 10vh 2vw;
+  padding: 5vh 2vw;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
+/* Car image */
 .car-registration-list .car-card img {
   width: 150px;
   height: auto;
   border-radius: 10px;
 }
 
+/* Car info */
 .car-registration-list .car-info {
   flex-grow: 1;
   margin-left: 20px;
@@ -66,6 +71,7 @@
   color: #666;
 }
 
+/* Car action buttons */
 .car-registration-list .car-actions {
   display: flex;
   gap: 10px;
@@ -113,7 +119,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* Dark background */
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -130,26 +136,28 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  color: #000; /* Black text */
+  color: #000;
 }
 
 .car-details-content img {
   width: 100%;
-  max-width: 300px; /* Limit the image size */
+  max-width: 300px;
   margin: 0 auto;
   display: block;
   border-radius: 10px;
 }
 
+/* Car details modal */
 .car-details-right {
   text-align: left;
 }
 
 .car-details-right h2,
 .car-details-right p {
-  color: #000; /* Set text color to black */
+  color: #000;
 }
 
+/* Close modal button */
 .close-modal-btn {
   align-self: flex-end;
   padding: 10px 20px;
@@ -159,4 +167,72 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.page-item {
+  list-style: none;
+}
+
+.page-link {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background-color: #f8f9fa;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 15px;
+  font-size: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.page-link:hover {
+  background-color: #e2e6ea;
+}
+
+.page-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.page-item.disabled .page-link {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Filter Section */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-group label {
+  color: black;
+}
+
+.filter-group select {
+  padding: 5px;
+  border-radius: 5px;
+  width: 100px;
 }

@@ -1,59 +1,228 @@
-.manage-user-container {
-  background-color: #444; /* Nền tối cho khung quản lý */
-  border-radius: 10px;
-  padding: 30px;
-  width: 100%;
-  max-width: 800px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Đổ bóng nhẹ */
-  margin: 0 auto; /* Căn giữa container */
+/* Toàn bộ phần của trang */
+.AllPage {
+  display: flex;
+  justify-content: center; /* Căn giữa nội dung */
+  align-items: center;
+  min-height: 100vh; /* Đảm bảo chiều cao toàn trang */
+  background-color: rgb(94, 94, 94); /* Màu nền như car reg */
 }
 
+.LeftSide {
+  width: 20%;
+}
+
+.RightSide {
+  width: 80%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container cho việc quản lý người dùng */
+.manage-user-container {
+  background-color: #444; /* Màu nền xám đậm */
+  border-radius: 10px;
+  padding: 30px;
+  width: 90%; /* Giảm chiều rộng để gọn hơn */
+  max-width: 800px; /* Chiều rộng tối đa */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Đổ bóng */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white; /* Màu chữ */
+  margin-bottom: 40px; /* Tạo khoảng cách phía dưới container */
+}
+
+/* Tiêu đề trang */
 .manage-user-container .title {
-  color: white;
   font-size: 36px;
-  margin-bottom: 20px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 30px; /* Tăng khoảng cách dưới tiêu đề */
   text-align: center;
 }
 
+/* Bộ lọc và phần filter */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 400px; /* Giảm chiều rộng của bộ lọc */
+  margin: 0 auto 20px auto; /* Căn giữa và thêm khoảng cách */
+}
+
+/* Giảm khoảng cách giữa các filter */
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-group label {
+  color: black; /* Chỉnh màu chữ */
+}
+
+.filter-group select {
+  padding: 5px;
+  border-radius: 5px;
+  width: 100px; /* Giảm chiều rộng của dropdown */
+}
+
 /* Danh sách người dùng */
-.manage-user-container .user-list {
-  overflow-y: auto;
-  max-height: 70vh;
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Tạo khoảng cách giữa các thẻ người dùng */
+  width: 100%; /* Đảm bảo danh sách chiếm hết chiều ngang */
+}
+
+/* Thẻ người dùng */
+.user-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f2f2f2; /* Màu nền nhạt */
+  padding: 10px 20px; /* Giảm padding */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+  width: 90%; /* Giảm chiều rộng của thẻ */
+  max-width: 600px; /* Chiều rộng tối đa */
+  margin: 0 auto; /* Căn giữa */
+  color: black;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info {
+  flex-grow: 1;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.view-btn,
+.remove-btn {
+  padding: 5px 10px; /* Giảm kích thước các nút */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  font-size: 14px; /* Giảm kích thước chữ */
+}
+
+.view-btn {
+  background-color: #007bff;
+}
+
+.view-btn:hover {
+  background-color: #0056b3;
+}
+
+.remove-btn {
+  background-color: #dc3545;
+}
+
+.remove-btn:hover {
+  background-color: #c82333;
+}
+
+/* Modal xem thông tin chi tiết */
+.user-details-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Nền tối */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.user-details-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-width: 500px; /* Giảm kích thước modal */
+  color: black;
 }
-.success-message {
-  background-color: #d4edda;
-  color: #155724;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #c3e6cb;
+
+.user-details-content img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto;
+}
+
+.user-details-content h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.close-modal-btn {
+  align-self: flex-end;
+  padding: 5px 10px; /* Giảm kích thước nút close */
+  background-color: #dc3545;
+  color: white;
+  border: none;
   border-radius: 5px;
 }
-.manage-user-container {
+
+/* Pagination */
+.pagination {
   display: flex;
-  flex-direction: column;
-}
-
-.user-list {
-  margin-bottom: 20px;
-}
-
-.user-details {
+  justify-content: center;
+  gap: 10px;
   margin-top: 20px;
-  background-color: #f4f4f4;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: black;
 }
 
-.user-details h2 {
-  margin-bottom: 10px;
-  color: black;
+.page-item {
+  list-style: none;
 }
 
-.user-details p {
-  margin: 5px 0;
+.page-link {
+  padding: 5px 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.page-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.page-link:hover {
+  background-color: #e2e6ea;
+}
+
+.pagination {
+  margin-top: 10px; /* Tạo thêm khoảng cách giữa pagination và thẻ người dùng */
 }
