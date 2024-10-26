@@ -25,6 +25,7 @@ import Payment from "./pages/payment/Payment";
 import MyProfile from "./pages/home/MyProfile";
 import ProfileCard from "./pages/car_owner/ProfilePage";
 import FeedbackForm from "./pages/car/FeedbackForm";
+import Assistant from "./pages/others/Assistant";
 import "./styles/General.css";
 
 const App = () => {
@@ -73,6 +74,7 @@ const App = () => {
         <Route path="/car-detail" element={<CarDetail />} />
         <Route path="/customer-map" element={<CustomerMap />} />
         <Route path="/customer-feedback" element={<FeedbackForm />} />
+        <Route path="/assistant" element={<Assistant />} />
       </Routes>
     </BrowserRouter>
   );

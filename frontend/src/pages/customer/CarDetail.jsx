@@ -132,7 +132,7 @@ const RentalCard = ({ car, accID }) => {
 
         try {
             await axios.post('http://localhost:5000/api/rental', newRental);
-            navigate('/car-status', { state: { id: CarID } });
+            navigate('/car-status');
         } catch (error) {
             console.error('Error adding rental:', error);
         }
@@ -177,9 +177,15 @@ const RentalCard = ({ car, accID }) => {
 const CarDetail = () => {
     const location = useLocation();
     const { carID } = location.state || {carID: 1};
-    const { accID } = location.state || {accID: 1};
     const [car, setCar] = useState(null);
-
+    const [accID, setAccID] = useState(0);
+    
+    useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser && storedUser.id) {
+          setAccID(storedUser.id);
+        }
+      });
     useEffect(() => {
         const fetchCarData = async () => {
             try {

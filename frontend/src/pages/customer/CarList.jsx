@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
 import axios from "axios";
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../../modules/components/Helmet";
@@ -8,8 +7,6 @@ import CarPlot from "../../modules/components/CarPlot";
 import carDemo from "../../assets/data/carDemo";
 
 const CarList = () => {
-  const location = useLocation();
-  const { accID } = location.state || { accID: 1 };
   const [error, setError] = useState("");
   const defaultFilters = {
     type: "",
@@ -103,7 +100,7 @@ const CarList = () => {
             <Row>
               {filteredData.map((item) => (
                 <Col md="3" sm="6" xs="12" key={item.id}>
-                  <CarPlot item={item} accID={accID} />
+                  <CarPlot item={item}/>
                 </Col>
               ))}
             </Row>

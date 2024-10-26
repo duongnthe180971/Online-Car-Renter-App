@@ -1,0 +1,118 @@
+/* Container for the entire assistant page */
+.assistant-container {
+    background-color: #222;
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .assistant-container .chat-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #333;
+  }
+  
+  /* Back arrow button with no default styles */
+  .assistant-container .back-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-right: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+  }
+  
+  .assistant-container .back-arrow {
+    color: #fff;
+    font-size: 24px;
+  }
+  
+  .assistant-container .assistant-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .assistant-container .chat-window {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .assistant-container .chat-bubble {
+    max-width: 60%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    line-height: 1.5;
+  }
+  
+  .assistant-container .assistant-bubble {
+    background-color: #777;
+    color: #fff;
+    align-self: flex-start;
+  }
+  
+  .assistant-container .user-bubble {
+    background-color: #44d1a6;
+    color: #000;
+    align-self: flex-end;
+  }
+  
+  .assistant-container .scrollable-questions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 20px;
+    max-height: 150px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #333;
+  }
+  
+  .assistant-container .question-button {
+    background-color: #44d1a6;
+    color: #000;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  
+  .assistant-container .question-button:hover {
+    background-color: #3bb18e;
+  }
+  
+  /* Input and Enter Button */
+  .assistant-container .question-input {
+    display: flex;
+    padding: 10px;
+    background-color: #333;
+  }
+  
+  .assistant-container .input-field {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+  }
+  
+  .assistant-container .enter-button {
+    background-color: #44d1a6;
+    color: #000;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  .assistant-container .enter-button:hover {
+    background-color: #3bb18e;
+  }
+  

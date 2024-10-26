@@ -46,7 +46,7 @@
 }
 
 /* Bộ lọc và phần filter */
-.filter-container {
+.manage-user-container .filter-container {
   display: flex;
   justify-content: center;
   align-items: center;

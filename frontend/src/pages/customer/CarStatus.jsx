@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import ChooseBarCustomer from '../../modules/components/ChooseBarCustomer';
 import { formatPrice, formatDate_vn } from "../../assets/format/numberFormat";
 import "../../styles/customer/CarStatus.css";
 
-const CarOrderDetails = ({ car, rental, handleCancel }) => {
+const CarOrderDetails = ({ car, rental, handleUpdateStatus, handleFeedback }) => {
     const { CarImage, CarName, Rate, Price } = car;
     const { RentalStart, RentalEnd, RentalStatus } = rental;
     return (
@@ -33,10 +33,12 @@ const CarOrderDetails = ({ car, rental, handleCancel }) => {
             </div>
             <ProgressBar status={RentalStatus} />
             <div className="cancel-section">
-                { RentalStatus === 1 ? (<button className="cancel-btn" onClick={handleCancel}>Cancel Order</button>) : 
-                (RentalStatus === 2 ? (<button className="in-rent-btn" onClick={handleCancel}>In Rent</button>) : 
-                (RentalStatus === 3 ? (<button className="return-btn" onClick={handleCancel}>Return Car</button>) : (<div/>) ) ) 
+                { RentalStatus === 1 ? (<button className="cancel-btn" onClick={() => handleUpdateStatus(0)}>Cancel Order</button>) : 
+                (RentalStatus === 2 ? (<button className="in-rent-btn" onClick={() => handleUpdateStatus(3)}>In Rent</button>) : 
+                (RentalStatus === 3 ? (<button className="return-btn" onClick={() => handleUpdateStatus(4)}>Return Car</button>) : (<div/>) ) ) 
                 }
+                {(RentalStatus === 3 || RentalStatus === 4) && 
+                (<button className="in-rent-btn" onClick={handleFeedback}>Give Feedback</button>)}
             </div>
         </div>
     );
@@ -70,35 +72,89 @@ const ProgressBar = ({ status }) => {
 };
 
 const CarStatus = () => {
-    const location = useLocation();
-    const [{id}, setId] = useState(location.state || { id: 1 });
+    const navigate = useNavigate();
     const [car, setCar] = useState(null);
     const [rental, setRental] = useState(null);
     const [error, setError] = useState('');
+    const [accID, setAccID] = useState(0);
+    
+    useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser && storedUser.id) {
+            setAccID(storedUser.id);
+        }
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const carResponse = await axios.get("http://localhost:5000/api/car");
-                const car_ = carResponse.data.find((item) => item.CarID === id);
-                setCar(car_);
+            if (!accID) return;
 
+            try {
                 const rentalResponse = await axios.get("http://localhost:5000/api/rental");
-                const filteredRentals = rentalResponse.data.filter((item) => item.CarID === id);
+                const filteredRentals = rentalResponse.data.filter((item) => item.CustomerID === accID);
                 const sortedRentals = filteredRentals.sort((a, b) => b.RentalID - a.RentalID);
                 const rental_ = sortedRentals.length > 0 ? sortedRentals[0] : null;
-                setRental(rental_);
+
+                if (rental_) {
+                    setRental(rental_);
+                    const carResponse = await axios.get("http://localhost:5000/api/car");
+                    const car_ = carResponse.data.find((item) => item.CarID === rental_.CarID);
+                    setCar(car_);
+                } else {
+                    setError("You have not rented any car yet");
+                }
             } catch (err) {
                 setError("Error loading car or rental data");
-                console.error("Error fetching data:", err);
             }
         };
 
         fetchData();
-    }, [id]);
+    }, [accID]);
+    const handleFeedback = async () => {
+        console.log("Feedback button clicked");
+    
+        try {
+            console.log("User ID:", accID);
+            
+            const response = await axios.get(`http://localhost:5000/api/feedback/${car.CarID}`);
+            console.log("Feedback response data:", response.data);
+    
+            const existingFeedback = response.data.find((f) => f.CustomerID === accID);
+            if (existingFeedback) {
+                window.alert("You already provided feedback for this car.");
+            } else {
+                navigate("/customer-feedback", { state: { carId: car.CarID } });
+            }
+        } catch (err) {
+            console.error("Error checking feedback existence:", err);
+            alert("Failed to check feedback status.");
+        }
+    };
 
-    const handleCancel = () => {
-        setId(0);
+    const updateStatus = async (newStatus) => {
+        if (!rental || !rental.RentalID) {
+            alert('Rental data is missing.');
+            return;
+        }
+    
+        const RentalID = rental.RentalID;
+        
+        try {
+          const response = await axios.put(`http://localhost:5000/api/rentals/${RentalID}`, { status: newStatus });
+    
+          if (response.status === 200) {
+            setRental((prevRental) => ({
+              ...prevRental,
+              RentalStatus: newStatus,
+            }));
+            alert('Rental status updated successfully!');
+          } else {
+            alert('Failed to update rental status.');
+          }
+        } catch (error) {
+          console.error('Error updating rental status:', error);
+          alert('An error occurred while updating the rental status.');
+        }
     };
 
     return (
@@ -109,8 +165,8 @@ const CarStatus = () => {
                 </div>
             </div>
             <div className="RightSide sidefix">
-                {id > 0 && car && rental ? (
-                    <CarOrderDetails car={car} rental={rental} handleCancel={handleCancel} />
+                {car && rental && rental.RentalID !== 0 ? (
+                    <CarOrderDetails car={car} rental={rental} handleUpdateStatus={updateStatus} handleFeedback={handleFeedback}/>
                 ) : (
                     <h1>{ error ? error : "You have not rented any car yet"}</h1>
                 )}

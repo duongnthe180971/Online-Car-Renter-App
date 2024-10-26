@@ -23,7 +23,7 @@ const AdminCarRegistrations = () => {
     const fetchCars = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/cars?status=Pending"
+          "http://localhost:5000/api/cars/pending?status=Pending"
         ); // Fetch only pending cars
         if (!response.ok) {
           throw new Error("Failed to fetch car data");

@@ -208,7 +208,7 @@
 }
 
 /* Filter Section */
-.filter-container {
+.adm-car-registration-container .filter-container {
   display: flex;
   justify-content: center;
   align-items: center;
