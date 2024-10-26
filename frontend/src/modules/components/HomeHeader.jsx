@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/icon/logo.png";
 import "../../styles/home/homeheader.css";
-import Voucher from "../../modules/components/Voucher";
+// import Voucher from "../../modules/components/Voucher";
 import NotificationForm from "../../modules/components/NotificationForm";
 import "../../styles/home/notification.css";
 
@@ -13,35 +13,36 @@ const HomeHeader = ({ id }) => {
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdownDashboard, setShowDropdownDashboard] = useState(false);
-  const [showChat, setShowChat] = useState(false);
-  const [showVoucherPopup, setShowVoucherPopup] = useState(false);
-  const [vouchers, setVouchers] = useState([]);
+  // const [showVoucherPopup, setShowVoucherPopup] = useState(false);
+  // const [vouchers, setVouchers] = useState([]);
 
-  useEffect(() => {
-    fetchVouchers();
-  }, []);
+  // useEffect(() => {
+  //   fetchVouchers();
+  // }, []);
 
-  const fetchVouchers = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/vouchers");
-      setVouchers(response.data);
-    } catch (error) {
-      console.error("Error fetching vouchers:", error);
-    }
+  // const fetchVouchers = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:5000/api/vouchers");
+  //     setVouchers(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching vouchers:", error);
+  //   }
+  // };
+
+  // const handleClaimVoucher = async (voucherId) => {
+  //   try {
+  //     await axios.put(`http://localhost:5000/api/voucher/claim/${voucherId}`, {
+  //       userId: id,
+  //     });
+  //     fetchVouchers();
+  //     alert("Voucher claimed successfully");
+  //   } catch (error) {
+  //     console.error("Error claiming voucher:", error);
+  //   }
+  // };
+  const HandlerAssistant = () => {
+    navigate("/assistant");
   };
-
-  const handleClaimVoucher = async (voucherId) => {
-    try {
-      await axios.put(`http://localhost:5000/api/voucher/claim/${voucherId}`, {
-        userId: id,
-      });
-      fetchVouchers();
-      alert("Voucher claimed successfully");
-    } catch (error) {
-      console.error("Error claiming voucher:", error);
-    }
-  };
-
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.id) {
@@ -156,7 +157,7 @@ const HomeHeader = ({ id }) => {
       </div>
 
       <div className="user">
-        <div className="voucher">
+        {/* <div className="voucher">
           <button
             className="header-voucher-button"
             onClick={() => setShowVoucherPopup(true)}
@@ -170,7 +171,7 @@ const HomeHeader = ({ id }) => {
               onClaim={handleClaimVoucher}
             />
           )}
-        </div>
+        </div> */}
         <NotificationForm id={user?.id} />
         <div className="header-user-dropdown">
           <button
@@ -198,22 +199,9 @@ const HomeHeader = ({ id }) => {
           </button>
         </div>
       </div>
-      <button className="chat-icon" onClick={() => setShowChat(!showChat)}>
+      <button className="chat-icon" onClick={HandlerAssistant}>
         💬
       </button>
-
-      {/* Chat Window */}
-      {showChat && (
-        <div className="chat-window">
-          <div className="chat-header">
-            <h4>Chat Support</h4>
-            <button onClick={() => setShowChat(false)}>✖️</button>
-          </div>
-          <div className="chat-body">
-            <p>Chat feature coming soon!</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

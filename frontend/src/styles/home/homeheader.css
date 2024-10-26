@@ -118,36 +118,6 @@
   cursor: pointer;
   z-index: 1000;
 }
-
-.chat-window {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 300px;
-  max-height: 400px;
-  background-color: #fff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  overflow: hidden;
-  z-index: 1000;
-}
-
-.chat-header {
-  background-color: #4caf50;
-  color: #fff;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.chat-body {
-  color: #4caf50;
-  padding: 10px;
-  overflow-y: auto;
-  max-height: 300px;
-  font-size: 14px;
-}
 .header-voucher-button {
   background-color: #00000046;
   color: #ffffff;
