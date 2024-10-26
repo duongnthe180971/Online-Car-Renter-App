@@ -35,7 +35,7 @@ const Home = ({ id_ }) => {
   }, [currentIndex]); // Add currentIndex as dependency to avoid re-render issues
 
   const [cars, SetCars] = useState(carDemo); // Initial state with demo data or an empty array
-  
+
   // Add try-catch in useEffect
   useEffect(() => {
     const fetchCarData = async () => {

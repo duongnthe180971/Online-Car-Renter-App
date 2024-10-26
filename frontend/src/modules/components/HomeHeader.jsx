@@ -3,69 +3,44 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/icon/logo.png";
 import "../../styles/home/homeheader.css";
+import Voucher from "../../modules/components/Voucher";
+import NotificationForm from "../../modules/components/NotificationForm";
 import "../../styles/home/notification.css";
-
-const Notification = ({ id }) => {
-  const [showNotification, setShowNotification] = useState(false);
-  const [notifications, setData] = useState([]);
-
-  const handleShowNotification = () => {
-    setShowNotification(true);
-  };
-
-  const handleCloseNotification = () => {
-    setShowNotification(false);
-  };
-
-  useEffect(() => {
-    const fetchNotis = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/notification"
-        );
-        const filteredNotis = response.data.filter(
-          (notification) => notification.AccID === id
-        );
-        setData(filteredNotis);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      }
-    };
-
-    fetchNotis();
-  }, [id]);
-
-  return (
-    <div className="notification-container">
-      {showNotification && (
-        <div className="notification-popup">
-          <div className="notification-content">
-            <ul>
-              {notifications.map((item) => (
-                <li key={item.NotificationID}>{item.Description}</li>
-              ))}
-            </ul>
-            <button
-              className="notification-close"
-              onClick={handleCloseNotification}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-      <button className="notification-show" onClick={handleShowNotification}>
-        Notification
-      </button>
-    </div>
-  );
-};
 
 const HomeHeader = ({ id }) => {
   const navigate = useNavigate();
   const [itlogedin, setitlogedin] = useState(false);
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdownDashboard, setShowDropdownDashboard] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+  const [showVoucherPopup, setShowVoucherPopup] = useState(false);
+  const [vouchers, setVouchers] = useState([]);
+
+  useEffect(() => {
+    fetchVouchers();
+  }, []);
+
+  const fetchVouchers = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/vouchers");
+      setVouchers(response.data);
+    } catch (error) {
+      console.error("Error fetching vouchers:", error);
+    }
+  };
+
+  const handleClaimVoucher = async (voucherId) => {
+    try {
+      await axios.put(`http://localhost:5000/api/voucher/claim/${voucherId}`, {
+        userId: id,
+      });
+      fetchVouchers();
+      alert("Voucher claimed successfully");
+    } catch (error) {
+      console.error("Error claiming voucher:", error);
+    }
+  };
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -103,68 +78,142 @@ const HomeHeader = ({ id }) => {
     setUser(null);
     navigate("/login", { state: { id } });
   };
+  const renderDashboardLinks = () => {
+    if (user?.Role === 0) {
+      // Admin
+      return (
+        <>
+          <li>
+            <a href="/finance">Finance Statistic</a>
+          </li>
+          <li>
+            <a href="/car-template">Car Template</a>
+          </li>
+          <li>
+            <a href="/admin-car-registration">Car Registration</a>
+          </li>
+          <li>
+            <a href="/user-management">User Management</a>
+          </li>
+        </>
+      );
+    } else if (user?.Role === 1) {
+      // CarOwner
+      return (
+        <>
+          <li>
+            <a href="/garage">Garage</a>
+          </li>
+          <li>
+            <a href="/rental-request">Rental Request</a>
+          </li>
+          <li>
+            <a href="/rental-history">Rental History</a>
+          </li>
+          <li>
+            <a href="/finance">Finance Statistic</a>
+          </li>
+        </>
+      );
+    } else if (user?.Role === 2) {
+      // Customer
+      return (
+        <>
+          <li>
+            <a href="/car-status">Car Status</a>
+          </li>
+        </>
+      );
+    }
+  };
   return (
     <div className="header-home">
       <div className="logo">
-        <div className="header-logo">
-          <div
-            className="header-logo"
-            onClick={() => navigate("/", { state: { id: user?.id } })}
-          >
-            <img src={logo} alt="logo" />
-          </div>
+        <div className="header-logo" onClick={() => navigate("/")}>
+          <img src={logo} alt="logo" />
         </div>
       </div>
       <div className="header-navbar">
-        <button
-          className="navbar"
-          onClick={() => navigate("/home", { state: { id: user?.id } })}
-        >
+        <button className="click-navbar" onClick={() => navigate("/home")}>
           Home
         </button>
-        <button
-          className="navbar"
-          onClick={() => navigate("/about-us", { state: { id: user?.id } })}
-        >
+        <button className="click-navbar" onClick={() => navigate("/about-us")}>
           About Us
         </button>
-        <button
-          className="navbar"
-          onClick={() => navigate("/car-status", { state: { id: user?.id } })}
-        >
-          Your Renting Car
-        </button>
+        <div className="header-dashboard-dropdown">
+          <button
+            className="click-navbar"
+            onClick={() => setShowDropdownDashboard(!showDropdownDashboard)}
+          >
+            Dashboard 🔽
+          </button>
+          {showDropdownDashboard && (
+            <div className="header-dropdowndashboard-menu">
+              <ul>{renderDashboardLinks()}</ul>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="user">
-        <Notification id={user?.id}></Notification>
+        <div className="voucher">
+          <button
+            className="header-voucher-button"
+            onClick={() => setShowVoucherPopup(true)}
+          >
+            Vouchers
+          </button>
+          {showVoucherPopup && (
+            <Voucher
+              vouchers={vouchers}
+              onClose={() => setShowVoucherPopup(false)}
+              onClaim={handleClaimVoucher}
+            />
+          )}
+        </div>
+        <NotificationForm id={user?.id} />
         <div className="header-user-dropdown">
           <button
             className="header-user-show"
             onClick={() => setShowDropdown(!showDropdown)}
           >
             <i className="fas fa-user-circle"></i>
-            {itlogedin && user && user.UserName ? (
+            {itlogedin && user?.UserName ? (
               <div className="user-info">
                 <span>{user.UserName}</span>
+                {showDropdown && (
+                  <div className="header-dropdown-menu">
+                    <ul>
+                      <li>
+                        <a href="/profile">Profile</a>
+                      </li>
+                      <li onClick={handleLogout}>Logout</li>
+                    </ul>
+                  </div>
+                )}
               </div>
             ) : (
               <a href="../login">Login</a>
             )}
           </button>
-
-          {showDropdown && (
-            <div className="header-dropdown-menu">
-              <ul>
-                <li>
-                  <a href="/profile">Profile</a>
-                </li>
-                <li onClick={handleLogout}>Logout</li>
-              </ul>
-            </div>
-          )}
         </div>
       </div>
+      <button className="chat-icon" onClick={() => setShowChat(!showChat)}>
+        💬
+      </button>
+
+      {/* Chat Window */}
+      {showChat && (
+        <div className="chat-window">
+          <div className="chat-header">
+            <h4>Chat Support</h4>
+            <button onClick={() => setShowChat(false)}>✖️</button>
+          </div>
+          <div className="chat-body">
+            <p>Chat feature coming soon!</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

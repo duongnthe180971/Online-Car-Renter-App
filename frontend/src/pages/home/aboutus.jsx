@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import aboutus from "../../assets/icon/aboutus.gif";
 import { useLocation } from "react-router-dom";
 import "../../styles/home/aboutus.css";
 import HomeHeader from "../../modules/components/HomeHeader";
+import axios from "axios";
 
 const AboutUs = () => {
   const location = useLocation();
@@ -18,6 +19,39 @@ const AboutUs = () => {
     email: "",
     message: "",
   });
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser && storedUser.id) {
+      fetchUserData(storedUser.id);
+    }
+  }, []);
+  const [user, setUser] = useState(null);
+  const fetchUserData = async (userId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/account/${userId}`
+      );
+      if (response.data) {
+        setUser(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const roleGreeting = () => {
+    if (!user) return "Welcome Guest, you need login to use our service!";
+    switch (user.Role) {
+      case 0:
+        return `Hello Admin ${user.UserName}, welcome to our About Us page!`;
+      case 1:
+        return `Hello Car Owner ${user.UserName}, welcome to our About Us page!`;
+      case 2:
+        return `Hello Customer ${user.UserName}, welcome to our About Us page!`;
+      default:
+        return `Hello ${user.UserName}, welcome to our About Us page!`;
+    }
+  };
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -102,7 +136,9 @@ const AboutUs = () => {
           <div className="toggle-switch">
             <input type="checkbox" id="dark-mode-toggle" />
           </div>
+          <h5>{roleGreeting()}</h5>
           <h1>CONTACT US</h1>
+
           <p>
             <h5>
               Each trip is a journey to discover life and the world around you,
@@ -150,7 +186,7 @@ const AboutUs = () => {
             <button type="submit">SEND</button>
           </form>
           <div class="social-icons">
-            <a href="./aboutus" title="Contact">
+            <a href="./about-us" title="Contact">
               <i class="fas fa-phone"></i> 1900.1234
             </a>
             <a href="https://facebook.com/" title="Facebook">
