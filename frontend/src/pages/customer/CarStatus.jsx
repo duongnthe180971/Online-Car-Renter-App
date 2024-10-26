@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ChooseBarCustomer from '../../modules/components/ChooseBarCustomer';
 import { formatPrice, formatDate_vn } from "../../assets/format/numberFormat";
@@ -7,7 +8,6 @@ import "../../styles/customer/CarStatus.css";
 const CarOrderDetails = ({ car, rental, handleCancel }) => {
     const { CarImage, CarName, Rate, Price } = car;
     const { RentalStart, RentalEnd, RentalStatus } = rental;
-
     return (
         <div className="car-order-container">
             <div className="title">My Renting Car:</div>
@@ -33,7 +33,10 @@ const CarOrderDetails = ({ car, rental, handleCancel }) => {
             </div>
             <ProgressBar status={RentalStatus} />
             <div className="cancel-section">
-                <button className="cancel-btn" onClick={handleCancel}>Cancel Order</button>
+                { RentalStatus === 1 ? (<button className="cancel-btn" onClick={handleCancel}>Cancel Order</button>) : 
+                (RentalStatus === 2 ? (<button className="in-rent-btn" onClick={handleCancel}>In Rent</button>) : 
+                (RentalStatus === 3 ? (<button className="return-btn" onClick={handleCancel}>Return Car</button>) : (<div/>) ) ) 
+                }
             </div>
         </div>
     );
@@ -66,26 +69,33 @@ const ProgressBar = ({ status }) => {
     );
 };
 
-const CarStatus = ({ id }) => {
-    const [id_, setId] = useState(id);
+const CarStatus = () => {
+    const location = useLocation();
+    const [{id}, setId] = useState(location.state || { id: 1 });
     const [car, setCar] = useState(null);
     const [rental, setRental] = useState(null);
+    const [error, setError] = useState('');
 
-    // Fetch car data
     useEffect(() => {
-        const fetchCarData = async () => {
-            const response = await axios.get("http://localhost:5000/api/car");
-                const car_ = response.data.find((item) => item.CarID === id_);
+        const fetchData = async () => {
+            try {
+                const carResponse = await axios.get("http://localhost:5000/api/car");
+                const car_ = carResponse.data.find((item) => item.CarID === id);
                 setCar(car_);
-        };
-        const fetchRentalData = async () => {
-            const response = await axios.get("http://localhost:5000/api/rental");
-                const rental_ = response.data.find((item) => item.CarID === id_);
+
+                const rentalResponse = await axios.get("http://localhost:5000/api/rental");
+                const filteredRentals = rentalResponse.data.filter((item) => item.CarID === id);
+                const sortedRentals = filteredRentals.sort((a, b) => b.RentalID - a.RentalID);
+                const rental_ = sortedRentals.length > 0 ? sortedRentals[0] : null;
                 setRental(rental_);
+            } catch (err) {
+                setError("Error loading car or rental data");
+                console.error("Error fetching data:", err);
+            }
         };
-        fetchCarData();
-        fetchRentalData();
-    }, [id_]);
+
+        fetchData();
+    }, [id]);
 
     const handleCancel = () => {
         setId(0);
@@ -99,10 +109,10 @@ const CarStatus = ({ id }) => {
                 </div>
             </div>
             <div className="RightSide sidefix">
-                {id_ > 0 && car && rental ? (
+                {id > 0 && car && rental ? (
                     <CarOrderDetails car={car} rental={rental} handleCancel={handleCancel} />
                 ) : (
-                    <h1>You have not rented any car yet</h1>
+                    <h1>{ error ? error : "You have not rented any car yet"}</h1>
                 )}
             </div>
         </div>

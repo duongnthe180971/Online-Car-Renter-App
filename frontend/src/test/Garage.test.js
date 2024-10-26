@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect'; // for additional matchers
+import '@testing-library/jest-dom'; // for additional matchers
 import axios from 'axios';
 import { BrowserRouter as Router } from 'react-router-dom'; // wrap Router for navigate
 import Garage from '../pages/car_owner/Garage';

@@ -1,14 +1,56 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet-routing-machine';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import '../../styles/customer/CustomerMap.css';
 
-const LocationForm = ({ fromLocation, toLocation, setFromLocation, setToLocation, handleShowWay }) => {
+const geocodeLocation = async (locationName) => {
+    try {
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}`
+        );
+        const data = await response.json();
+        if (data.length > 0) {
+            return {
+                name: locationName,
+                lat: parseFloat(data[0].lat),
+                lng: parseFloat(data[0].lon),
+            };
+        } else {
+            console.error('Location not found:', locationName);
+            return null;
+        }
+    } catch (error) {
+        console.error('Geocoding error:', error);
+        return null;
+    }
+};
+
+const removeAccents = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
+
+const fromIcon = L.divIcon({
+    html: ReactDOMServer.renderToString(<FaMapMarkerAlt style={{ color: 'red', fontSize: '24px' }} />),
+    iconSize: [24, 24],
+    className: '',
+});
+
+const toIcon = L.divIcon({
+    html: ReactDOMServer.renderToString(<FaMapMarkerAlt style={{ color: 'green', fontSize: '24px' }} />),
+    iconSize: [24, 24],
+    className: '',
+});
+
+const LocationForm = ({ fromLocation, toLocation, setFromLocation, setToLocation, handleShowWay, error }) => {
     return (
         <div className="form">
             <div className="form-group">
-                <label htmlFor="fromInput">From:</label>
+                <label htmlFor="fromInput">Your Location:</label>
                 <input
                     id="fromInput"
                     value={fromLocation.name}
@@ -17,7 +59,7 @@ const LocationForm = ({ fromLocation, toLocation, setFromLocation, setToLocation
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="toInput">To:</label>
+                <label htmlFor="toInput">Car Location:</label>
                 <input
                     id="toInput"
                     value={toLocation.name}
@@ -26,41 +68,87 @@ const LocationForm = ({ fromLocation, toLocation, setFromLocation, setToLocation
                 />
             </div>
             <button className="show-way-button" onClick={handleShowWay}>Show Way</button>
+            {error && <p className="error-message" style={{margin: 2 + 'em'}}>{error}</p>}
         </div>
     );
 };
 
-const MapComponent = ({ fromLocation, toLocation }) => {
-    const mapRef = useRef();
+const Routing = ({ fromLocation, toLocation }) => {
+    const map = useMap();
+    const routingControlRef = useRef(null);
 
     useEffect(() => {
-        if (fromLocation && toLocation && mapRef.current) {
-            const map = mapRef.current;
+        if (!fromLocation || !toLocation ) return;
 
-            map.flyToBounds([
-                [fromLocation.lat, fromLocation.lng],
-                [toLocation.lat, toLocation.lng]
-            ], { padding: [50, 50] });
+        if (routingControlRef.current) {
+            try {
+                routingControlRef.current.getPlan().setWaypoints([]);
+                map.removeControl(routingControlRef.current);
+            } catch (err) {
+                console.error('Error while removing routing control:', err);
+            }
         }
-    }, [fromLocation, toLocation]);
 
+        const routingControl = L.Routing.control({
+            waypoints: [
+                L.latLng(fromLocation.lat, fromLocation.lng),
+                L.latLng(toLocation.lat, toLocation.lng),
+            ],
+            routeWhileDragging: true,
+            lineOptions: {
+                styles: [{ color: 'navy', weight: 4 }],
+            },
+            createMarker: () => null,
+            addWaypoints: false,
+        }).addTo(map);
+
+        const controlContainer = document.getElementsByClassName('leaflet-routing-container')[0];
+        if (controlContainer) {
+            controlContainer.style.display = 'none';
+        }
+
+        routingControlRef.current = routingControl;
+
+        return () => {
+            if (routingControlRef.current) {
+                try {
+                    routingControlRef.current.getPlan().setWaypoints([]);
+                    map.removeControl(routingControlRef.current);
+                } catch (err) {
+                    console.error('Error while removing routing control during cleanup:', err);
+                }
+                routingControlRef.current = null;
+            }
+        };
+    }, [fromLocation, toLocation, map]);
+
+    return null;
+};
+
+
+const MapComponent = ({ fromLocation, toLocation }) => {
     return (
         <div className="map-container">
-            <MapContainer center={[21.0285, 105.8542]} zoom={13} className="map" ref={mapRef}>
+            <MapContainer
+                center={[fromLocation.lat || 21.0285, fromLocation.lng || 105.8542]}
+                zoom={13}
+                className="map"
+            >
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
                 />
-                {fromLocation && (
-                    <Marker position={[fromLocation.lat, fromLocation.lng]}>
+                {fromLocation.lat && (
+                    <Marker position={[fromLocation.lat, fromLocation.lng]} icon={fromIcon}>
                         <Popup>From: {fromLocation.name}</Popup>
                     </Marker>
                 )}
-                {toLocation && (
-                    <Marker position={[toLocation.lat, toLocation.lng]}>
+                {toLocation.lat && (
+                    <Marker position={[toLocation.lat, toLocation.lng]} icon={toIcon}>
                         <Popup>To: {toLocation.name}</Popup>
                     </Marker>
                 )}
+                <Routing fromLocation={fromLocation} toLocation={toLocation} />
             </MapContainer>
         </div>
     );
@@ -68,18 +156,46 @@ const MapComponent = ({ fromLocation, toLocation }) => {
 
 const CustomerMap = () => {
     const [fromLocation, setFromLocation] = useState({
-        name: 'Dai Hoc FPT Ha Noi',
-        lat: 21.0367,
-        lng: 105.8342,
+        name: '',
+        lat: 0,
+        lng: 0,
     });
     const [toLocation, setToLocation] = useState({
-        name: 'So 33 Duong Tran Cung Quan Bac Tu Liem Ha Noi',
-        lat: 21.0381,
-        lng: 105.7821,
+        name: '',
+        lat: 0,
+        lng: 0,
     });
 
-    const handleShowWay = () => {
-        console.log('Showing directions from:', fromLocation, 'to:', toLocation);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const geocodeDefaultLocations = async () => {
+            const geocodedFrom = await geocodeLocation('Dai Hoc FPT Ha Noi');
+            const geocodedTo = await geocodeLocation('75 Hang Bong, Hoan Kiem, Ha Noi');
+
+            if (geocodedFrom && geocodedTo) {
+                setFromLocation(geocodedFrom);
+                setToLocation(geocodedTo);
+            }
+        };
+
+        geocodeDefaultLocations();
+    }, []);
+
+    const handleShowWay = async () => {
+        const cleanFromLocationName = removeAccents(fromLocation.name);
+        const cleanToLocationName = removeAccents(toLocation.name);
+
+        const geocodedFrom = await geocodeLocation(cleanFromLocationName);
+        const geocodedTo = await geocodeLocation(cleanToLocationName);
+
+        if (geocodedFrom && geocodedTo) {
+            setFromLocation(geocodedFrom);
+            setToLocation(geocodedTo);
+            setError("");
+        } else {
+            setError("One or both locations were not found. Please check the inputs.");
+        }
     };
 
     return (
@@ -90,6 +206,7 @@ const CustomerMap = () => {
                 setFromLocation={setFromLocation}
                 setToLocation={setToLocation}
                 handleShowWay={handleShowWay}
+                error={error}
             />
             <MapComponent fromLocation={fromLocation} toLocation={toLocation} />
         </div>

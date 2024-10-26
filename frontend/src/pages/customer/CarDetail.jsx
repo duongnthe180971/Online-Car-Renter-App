@@ -1,38 +1,45 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import DatePicker from "react-datepicker";
-import { getNumOfDay, formatPrice} from "../../assets/format/numberFormat";
+import { getNumOfDay, formatPrice } from "../../assets/format/numberFormat";
 import "../../styles/customer/CarDetail.css";
 import 'react-datepicker/dist/react-datepicker.css';
 
 const CarDetailCard = ({ car }) => {
     const { CarID, GarageID, CarImage, CarName, Rate, Seats, CarType, Gear, Fuel, CarDescription } = car;
-    const [address, setAddress] = useState("123 Tran Duy Hung, Cau Giay, Ha Noi");
+    const [address, setAddress] = useState("");
     const [features, setFeatures] = useState([]);
 
     useEffect(() => {
         const fetchAddressData = async () => {
-            const resGarage = await axios.get("http://localhost:5000/api/garage");
-            const garage = resGarage.data.find((item) => item.GarageID === GarageID);
-            const accID = garage.CarOwnerID;
-            const resAccount = await axios.get("http://localhost:5000/api/account");
-            const account = resAccount.data.find((item) => item.id === accID);
-            const address_ = account.Address;
-            setAddress(address_);
+            try {
+                const resGarage = await axios.get("http://localhost:5000/api/garage");
+                const garage = resGarage.data.find((item) => item.GarageID === GarageID);
+                const accID = garage.CarOwnerID;
+                const resAccount = await axios.get("http://localhost:5000/api/account");
+                const account = resAccount.data.find((item) => item.id === accID);
+                setAddress(account.Address);
+            } catch (err) {
+                console.error("Error fetching address:", err);
+            }
         };
 
         const fetchFeatureData = async () => {
-            const resFeatures = await axios.get(`http://localhost:5000/api/features/${CarID}`);
-            const features_ = resFeatures.data.map((f) => f.Name);
-            setFeatures(features_);
+            try {
+                const resFeatures = await axios.get(`http://localhost:5000/api/features/${CarID}`);
+                const features_ = resFeatures.data.map((f) => f.Name);
+                setFeatures(features_);
+            } catch (err) {
+                console.error("Error fetching features:", err);
+            }
         };
 
         if (CarID && GarageID) {
             fetchAddressData();
             fetchFeatureData();
         }
-    }, [CarID, GarageID]); // Include dependencies to avoid unnecessary re-renders
+    }, [CarID, GarageID]);
 
     const featureList = Array.isArray(features) ? features : [];
 
@@ -70,15 +77,17 @@ const CarDetailCard = ({ car }) => {
     );
 }
 
-const RentalCard = ({ car }) => {
+const RentalCard = ({ car, accID }) => {
     const navigate = useNavigate();
     const { Price, CarID } = car;
     const insurance = 60000;
 
     const [formData, setFormData] = useState({
         startDate: new Date(),
-        returnDate: new Date(),
+        returnDate: new Date().setDate(new Date().getDate() + 1),
     });
+
+    const [errors, setErrors] = useState('');
 
     const totalRentingPrice = Price * getNumOfDay(formData.startDate, formData.returnDate);
 
@@ -87,20 +96,43 @@ const RentalCard = ({ car }) => {
             ...prevData,
             [name]: date,
         }));
+
+        if (name === 'startDate') {
+            validateDates(date, formData.returnDate);
+        } else {
+            validateDates(formData.startDate, date);
+        }
+    };
+
+    const validateDates = (startDate, returnDate) => {
+        const today = new Date();
+        let errorMessage = '';
+
+        if (startDate < today.setHours(0, 0, 0, 0)) {
+            errorMessage = 'The start date cannot be earlier than today.';
+        } else if (getNumOfDay(startDate, returnDate) <= 0) {
+            errorMessage = 'The return date must be at least 1 day after the start date.';
+        }
+
+        setErrors(errorMessage);
     };
 
     const addNewRental = async () => {
+        if (errors) {
+            return;
+        }
+
         const newRental = {
             CarID: CarID,
-            CustomerID: 3,  // Adjust dynamically based on logged-in user
+            CustomerID: accID,
             RentalStart: formData.startDate,
             RentalEnd: formData.returnDate,
-            RentalStatus: 1,  // Default to 1 for booked
+            RentalStatus: 1,
         };
 
         try {
             await axios.post('http://localhost:5000/api/rental', newRental);
-            navigate('/car-status');
+            navigate('/car-status', { state: { id: CarID } });
         } catch (error) {
             console.error('Error adding rental:', error);
         }
@@ -129,36 +161,45 @@ const RentalCard = ({ car }) => {
                 </div>
             </div>
             <div className="price-details">
-                <div className="item"><h7>Total Renting Price:</h7><h7>{formatPrice(totalRentingPrice)} VND</h7></div>
+                <div className="item"><h7>Total Renting Price:</h7><h7>{errors ? 0 : formatPrice(totalRentingPrice)} VND</h7></div>
                 <div className="item"><h7>Insurance:</h7><h7>{formatPrice(insurance)} VND</h7></div>
-                <div className="item"><h5>Total:</h5><h5>{formatPrice(totalRentingPrice + insurance)} VND</h5></div>
+                <div className="item"><h5>Total:</h5><h5>{errors ? 0 : formatPrice(totalRentingPrice + insurance)} VND</h5></div>
             </div>
             <div className='button-container'>
                 <button className="book-button" onClick={addNewRental}>Book</button>
             </div>
+            {errors && <p className="error-message">{errors}</p>}
         </div>
     );
-}
+};
 
-const CarDetail = ({ id }) => {
+
+const CarDetail = () => {
+    const location = useLocation();
+    const { carID } = location.state || {carID: 1};
+    const { accID } = location.state || {accID: 1};
     const [car, setCar] = useState(null);
 
     useEffect(() => {
         const fetchCarData = async () => {
-            const response = await axios.get("http://localhost:5000/api/car");
-            const car_ = response.data.find((item) => item.CarID === id);
-            setCar(car_);
+            try {
+                const response = await axios.get("http://localhost:5000/api/car");
+                const car_ = response.data.find((item) => item.CarID === carID);
+                setCar(car_);
+            } catch (err) {
+                console.error("Error fetching car data:", err);
+            }
         };
 
         fetchCarData();
-    }, [id]);
+    }, [carID]);
 
     if (!car) return <div>Car not found.</div>;
 
     return (
         <div className="car-detail-container">
             <CarDetailCard car={car} />
-            <RentalCard car={car} />
+            <RentalCard car={car} accID={accID} />
         </div>
     );
 }

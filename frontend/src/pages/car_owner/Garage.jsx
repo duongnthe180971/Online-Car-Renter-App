@@ -4,12 +4,14 @@ import ChooseBar from "../../modules/components/ChooseBarCarOwner";
 import "../../styles/cars_owner/Garage.css";
 import CarCard from "../../modules/components/CarCard";
 import { useNavigate } from 'react-router-dom';
+import DeleteConfirmationCard from '../../modules/components/DeleteConfirmCard';
 
 const Garage = ({ garageID }) => {
     const navigate = useNavigate();
     const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [carToDelete, setCarToDelete] = useState(null);
     useEffect(() => {
         const fetchCarData = async () => {
             try {
@@ -42,6 +44,24 @@ const Garage = ({ garageID }) => {
         );
         setCars(updatedCars);
     };
+
+    const handleDeleteClick = (carId) => {
+        setCarToDelete(carId);
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:5000/api/car/${carToDelete}`);
+            setCars(cars.filter((car) => car.CarID !== carToDelete));
+            setCarToDelete(null);
+        } catch (error) {
+            setError('Failed to delete the car.');
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setCarToDelete(null); // Just close the modal
+    };
     return (
         <div className="AllPage">
             <div className="LeftSide">
@@ -62,13 +82,25 @@ const Garage = ({ garageID }) => {
                     ) : (
                         <div className="garageCarList">
                             {cars.map((car, index) => (
-                                <CarCard key={car.id || index} car={car} onStatusChange={handleStatusChange} />
+                                <CarCard key={car.id || index} 
+                                         car={car} 
+                                         onStatusChange={handleStatusChange}
+                                         onDeleteClick={handleDeleteClick}
+                                         />
                             ))}
                         </div>
                     )}
                 </div>
 
             </div>
+
+            {/* Show Delete Confirmation Card if a car is selected for deletion */}
+            {carToDelete && (
+                <DeleteConfirmationCard
+                    onConfirmDelete={handleConfirmDelete}
+                    onCancelDelete={handleCancelDelete}
+                />
+            )}
         </div>
     );
 };
