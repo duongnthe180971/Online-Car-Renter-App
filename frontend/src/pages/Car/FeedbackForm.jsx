@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/car/FeedbackStyle.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 const FeedbackForm = () => {
@@ -8,14 +8,23 @@ const FeedbackForm = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [feedback, setFeedback] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [authorized, setAuthorized] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
-  
-  const { carId, customerId } = location.state || {};
+  const { carId } = location.state || {}; 
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+
+    if (!userData || userData.role !== 2) {
+      setAuthorized(false);
+      return;
+    }
+
+    setUserId(userData.id);
+
     if (carId) {
       axios.get(`http://localhost:5000/api/car/${carId}`)
         .then((response) => {
@@ -29,19 +38,19 @@ const FeedbackForm = () => {
 
   const handleSubmitFeedback = async () => {
     if (rating === 0) {
-      setErrorMessage("Please select a star rating before submitting your feedback.");
+      alert("Please select a star rating before submitting your feedback.");
       return;
     }
 
     if (!feedback) {
-      setErrorMessage("Please enter your feedback.");
+      alert("Please enter your feedback.");
       return;
     }
 
     try {
       await axios.post("http://localhost:5000/api/feedback", {
         CarID: carId,
-        CustomerID: customerId,
+        CustomerID: userId,
         FeedbackDescription: feedback,
         Rate: rating,
       });
@@ -56,6 +65,16 @@ const FeedbackForm = () => {
     }
   };
 
+  if (!authorized) {
+    return (
+      <div className="error-page">
+        <h1>Access Denied</h1>
+        <p>You do not have permission to view this page.</p>
+        <button onClick={() => navigate("/")}>Go to Home</button>
+      </div>
+    );
+  }
+
   return (
     <div className="feedback-wrapper">
       <div className="containerFeedback">
@@ -63,7 +82,7 @@ const FeedbackForm = () => {
           <a href="#" onClick={() => navigate(-1)}><span></span> Back</a>
         </div>
 
-        <div className="title">Feedback Car</div>
+        <div className="feedback-title">Feedback Car</div>
 
         <div className="feedback-car">Feedback Car: {carName}</div>
 
@@ -87,8 +106,6 @@ const FeedbackForm = () => {
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
         />
-
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
 
         <button className="feedback-button" onClick={handleSubmitFeedback}>
           Submit Feedback

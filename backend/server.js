@@ -78,14 +78,13 @@ app.put("/api/cars/:id", async (req, res) => {
   } catch (error) {}
 });
 
-//Rental
 app.get("/api/rental", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
     const result = await sql.query("SELECT * FROM Rental");
     res.json(result.recordset);
   } catch (err) {
-    console.error("Error connecting to the database:", err);
+    console.error("Error fetching rentals:", err);
     res.status(500).send("Server error");
   }
 });
@@ -136,22 +135,22 @@ app.post("/api/rental", async (req, res) => {
 
 app.put("/api/rentals/:id", async (req, res) => {
   const rentalId = req.params.id;
-  const { status } = req.body;
+  const { status } = req.body; 
 
   try {
-    await sql.connect(sqlConfig);
+      await sql.connect(sqlConfig);
 
     const result =
       await sql.query`UPDATE Rental SET RentalStatus = ${status} WHERE RentalID = ${rentalId}`;
 
-    if (result.rowsAffected[0] > 0) {
-      res.status(200).json({ message: "Rental status updated successfully" });
-    } else {
-      res.status(404).json({ message: "Rental not found" });
-    }
+      if (result.rowsAffected[0] > 0) {
+          res.status(200).json({ message: "Rental status updated successfully" });
+      } else {
+          res.status(404).json({ message: "Rental not found" });
+      }
   } catch (error) {
-    console.error("Error updating rental status:", error);
-    res.status(500).json({ message: "Server error" });
+      console.error("Error updating rental status:", error);
+      res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -830,30 +829,22 @@ app.put("/api/deactivate-user/:id", async (req, res) => {
 // API Endpoint for fetching financial data based on year
 app.get("/api/finance/:year", async (req, res) => {
   const { year } = req.params;
-app.post("/api/feedback", async (req, res) => {
-  const { CarID, CustomerID, FeedbackDescription, Rate } = req.body;
 
   try {
     await sql.connect(sqlConfig);
-    const query = `
-      INSERT INTO Feedback (CarID, CustomerID, FeedbackDescription, FeedbackDate, Rate)
-      VALUES (@CarID, @CustomerID, @FeedbackDescription, GETDATE(), @Rate)
-    `;
 
-    const request = new sql.Request();
-    request.input("CarID", sql.Int, CarID);
-    request.input("CustomerID", sql.Int, CustomerID);
-    request.input("FeedbackDescription", sql.VarChar(255), FeedbackDescription);
-    request.input("Rate", sql.Int, Rate);
+    const result = await sql.query(`
+      SELECT FinanceID, Date, totalMoney, AccID
+      FROM Bill 
+      WHERE YEAR(Date) = ${year}
+    `);
 
-    await request.query(query);
-
-    res.status(201).send("Feedback submitted successfully");
-  } catch (error) {
-    console.error("Error submitting feedback:", error);
+    res.status(200).json(result.recordset); // Send the query results back
+  } catch (err) {
+    console.error("Error fetching financial data", err);
     res.status(500).send("Server error");
   }
-})});
+});
 
 
 app.post("/api/feedback", async (req, res) => {
@@ -912,6 +903,96 @@ app.put("/api/car/update-rating/:carId", async (req, res) => {
   }
 });
 
+app.put("/api/car/:carId/delete", async (req, res) => {
+  const { carId } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+
+    // Set CarStatus to 'Deleted' instead of deleting the car
+    await sql.query(`UPDATE Car SET CarStatus = 'Deleted' WHERE CarID = ${carId}`);
+
+    res.status(200).send({ message: "Car marked as deleted successfully" });
+  } catch (error) {
+    console.error("Error marking car as deleted:", error);
+    res.status(500).send({ message: "Error marking car as deleted" });
+  }
+});
+
+app.get("/api/register-cars", async (req, res) => {
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query("SELECT * FROM RegisterCar");
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).send("Error fetching register cars");
+  }
+});
+
+// Get features for a specific registered car
+app.get("/api/register-cars/:carId/features", async (req, res) => {
+  const { carId } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(`
+      SELECT f.Name
+      FROM RegisterCarFeature rcf
+      JOIN Feature f ON rcf.FeatureID = f.FeatureID
+      WHERE rcf.CarID = ${carId}`);
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).send("Error fetching car features");
+  }
+});
+
+// Approve a car registration
+app.post("/api/register-cars/:carId/approve", async (req, res) => {
+  const { carId } = req.params;
+  const { adminId } = req.body;
+  try {
+    await sql.connect(sqlConfig);
+
+    // Fetch car details
+    const carResult = await sql.query(`SELECT * FROM RegisterCar WHERE CarID = ${carId}`);
+    if (carResult.recordset.length === 0) return res.status(404).send("Car not found");
+    const car = carResult.recordset[0];
+
+    // Insert into Car table
+    const carInsertQuery = `
+      INSERT INTO Car (GarageID, CarName, Brand, Rate, Price, CarType, Seats, Gear, Fuel, CarStatus, CarImage, CarDescription)
+      VALUES (${car.GarageID}, '${car.CarName}', '${car.Brand}', ${car.Rate}, ${car.Price}, '${car.CarType}',
+              ${car.Seats}, '${car.Gear}', '${car.Fuel}', 'Closed', '${car.CarImage}', '${car.CarDescription}');
+      SELECT SCOPE_IDENTITY() AS CarID;
+    `;
+    const newCarId = (await sql.query(carInsertQuery)).recordset[0].CarID;
+
+    // Migrate features
+    const featureResult = await sql.query(`SELECT FeatureID FROM RegisterCarFeature WHERE CarID = ${carId}`);
+    for (const feature of featureResult.recordset) {
+      await sql.query(`INSERT INTO CarFeature (CarID, FeatureID) VALUES (${newCarId}, ${feature.FeatureID})`);
+    }
+
+    // Delete old records
+    await sql.query(`DELETE FROM RegisterCarFeature WHERE CarID = ${carId}`);
+    await sql.query(`DELETE FROM RegisterCar WHERE CarID = ${carId}`);
+
+    res.status(200).send("Car approved successfully");
+  } catch (err) {
+    res.status(500).send("Error approving car");
+  }
+});
+
+// Decline a car registration
+app.delete("/api/register-cars/:carId/decline", async (req, res) => {
+  const { carId } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    await sql.query(`DELETE FROM RegisterCarFeature WHERE CarID = ${carId}`);
+    await sql.query(`DELETE FROM RegisterCar WHERE CarID = ${carId}`);
+    res.status(200).send("Car declined successfully");
+  } catch (err) {
+    res.status(500).send("Error declining car");
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

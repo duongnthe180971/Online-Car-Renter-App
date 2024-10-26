@@ -23,7 +23,7 @@ const AdminCarRegistrations = () => {
     const fetchCars = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/cars/pending?status=Pending"
+          "http://localhost:5000/api/register-cars"
         ); // Fetch only pending cars
         if (!response.ok) {
           throw new Error("Failed to fetch car data");
@@ -70,9 +70,9 @@ const AdminCarRegistrations = () => {
   const handleApprove = async (carId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/cars/${carId}/approve`,
+        `http://localhost:5000/api/register-cars/${carId}/approve`,
         {
-          method: "PUT",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ adminId }),
         }
@@ -94,11 +94,10 @@ const AdminCarRegistrations = () => {
   const handleDecline = async (carId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/cars/${carId}/decline`,
+        `http://localhost:5000/api/register-cars/${carId}/decline`,
         {
-          method: "PUT",
+          method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ adminId }),
         }
       );
 
@@ -115,13 +114,30 @@ const AdminCarRegistrations = () => {
   };
 
   // Function to handle viewing car details
-  const handleViewInfo = (car) => {
+  const handleViewInfo = async (car) => {
     setSelectedCar(car); // Set the selected car object in state
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/register-cars/${car.CarID}/features`
+      );
+      const featureData = await response.json();
+      setSelectedCar((prev) => ({ ...prev, features: featureData }));
+    } catch (err) {
+      alert("Failed to load features");
+    }
   };
 
   // Function to close the detailed view
   const handleCloseInfo = () => {
     setSelectedCar(null); // Close the detailed view
+  };
+
+  // Function to download license file
+  const handleDownloadLicense = (licenseUrl) => {
+    const link = document.createElement("a");
+    link.href = licenseUrl;
+    link.download = "license.pdf";
+    link.click();
   };
 
   // Display a loading indicator while data is being fetched
@@ -249,8 +265,24 @@ const AdminCarRegistrations = () => {
                     <strong>Fuel:</strong> {selectedCar.Fuel}
                   </p>
                   <p>
+                    <strong>Type:</strong> {selectedCar.CarType}
+                  </p>
+                  <p>
+                    <strong>Gear:</strong> {selectedCar.Gear}
+                  </p>
+                  <p>
                     <strong>Description:</strong> {selectedCar.CarDescription}
                   </p>
+                  <p>
+                    <strong>Features:</strong>{" "}
+                    {selectedCar.features &&
+                      selectedCar.features.map((feature) => feature.Name).join(", ")}
+                  </p>
+                  <button
+                    onClick={() => handleDownloadLicense(selectedCar.License)}
+                  >
+                    Download License
+                  </button>
                 </div>
               </div>
             </div>
