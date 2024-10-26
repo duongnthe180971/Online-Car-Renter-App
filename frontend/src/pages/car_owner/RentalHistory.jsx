@@ -21,8 +21,39 @@ const getStatusLabel = (status) => {
   }
 };
 
-const RentalHistory = ({ garageID }) => {
+
+
+const RentalHistory = () => {
   const [filteredRentalHistory, setRentalHistory] = useState([]);
+  const [Accid, setAccID] = useState(0);
+  const [garageID, setGarageID] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser && storedUser.id) {
+        setAccID(storedUser.id);
+    }
+    
+    const fetchGarageData = async () => {
+        try {
+            if (Accid) {
+                const responseGarage = await axios.get(`http://localhost:5000/api/garage/${Accid}`);
+                if (responseGarage.data.length > 0) {
+                    setGarageID(responseGarage.data[0].GarageID); // Ensure data exists before setting
+                } else {
+                    console.log("No garage found for this CarOwnerID");
+                }
+            }
+        } catch (error) {
+            setError("Server error");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchGarageData();
+}, [Accid]);
 
   useEffect(() => {
     const fetchRentalData = async () => {

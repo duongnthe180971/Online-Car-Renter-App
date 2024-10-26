@@ -36,11 +36,11 @@ const App = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/finance" element={<FinancePage />} />
-        <Route path="/profile" element={<MyProfile id={1}/>}/>
-        <Route path="/garage" element={<Garage garageID={1} />} />
+        <Route path="/profile" element={<MyProfile/>}/>
+        <Route path="/garage" element={<Garage/>} />
         <Route
           path="/rental-request"
-          element={<RentalRequest garageID={3} />}
+          element={<RentalRequest/>}
         />
         <Route
           path="/rental-order"
@@ -48,7 +48,7 @@ const App = () => {
         />
         <Route
           path="/rental-history"
-          element={<RentalHistory garageID={1} />}
+          element={<RentalHistory/>}
         />
         <Route
           path="/profile-partner"

@@ -274,6 +274,18 @@ app.get("/api/garage", async (req, res) => {
   }
 });
 
+app.get("/api/garage/:id", async (req, res) => { 
+  try { 
+    await sql.connect(sqlConfig);
+    const {id} = req.params;
+    const result = await sql.query(`SELECT * FROM Garage Where CarOwnerID = ${id}`);
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("Error connecting to the database:", err);
+    res.status(500).send("Server error");
+  }
+});
+
 app.get("/api/feature", async (req, res) => {
   try {
     await sql.connect(sqlConfig);
@@ -567,12 +579,6 @@ app.get("/api/feedback/:carId", async (req, res) => {
       JOIN Account a ON f.CustomerID = a.id
       WHERE f.CarID = ${carId}
     `);
-
-    if (result.recordset.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No feedback found for this CarID" });
-    }
 
     res.json(result.recordset);
   } catch (err) {

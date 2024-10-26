@@ -6,17 +6,51 @@ import CarCard from "../../modules/components/CarCard";
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationCard from '../../modules/components/DeleteConfirmCard';
 
-const Garage = ({ garageID }) => {
+const Garage = () => {
     const navigate = useNavigate();
     const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [carToDelete, setCarToDelete] = useState(null);
+    const [Accid, setAccID] = useState(0);
+    const [garageID, setGarageID] = useState(0);
+    
     useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser && storedUser.id) {
+            setAccID(storedUser.id);
+        }
+        
+        const fetchGarageData = async () => {
+            try {
+                if (Accid) {
+                    const responseGarage = await axios.get(`http://localhost:5000/api/garage/${Accid}`);
+                    if (responseGarage.data.length > 0) {
+                        setGarageID(responseGarage.data[0].GarageID); // Ensure data exists before setting
+                    } else {
+                        console.log("No garage found for this CarOwnerID");
+                    }
+                }
+            } catch (error) {
+                setError("Server error");
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        fetchGarageData();
+    }, [Accid]);
+
+    useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser && storedUser.id) {
+            setAccID(storedUser.id);
+        }
+
         const fetchCarData = async () => {
             try {
                 const response = await axios.get("http://localhost:5000/api/car");
-                const filteredCars = response.data.filter(car => car.GarageID === garageID);
+                const filteredCars = response.data.filter(car => car.GarageID === garageID && car.CarStatus !== 'Deleted' );
                 if (garageID === 0) {
                     setCars(response.data)
                 } else {
@@ -28,9 +62,8 @@ const Garage = ({ garageID }) => {
                 setLoading(false); // Stop loading after fetching or error
             }
         };
-
         fetchCarData();
-    }, [garageID]);
+    },[garageID]);
 
     const handleAddCarClick = () => {
         navigate(`/car-registration/${garageID}`);
@@ -51,9 +84,10 @@ const Garage = ({ garageID }) => {
 
     const handleConfirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:5000/api/car/${carToDelete}`);
+            await axios.put(`http://localhost:5000/api/car/${carToDelete}/delete`);
             setCars(cars.filter((car) => car.CarID !== carToDelete));
             setCarToDelete(null);
+            //window.location.reload();
         } catch (error) {
             setError('Failed to delete the car.');
         }

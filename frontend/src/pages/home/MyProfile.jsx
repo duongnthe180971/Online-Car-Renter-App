@@ -7,12 +7,13 @@ import EditProfileModal from "../../modules/components/EditProfileModal";
 import ChangePasswordModal from "../../modules/components/ChangePassWord";
 import { formatPrice, formatDate_String } from "../../assets/format/numberFormat";
 //import avatar from 'process.env.PUBLIC_URL'
-const MyProfile = ({ id }) => {
+const MyProfile = ({}) => {
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isChangePass, setIsChangePass] = useState(false);
+    const [Accid, setAccID] = useState(0);
 
     const handleEditClick = (AccID) => {
         setIsEditing(true);
@@ -21,7 +22,7 @@ const MyProfile = ({ id }) => {
     const handleSave = async (updatedUser) => {
         console.log("Updated User Data:", updatedUser);
         try {
-            const response = await axios.put(`http://localhost:5000/api/account/${id}`, updatedUser);
+            const response = await axios.put(`http://localhost:5000/api/account/${Accid}`, updatedUser);
             setUser(response.data); // Update the user data on success
             setIsEditing(false);
 
@@ -38,9 +39,13 @@ const MyProfile = ({ id }) => {
     };
 
     useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser && storedUser.id) {
+            setAccID(storedUser.id);
+        }
         const fetchUserData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/account/${id}`);
+                const response = await axios.get(`http://localhost:5000/api/account/${Accid}`);
                 setUser(response.data);
             } catch (error) {
                 setError("Unable to fetch user data.");
@@ -50,7 +55,7 @@ const MyProfile = ({ id }) => {
         };
 
         fetchUserData();
-    }, [id]);
+    },);
 
     const getGender = (gender) => {
         if (gender) {
@@ -67,7 +72,7 @@ const MyProfile = ({ id }) => {
     const handlePasswordSave = async (passwordData) => {
         try {
             // Here you would make an API request to change the password
-            await axios.put(`http://localhost:5000/api/account/${id}/change-password`, passwordData);
+            await axios.put(`http://localhost:5000/api/account/${Accid}/change-password`, passwordData);
             console.log("Password changed successfully");
             setIsChangePass(false);
         } catch (error) {
