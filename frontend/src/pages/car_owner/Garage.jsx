@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import ChooseBar from "../../modules/components/ChooseBarCarOwner";
 import "../../styles/cars_owner/Garage.css";
 import CarCard from "../../modules/components/CarCard";
+import CarDetailsModal from "../../modules/components/CarDetailsModal";
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationCard from '../../modules/components/DeleteConfirmCard';
 
@@ -13,20 +15,26 @@ const Garage = () => {
     const [error, setError] = useState(null);
     const [carToDelete, setCarToDelete] = useState(null);
     const [Accid, setAccID] = useState(0);
-    const [garageID, setGarageID] = useState(0);
-    
+    const [garageID, setGarageID] = useState(-1);
+    const [selectedCar, setSelectedCar] = useState(null);
+
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
         if (storedUser && storedUser.id) {
             setAccID(storedUser.id);
         }
-        
+
+        console.error(storedUser);
+        if (storedUser.role !== 2) {
+            setError("No permission for current feauture");
+        }
+
         const fetchGarageData = async () => {
             try {
                 if (Accid) {
                     const responseGarage = await axios.get(`http://localhost:5000/api/garage/${Accid}`);
                     if (responseGarage.data.length > 0) {
-                        setGarageID(responseGarage.data[0].GarageID); // Ensure data exists before setting
+                        setGarageID(responseGarage.data[0].GarageID);
                     } else {
                         console.log("No garage found for this CarOwnerID");
                     }
@@ -42,11 +50,6 @@ const Garage = () => {
     }, [Accid]);
 
     useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (storedUser && storedUser.id) {
-            setAccID(storedUser.id);
-        }
-
         const fetchCarData = async () => {
             try {
                 const response = await axios.get("http://localhost:5000/api/car");
@@ -57,19 +60,17 @@ const Garage = () => {
                     setCars(filteredCars);
                 }
             } catch (error) {
-                setError("Server error"); // Set error state if request fails
+                setError("Server error");
             } finally {
-                setLoading(false); // Stop loading after fetching or error
+                setLoading(false);
             }
         };
         fetchCarData();
-    },[garageID]);
+    }, [garageID]);
 
     const handleAddCarClick = () => {
         navigate(`/car-registration/${garageID}`);
     };
-
-
 
     const handleStatusChange = (carId, newStatus) => {
         const updatedCars = cars.map((car) =>
@@ -87,53 +88,76 @@ const Garage = () => {
             await axios.put(`http://localhost:5000/api/car/${carToDelete}/delete`);
             setCars(cars.filter((car) => car.CarID !== carToDelete));
             setCarToDelete(null);
-            //window.location.reload();
         } catch (error) {
             setError('Failed to delete the car.');
         }
     };
 
     const handleCancelDelete = () => {
-        setCarToDelete(null); // Just close the modal
+        setCarToDelete(null);
     };
+
+    const handleViewCar = async (car) => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/features/${car.CarID}`);
+            const features = response.data.map(feature => feature.Name);
+            setSelectedCar({ ...car, features });
+        } catch (error) {
+            setError("Failed to load car features.");
+        }
+    };
+
+    const handleCloseModal = () => {
+        setSelectedCar(null);
+    };
+
     return (
         <div className="AllPage">
             <div className="LeftSide">
                 <div className="Bar">
                     <ChooseBar />
                 </div>
-
             </div>
             <div className="RightSide">
+            {error ? (
+                <p className="Error">{error}</p>
+                ) : (
+
                 <div className="garage">
                     <div className="header">
                         <h1>Garage</h1>
                         <button className="add-car-btn" onClick={handleAddCarClick}>Add New Car</button>
-                    </div>{loading ? (
+                    </div>
+                    {loading ? (
                         <p>Loading...</p>
                     ) : error ? (
-                        <p>{error}</p> // Display the error here
+                        <p>{error}</p>
                     ) : (
                         <div className="garageCarList">
                             {cars.map((car, index) => (
-                                <CarCard key={car.id || index} 
-                                         car={car} 
-                                         onStatusChange={handleStatusChange}
-                                         onDeleteClick={handleDeleteClick}
-                                         />
+                                <CarCard
+                                    key={car.CarID || index}
+                                    car={car}
+                                    onStatusChange={handleStatusChange}
+                                    onDeleteClick={handleDeleteClick}
+                                    onViewClick={() => handleViewCar(car)} 
+                                />
                             ))}
                         </div>
                     )}
                 </div>
-
+                )}
             </div>
 
-            {/* Show Delete Confirmation Card if a car is selected for deletion */}
             {carToDelete && (
                 <DeleteConfirmationCard
                     onConfirmDelete={handleConfirmDelete}
                     onCancelDelete={handleCancelDelete}
                 />
+            )}
+
+            {selectedCar && (
+                <CarDetailsModal car={selectedCar} onClose={handleCloseModal} />
             )}
         </div>
     );

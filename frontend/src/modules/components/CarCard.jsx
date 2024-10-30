@@ -1,18 +1,18 @@
+// src/modules/components/CarCard.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/component/CarCard.css';
 
-
-const CarCard = ({ car, onStatusChange, onDeleteClick }) => {
+const CarCard = ({ car, onStatusChange, onDeleteClick, onViewClick }) => {
     const [isAvailable, setIsAvailable] = useState(car.CarStatus === 'Idle');
     const navigate = useNavigate();
-    
 
     useEffect(() => {
         setIsAvailable(car.CarStatus === 'Idle');
     }, [car.CarStatus]);
 
+    
     const handleToggle = async () => {
         const newStatus = isAvailable ? 'Closed' : 'Idle'; // Change status accordingly
         setIsAvailable(!isAvailable); // Update availability
@@ -36,9 +36,6 @@ const CarCard = ({ car, onStatusChange, onDeleteClick }) => {
         }
     };
 
-    const handleViewCar = () => {
-        navigate(`/update-car`, { state: { carId: car.CarID } });
-    };
 
     const handleViewFeedback = () => {
         navigate(`/feedback`, { state: { carId: car.CarID } });
@@ -74,7 +71,7 @@ const CarCard = ({ car, onStatusChange, onDeleteClick }) => {
                     <span>Fuel: {car.Fuel}</span>
                 </div>
                 <div className="car-actions">
-                    <button className="view-car-btn" onClick={handleViewCar}>View Car</button>
+                    <button className="view-car-btn" onClick={onViewClick}>View Car</button>
                     <button className="view-car-btn" onClick={handleViewFeedback}>Feedback</button>
                     <button className="delete-car-btn" onClick={() => onDeleteClick(car.CarID)}>Delete Car</button>
                     <label className="switch">
@@ -83,12 +80,8 @@ const CarCard = ({ car, onStatusChange, onDeleteClick }) => {
                     </label>
                 </div>
             </div>
-
-            
         </div>
     );
 };
 
 export default CarCard;
-
-
