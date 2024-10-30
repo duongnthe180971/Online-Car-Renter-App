@@ -135,6 +135,12 @@ const Payment = () => {
               </div>
               <div className="payment-footer-text">
                 <span>Compartible parter apps</span>
+                <button
+                  className="payment-footer-confirm"
+                  onClick={HandlerConfirm}
+                >
+                  Confirm
+                </button>
               </div>
               <div className="payment-partners">
                 <img src={vietcombank} alt="vietcombank" />

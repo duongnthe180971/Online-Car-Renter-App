@@ -13,7 +13,7 @@
 }
 
 .notification-content {
-  width: 30vw;
+  width: 20vw;
   max-height: 60vh;
   background-color: #000000;
   padding: 20px;
@@ -46,7 +46,7 @@
 }
 
 .notification-close {
-  margin-top: 10px;
+  margin-bottom: 2vh;
   background-color: #33333349;
   color: #fff;
   border: none;
@@ -54,6 +54,7 @@
   border-radius: 5px;
   cursor: pointer;
   width: 100%;
+  justify-content: left;
 }
 
 .notification-show {
@@ -65,4 +66,29 @@
   width: 7vw;
   align-items: center;
   justify-content: center;
+}
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1vh 2vh;
+  background-color: rgba(139, 173, 235, 0.185);
+  border-radius: 20px;
+  margin-bottom: 10px;
+  color: #333;
+}
+.notification-description {
+  flex: 2;
+  padding-right: 10px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.notification-date {
+  flex: 1;
+  background-color: bisque;
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 0.9em;
 }

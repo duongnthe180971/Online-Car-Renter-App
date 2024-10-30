@@ -8,10 +8,12 @@ import carDemo from "../../assets/data/carDemo";
 import "../../styles/home/notification.css";
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Home = ({ id_ }) => {
+const Home = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { id, role } = location.state || { id: null, role: null };
+  const { status } = location.state || {
+    status: false,
+  };
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [
@@ -52,12 +54,12 @@ const Home = ({ id_ }) => {
   }, []); // Empty array to ensure it runs once
 
   const handleNavigateAboutUs = () => {
-    navigate("/about-us", { state: { id, role } });
+    navigate("/about-us");
   };
 
   return (
     <div className="home-container">
-      <HomeHeader id={id}></HomeHeader>
+      <HomeHeader></HomeHeader>
       {/* Advertisement section */}
       <div className="home-advertisement">
         {images.map((image, index) => (

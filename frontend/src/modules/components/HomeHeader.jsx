@@ -21,6 +21,17 @@ const HomeHeader = ({ id }) => {
   const HandlerMaps = () => {
     navigate("/customer-map");
   };
+  const handleCheckLoginRole = () => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser && storedUser.id === 2) {
+      navigate(`/voucher`);
+    } else if (storedUser && storedUser.id) {
+      alert("You must login at Customer!");
+    } else {
+      alert("Please log in to get Voucher");
+      navigate("./login");
+    }
+  };
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.id) fetchUserData(storedUser.id);
@@ -154,7 +165,7 @@ const HomeHeader = ({ id }) => {
           {itlogedin && (
             <button
               className="header-voucher-button"
-              onClick={() => navigate("/voucher")}
+              onClick={handleCheckLoginRole}
             >
               Vouchers
             </button>

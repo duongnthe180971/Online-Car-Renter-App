@@ -43,12 +43,16 @@ const NotificationForm = ({ id }) => {
             <div className="notification-messages">
               {notifications.map((notification, index) => (
                 <div key={index} className="notification-item">
-                  <p>{notification.Description}</p>
-                  <span className="notification-date">
-                    {new Date(
-                      notification.NotificationDate
-                    ).toLocaleDateString()}
-                  </span>
+                  <div className="notification-description">
+                    <p>{notification.Description}</p>
+                  </div>
+                  <div className="notification-date">
+                    <span>
+                      {new Date(
+                        notification.NotificationDate
+                      ).toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>

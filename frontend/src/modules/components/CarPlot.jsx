@@ -1,14 +1,22 @@
 import React from "react";
 import { Col } from "reactstrap";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import "../../styles/component/CarPlot.css";
 import { formatPrice } from "../../assets/format/numberFormat";
 
 const CarPlot = (props) => {
-  const {CarID, CarImage, CarName, Gear, Price, Seats, CarType } = props.item;
+  const { CarID, CarImage, CarName, Gear, Price, Seats, CarType } = props.item;
   const navigate = useNavigate();
   const handleCheckDetailCar = () => {
-    navigate(`/car-detail`, { state: { carID: CarID } });
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser && storedUser.id === 2) {
+      navigate(`/car-detail`, { state: { carID: CarID } });
+    } else if (storedUser && storedUser.id) {
+      alert("You must login at Customer!");
+    } else {
+      alert("Please log in to book a car.");
+      navigate("./login");
+    }
   };
   return (
     <>
@@ -28,7 +36,9 @@ const CarPlot = (props) => {
                 <h6 className="price">Starting from </h6>
                 <h5>{formatPrice(Price)} vnd</h5>
               </div>
-              <button className="book-btn" onClick={handleCheckDetailCar}>Book now</button>
+              <button className="book-btn" onClick={handleCheckDetailCar}>
+                Book now
+              </button>
             </div>
           </div>
         </div>

@@ -19,6 +19,8 @@
 }
 
 .voucher-inputs {
+  margin-left: 2vw;
+  margin-right: 2vw;
   display: flex;
   justify-content: space-between;
   gap: 10px;
@@ -62,6 +64,8 @@
 }
 
 .existing-vouchers li {
+  margin-left: 2vw;
+  margin-right: 2vw;
   display: flex;
   justify-content: space-between;
   align-items: center;

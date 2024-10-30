@@ -33,6 +33,7 @@ const Login = () => {
     return valid;
   };
   // Function to handle login
+
   const getPassByAccount = async () => {
     if (!validateInputs()) {
       return; // stop if input can't be validated
@@ -44,12 +45,12 @@ const Login = () => {
       if (acc && acc.PassWord === password) {
         localStorage.setItem(
           "user",
-          JSON.stringify({ id: acc.id, role: acc.Role })
+          JSON.stringify({ id: acc.id, role: acc.Role, status: acc.Status })
         );
-        if (acc.Role === 1) {
-          navigate(`/home`);
+        if (!acc.Status) {
+          alert("Your account was banned!");
         } else {
-          navigate(`/home`);
+          navigate(`/home`, { state: { status: acc.Status } });
         }
       } else {
         alert("Invalid username or password");
