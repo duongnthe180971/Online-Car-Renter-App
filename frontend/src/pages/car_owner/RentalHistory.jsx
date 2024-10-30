@@ -14,7 +14,7 @@ const getStatusLabel = (status) => {
       return 'Renting';
     case 5:
       return 'Success';
-    case 6:
+    case 0:
       return 'Canceled';
     default:
       return 'Unknown';
@@ -32,28 +32,32 @@ const RentalHistory = () => {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.id) {
-        setAccID(storedUser.id);
+      setAccID(storedUser.id);
     }
-    
+
+    if (storedUser.role !== 3) {
+      setError("No permission for current feauture");
+    }
+
     const fetchGarageData = async () => {
-        try {
-            if (Accid) {
-                const responseGarage = await axios.get(`http://localhost:5000/api/garage/${Accid}`);
-                if (responseGarage.data.length > 0) {
-                    setGarageID(responseGarage.data[0].GarageID); // Ensure data exists before setting
-                } else {
-                    console.log("No garage found for this CarOwnerID");
-                }
-            }
-        } catch (error) {
-            setError("Server error");
-        } finally {
-            setLoading(false);
+      try {
+        if (Accid) {
+          const responseGarage = await axios.get(`http://localhost:5000/api/garage/${Accid}`);
+          if (responseGarage.data.length > 0) {
+            setGarageID(responseGarage.data[0].GarageID); // Ensure data exists before setting
+          } else {
+            console.log("No garage found for this CarOwnerID");
+          }
         }
+      } catch (error) {
+        setError("Server error");
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchGarageData();
-}, [Accid]);
+  }, [Accid]);
 
   useEffect(() => {
     const fetchRentalData = async () => {
@@ -99,25 +103,29 @@ const RentalHistory = () => {
         </div>
       </div>
       <div className="RightSide">
-        <div className="garage rentalReq">
-          <h1>Rental History</h1>
-          <div className="rental-requests">
-            {filteredRentalHistory.map((request) => (
-              <RentalHistoryCard
-                key={request.RentalID}
-                rental={{
-                  vehicle: request.carName,
-                  customer: request.Customer,
-                  status: getStatusLabel(request.RentalStatus),
-                  bookDate: `${formatDate_String(request.RentalStart)}`,
-                  timePeriod: `${formatDate_String(request.RentalStart)} To ${formatDate_String(request.RentalEnd)}`,
-                  price: `${formatPrice(request.price)} VND`,
-                  customerID: request.CustomerID
-                }}
-              />
-            ))}
+        {error ? (
+          <p className="Error">{error}</p>
+        ) : (
+          <div className="garage rentalReq">
+            <h1>Rental History</h1>
+            <div className="rental-requests">
+              {filteredRentalHistory.map((request) => (
+                <RentalHistoryCard
+                  key={request.RentalID}
+                  rental={{
+                    vehicle: request.carName,
+                    customer: request.Customer,
+                    status: getStatusLabel(request.RentalStatus),
+                    bookDate: `${formatDate_String(request.RentalStart)}`,
+                    timePeriod: `${formatDate_String(request.RentalStart)} To ${formatDate_String(request.RentalEnd)}`,
+                    price: `${formatPrice(request.price)} VND`,
+                    customerID: request.CustomerID
+                  }}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

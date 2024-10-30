@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import ChooseBar from "../../modules/components/ChooseBarCarOwner";
+import ChooseBarCustomer from "../../modules/components/ChooseBarCustomer";
 import "../../styles/cars_owner/Garage.css";
 import "../../styles/home/myprofile.css";
 import EditProfileModal from "../../modules/components/EditProfileModal";
@@ -14,6 +15,7 @@ const MyProfile = ({}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isChangePass, setIsChangePass] = useState(false);
     const [Accid, setAccID] = useState(0);
+    const [AccRole, setAccRole] = useState(0);
 
     const handleEditClick = (AccID) => {
         setIsEditing(true);
@@ -42,6 +44,7 @@ const MyProfile = ({}) => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
         if (storedUser && storedUser.id) {
             setAccID(storedUser.id);
+            setAccRole(storedUser.role);
         }
         const fetchUserData = async () => {
             try {
@@ -84,7 +87,12 @@ const MyProfile = ({}) => {
         <div className="AllPage">
             <div className="LeftSide">
                 <div className="Bar">
+                    {AccRole === 3 &&
                     <ChooseBar />
+                    }
+                    {AccRole === 2 &&
+                    <ChooseBarCustomer />
+                    }
                 </div>
 
             </div>

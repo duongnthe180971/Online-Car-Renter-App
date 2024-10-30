@@ -25,7 +25,7 @@ const Garage = () => {
         }
 
         console.error(storedUser);
-        if (storedUser.role !== 2) {
+        if (storedUser.role !== 3) {
             setError("No permission for current feauture");
         }
 
