@@ -37,7 +37,7 @@ const CarOrderDetails = ({
               <h5>Return Date:</h5> <h5>{formatDate_vn(RentalEnd)}</h5>
             </div>
             <div className="item">
-              <h5>Price:</h5> <h5>{formatPrice(Price)} VND</h5>
+              <h5>Price / Day:</h5> <h5>{formatPrice(Price)} VND</h5>
             </div>
           </div>
         </div>
@@ -215,7 +215,7 @@ const CarStatus = () => {
         </div>
       </div>
       <div className="RightSide">
-        {car && rental && rental.RentalID !== 0 ? (
+        {car && rental && rental.RentalStatus !== 0 ? (
           <CarOrderDetails
             car={car}
             rental={rental}
@@ -223,7 +223,7 @@ const CarStatus = () => {
             handleFeedback={handleFeedback}
           />
         ) : (
-          <h1>{error ? error : "You have not rented any car yet"}</h1>
+            <h1 style={{marginTop: '25%'}}>{error ? error : "You have not rented any car yet"}</h1>
         )}
       </div>
     </div>
