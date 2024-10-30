@@ -222,7 +222,7 @@ app.get("/api/account/:AccID", async (req, res) => {
 
 app.put("/api/account/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, gender, dob, phone, email } = req.body;
+  const { name, gender, dob, phone, email, address } = req.body;
 
   try {
     await sql.connect(sqlConfig);
@@ -232,7 +232,8 @@ app.put("/api/account/:id", async (req, res) => {
           Gender = '${gender}',
           DOB ='${dob}',
           Phone = '${phone}',
-          Email = '${email}'
+          Email = '${email}',
+          Address = '${address}'
           WHERE id = ${id}
       `;
     const result = await sql.query(query);

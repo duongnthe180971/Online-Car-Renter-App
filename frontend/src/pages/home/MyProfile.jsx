@@ -113,6 +113,9 @@ const MyProfile = ({}) => {
                             <p>
                                 <strong className="Profile-Right">Email:</strong> <strong className="Profile-Left"> {user.Email || "aaaa@gmail.com"} </strong>
                             </p>
+                            <p>
+                                <strong className="Profile-Right">Address:</strong> <strong className="Profile-Left"> {user.Address || "Burj Khalifa Blvd - Downtown Dubai - Dubai - Các Tiểu Vương quốc Ả Rập Thống nhất"} </strong>
+                            </p>
                         </div>
 
                     </div>

@@ -71,6 +71,10 @@ const ProfileCard = () => {
                             <strong className="profile-card-label-custom">Email:</strong>
                             <strong className="profile-card-value-custom"> {user.Email || "aaaa@gmail.com"} </strong>
                         </p>
+                        <p>
+                            <strong className="profile-card-label-custom">Address:</strong>
+                            <strong className="profile-card-value-custom"> {user.Address || "aaaa@gmail.com"} </strong>
+                        </p>
                     </div>
                 </div>
             </div>

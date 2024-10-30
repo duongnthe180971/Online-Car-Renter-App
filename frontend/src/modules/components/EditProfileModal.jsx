@@ -17,7 +17,8 @@ const EditProfileModal = ({ user, onSave, onClose }) => {
         gender: user.Gender === true,
         dob: user.DOB || '',
         phone: user.Phone || '',
-        email: user.Email || ''
+        email: user.Email || '',
+        address: user.Address || ''
     });
 
     const handleChange = (e) => {
@@ -136,6 +137,11 @@ const EditProfileModal = ({ user, onSave, onClose }) => {
                         isValid={isEmailValid}  // Pass email validity to style the input
                     />
                     {!isEmailValid && <ErrorMessage>{errorEmail}</ErrorMessage>}
+                </div>
+
+                <div className="form-group">
+                    <label>Address</label>
+                    <input type="text" name="address" value={formData.address} onChange={handleChange} />
                 </div>
 
                 <div className="actions">
