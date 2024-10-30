@@ -6,7 +6,6 @@
 }
 
 .garage {
-    margin-top: 5vh;
     background-color: #444;
     border-radius: 10px;
     height: 90%;
@@ -223,4 +222,13 @@ input:checked+.slider {
 
 input:checked+.slider:before {
     transform: translateX(14px);
+}
+
+.Error{
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3vh;
+    height: 60%;
 }

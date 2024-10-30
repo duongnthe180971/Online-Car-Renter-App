@@ -19,7 +19,7 @@ export class ChooseBarCustomer extends Component {
           </Link>
         </li>
         <li>
-          <Link to="/rental-history">
+          <Link to="/car-history">
             <FaHistory className="icon" /> Car History
           </Link>
         </li>
