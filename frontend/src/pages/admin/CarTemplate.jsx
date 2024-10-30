@@ -29,7 +29,7 @@ const CarTemplate = () => {
     fetchFeatures();
   }, []);
 
-  // Add a new feature with duplicate check (TC-15 scenario)
+  // Add a new feature with duplicate check and validation
   const handleAddFeature = async () => {
     const featureName = newFeature.trim();
 
@@ -43,6 +43,15 @@ const CarTemplate = () => {
       return; // Prevent further action
     }
 
+    // Validate that the input contains only letters and spaces, with no more than two consecutive spaces
+    const isValid =
+      /^[a-zA-Z]+( [a-zA-Z]+)*$/.test(featureName) &&
+      featureName.split(" ").filter((word) => word !== "").length <= 2;
+    if (!isValid) {
+      alert("Only alphabetic characters and up to two words are allowed.");
+      return;
+    }
+
     if (featureName === "") {
       alert("Feature name cannot be empty."); // Show error if input is empty
       return;
@@ -52,7 +61,7 @@ const CarTemplate = () => {
       const response = await fetch("http://localhost:5000/api/features", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newFeature }), // Send the new feature name
+        body: JSON.stringify({ name: featureName }), // Send the new feature name
       });
 
       if (response.ok) {
@@ -66,6 +75,11 @@ const CarTemplate = () => {
     } catch (err) {
       alert(`Error: ${err.message}`); // Show error message
     }
+  };
+
+  // Handle input change
+  const handleInputChange = (e) => {
+    setNewFeature(e.target.value); // Allow any input, validation happens on Add
   };
 
   // Remove a feature with API error handling
@@ -90,7 +104,6 @@ const CarTemplate = () => {
       }
     } catch (err) {
       alert(`Error: ${err.message}`); // Show detailed error message
-      // Optional: log the error for future debugging
       console.error("Error removing feature:", err);
     }
   };
@@ -121,7 +134,7 @@ const CarTemplate = () => {
               type="text"
               placeholder="Enter new feature"
               value={newFeature}
-              onChange={(e) => setNewFeature(e.target.value)} // Update the input value
+              onChange={handleInputChange} // Update input value
             />
             <button className="add-feature-btn" onClick={handleAddFeature}>
               Add Feature

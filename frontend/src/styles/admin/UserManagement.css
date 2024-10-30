@@ -34,7 +34,9 @@
   max-width: 400px; /* Giảm chiều rộng của bộ lọc */
   margin: 0 auto 20px auto; /* Căn giữa và thêm khoảng cách */
 }
-
+.manage-user-container .filter-container label {
+  color: black; /* Chỉnh màu chữ thành màu đen */
+}
 /* Giảm khoảng cách giữa các filter */
 .filter-group {
   display: flex;

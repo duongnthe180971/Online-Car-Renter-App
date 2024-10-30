@@ -946,6 +946,31 @@ app.get("/api/finance/:year", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+app.get("/api/finance/carOwner/:id/:year", async (req, res) => {
+  const { id, year } = req.params;
+  console.log("Received ID:", id, "Year:", year); // Debug: In ra ID và Year nhận được
+
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query`
+      SELECT FinanceID, Date, totalMoney, AccID
+      FROM Bill 
+      WHERE YEAR(Date) = ${year} AND AccID = ${id}
+    `;
+
+    if (result.recordset.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No financial data found for this year" });
+    }
+
+    res.status(200).json(result.recordset);
+  } catch (err) {
+    console.error("Error fetching financial data for carOwner:", err); // Log chi tiết lỗi
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
 app.post("/api/feedback", async (req, res) => {
   const { CarID, CustomerID, FeedbackDescription, Rate } = req.body;
 

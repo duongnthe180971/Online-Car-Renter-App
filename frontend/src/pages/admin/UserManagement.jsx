@@ -12,7 +12,6 @@ const UserManagement = () => {
   const usersPerPage = 3; // Number of users per page
   const [selectedRole, setSelectedRole] = useState(""); // Filter by role
   const [isDeleting, setIsDeleting] = useState(false); // Deleting state
-  const [isUpdating, setIsUpdating] = useState(false); // Updating state
 
   // Fetch users from the API
   useEffect(() => {
@@ -37,6 +36,11 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
+  // Define handleViewFull to set selected user for viewing details
+  const handleViewFull = (user) => {
+    setSelectedUser(user); // Set the selected user for viewing details
+  };
+
   // Filter users based on selected role
   const filteredUsers = users.filter((user) => {
     return selectedRole ? user.Role === parseInt(selectedRole) : true;
@@ -50,22 +54,21 @@ const UserManagement = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Handle user selection for details
-  const handleViewFull = (user) => {
-    setSelectedUser(user);
-  };
+  // Handle user deletion
+  const handleDeleteUser = async (id, UserName, Role) => {
+    // Check if the user is an Admin
+    if (Role === 1) {
+      alert("Admin accounts cannot be deactivated.");
+      return;
+    }
 
-  // Handle user deletion
-  // Handle user deletion
-  const handleDeleteUser = async (id, UserName) => {
     const confirmDelete = window.confirm(
-      `Are you sure you want to deactivate ${UserName} ?`
+      `Are you sure you want to deactivate ${UserName}?`
     );
 
     if (confirmDelete) {
       setIsDeleting(true); // Start deleting state
       try {
-        // Corrected URL
         const response = await fetch(
           `http://localhost:5000/api/deactivate-user/${id}`,
           {
@@ -150,7 +153,9 @@ const UserManagement = () => {
                   </button>
                   <button
                     className="remove-btn"
-                    onClick={() => handleDeleteUser(user.id, user.UserName)}
+                    onClick={() =>
+                      handleDeleteUser(user.id, user.UserName, user.Role)
+                    }
                     disabled={isDeleting}
                   >
                     {isDeleting ? "Deleting..." : "Remove"}

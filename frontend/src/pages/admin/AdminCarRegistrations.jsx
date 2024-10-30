@@ -22,9 +22,7 @@ const AdminCarRegistrations = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/register-cars"
-        ); // Fetch only pending cars
+        const response = await fetch("http://localhost:5000/api/register-cars"); // Fetch only pending cars
         if (!response.ok) {
           throw new Error("Failed to fetch car data");
         }
@@ -278,7 +276,9 @@ const AdminCarRegistrations = () => {
                   <p>
                     <strong>Features:</strong>{" "}
                     {selectedCar.features &&
-                      selectedCar.features.map((feature) => feature.Name).join(", ")}
+                      selectedCar.features
+                        .map((feature) => feature.Name)
+                        .join(", ")}
                   </p>
                   <button
                     onClick={() => handleDownloadLicense(selectedCar.License)}
