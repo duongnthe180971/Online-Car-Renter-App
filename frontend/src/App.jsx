@@ -1,8 +1,8 @@
 // src/App.jsx
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/home/home";
-import AboutUs from "./pages/home/aboutus";
+import Home from "./pages/home/Home";
+import AboutUs from "./pages/home/Aboutus";
 import Garage from "./pages/car_owner/Garage";
 import RentalRequest from "./pages/car_owner/RentalRequest";
 import RentalOrder from "./pages/car_owner/RentalOrder";
@@ -20,9 +20,9 @@ import FinancePage from "./pages/admin/Finance";
 import UserManagementPage from "./pages/admin/UserManagement";
 import AdminCarRegistrations from "./pages/admin/AdminCarRegistrations";
 import CarTemplatePage from "./pages/admin/CarTemplate";
-import Login from "./pages/login/login";
+import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
-import Payment from "./pages/payment/payment";
+import Payment from "./pages/payment/Payment";
 import Voucher from "./modules/components/Voucher";
 import AdminVouchers from "./pages/admin/AdminVouchers";
 import MyProfile from "./pages/home/MyProfile";

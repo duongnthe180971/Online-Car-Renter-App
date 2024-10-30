@@ -14,7 +14,7 @@ const getStatusLabel = (status) => {
       return 'Renting';
     case 5:
       return 'Success';
-    case 6:
+    case 0:
       return 'Canceled';
     default:
       return 'Unknown';

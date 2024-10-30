@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import ChooseBar from "../../modules/components/ChooseBarCarOwner";
 import ChooseBarCustomer from "../../modules/components/ChooseBarCustomer";
+import ChooseBarAdmin from "../../modules/components/ChooseBarAdmin";
 import "../../styles/cars_owner/Garage.css";
 import "../../styles/home/myprofile.css";
 import EditProfileModal from "../../modules/components/EditProfileModal";
@@ -92,6 +93,9 @@ const MyProfile = ({}) => {
                     }
                     {AccRole === 2 &&
                     <ChooseBarCustomer />
+                    }
+                    {AccRole === 1 &&
+                    <ChooseBarAdmin />
                     }
                 </div>
 
