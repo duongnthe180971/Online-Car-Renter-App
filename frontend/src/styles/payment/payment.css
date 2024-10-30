@@ -148,3 +148,7 @@
 .payment-content .payment-details .highlight {
   color: red;
 }
+.payment-footer-confirm {
+  margin-left: 60vw;
+  background-color: #35ff1b;
+}

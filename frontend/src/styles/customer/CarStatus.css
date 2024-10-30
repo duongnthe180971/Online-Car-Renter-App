@@ -10,9 +10,6 @@
   margin: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.sidefix{
-  align-items: center;
-}
 .car-order-container .title {
   max-height: 3vh;
   color: #ffffff;

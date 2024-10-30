@@ -1,0 +1,60 @@
+.voucher-body {
+  background-color: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.voucher-back {
+  background-color: #00000000;
+  color: aliceblue;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.voucher-section {
+  margin: 20px;
+}
+
+.voucher-section h2 {
+  margin: 10px 0;
+}
+
+.voucher-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 10px;
+  background-color: #333;
+  border-radius: 10px;
+}
+
+.voucher {
+  background-color: #666;
+  border-radius: 10px;
+  margin: 0 10px;
+  padding: 10px;
+  width: 200px;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.voucher img {
+  width: 100%;
+  height: 150px;
+  background-color: #000;
+  border-radius: 5px;
+}
+
+.voucher p {
+  margin: 10px 0;
+}
+
+.voucher-choose-button {
+  background-color: #00ff00;
+  color: #000;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}

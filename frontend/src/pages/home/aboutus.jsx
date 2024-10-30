@@ -42,11 +42,11 @@ const AboutUs = () => {
   const roleGreeting = () => {
     if (!user) return "Welcome Guest, you need login to use our service!";
     switch (user.Role) {
-      case 0:
-        return `Hello Admin ${user.UserName}, welcome to our About Us page!`;
       case 1:
-        return `Hello Car Owner ${user.UserName}, welcome to our About Us page!`;
+        return `Hello Admin ${user.UserName}, welcome to our About Us page!`;
       case 2:
+        return `Hello Car Owner ${user.UserName}, welcome to our About Us page!`;
+      case 3:
         return `Hello Customer ${user.UserName}, welcome to our About Us page!`;
       default:
         return `Hello ${user.UserName}, welcome to our About Us page!`;

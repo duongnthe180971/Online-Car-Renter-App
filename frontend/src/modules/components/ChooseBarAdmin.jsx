@@ -5,6 +5,7 @@ import {
   FaCar,
   FaClipboardList,
   FaUsers,
+  FaGift,
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa"; // Import icons
@@ -66,6 +67,11 @@ export class ChooseBarAdmin extends Component {
           <li>
             <Link to="/user-management">
               <FaUsers className="icon" /> User Management
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin-voucher">
+              <FaGift className="icon" /> Voucher
             </Link>
           </li>
           <li>

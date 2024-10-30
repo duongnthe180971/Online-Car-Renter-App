@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/icon/logo.png";
 import "../../styles/home/homeheader.css";
-// import Voucher from "../../modules/components/Voucher";
 import NotificationForm from "../../modules/components/NotificationForm";
 import "../../styles/home/notification.css";
 
@@ -13,45 +12,34 @@ const HomeHeader = ({ id }) => {
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdownDashboard, setShowDropdownDashboard] = useState(false);
-  // const [showVoucherPopup, setShowVoucherPopup] = useState(false);
-  // const [vouchers, setVouchers] = useState([]);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
 
-  // useEffect(() => {
-  //   fetchVouchers();
-  // }, []);
-
-  // const fetchVouchers = async () => {
-  //   try {
-  //     const response = await axios.get("http://localhost:5000/api/vouchers");
-  //     setVouchers(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching vouchers:", error);
-  //   }
-  // };
-
-  // const handleClaimVoucher = async (voucherId) => {
-  //   try {
-  //     await axios.put(`http://localhost:5000/api/voucher/claim/${voucherId}`, {
-  //       userId: id,
-  //     });
-  //     fetchVouchers();
-  //     alert("Voucher claimed successfully");
-  //   } catch (error) {
-  //     console.error("Error claiming voucher:", error);
-  //   }
-  // };
   const HandlerAssistant = () => {
     navigate("/assistant");
   };
+  const HandlerMaps = () => {
+    navigate("/customer-map");
+  };
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser && storedUser.id) {
-      fetchUserData(storedUser.id);
-    }
-    // else {
-    //   navigate("/login");
-    // }
-  });
+    if (storedUser && storedUser.id) fetchUserData(storedUser.id);
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > scrollY && currentScrollY > 50) {
+        setIsHeaderVisible(false); // Hide header on scroll down
+      } else {
+        setIsHeaderVisible(true); // Show header on scroll up
+      }
+      setScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [scrollY]);
+
   const fetchUserData = async (id) => {
     try {
       const response = await axios.get(
@@ -62,8 +50,6 @@ const HomeHeader = ({ id }) => {
       if (response.data && response.data.UserName) {
         setUser(response.data);
         setitlogedin(true);
-      } else {
-        console.log("No UserName found in the response data.");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -74,13 +60,11 @@ const HomeHeader = ({ id }) => {
   // console.log("user:", user); // To track user data
   const handleLogout = () => {
     localStorage.removeItem("user");
-    console.log("Logout clicked");
     setitlogedin(false);
-    setUser(null);
-    navigate("/login", { state: { id } });
+    navigate("/login");
   };
   const renderDashboardLinks = () => {
-    if (user?.Role === 0) {
+    if (user?.Role === 1) {
       // Admin
       return (
         <>
@@ -96,9 +80,12 @@ const HomeHeader = ({ id }) => {
           <li>
             <a href="/user-management">User Management</a>
           </li>
+          <li>
+            <a href="/admin-voucher">Admin Voucher</a>
+          </li>
         </>
       );
-    } else if (user?.Role === 1) {
+    } else if (user?.Role === 2) {
       // CarOwner
       return (
         <>
@@ -116,7 +103,7 @@ const HomeHeader = ({ id }) => {
           </li>
         </>
       );
-    } else if (user?.Role === 2) {
+    } else if (user?.Role === 3) {
       // Customer
       return (
         <>
@@ -128,81 +115,85 @@ const HomeHeader = ({ id }) => {
     }
   };
   return (
-    <div className="header-home">
-      <div className="logo">
-        <div className="header-logo" onClick={() => navigate("/")}>
-          <img src={logo} alt="logo" />
+    <>
+      <div
+        className={`header-home ${isHeaderVisible ? "visible" : "hidden"}`}
+        onMouseEnter={() => setIsHeaderVisible(true)}
+      >
+        <div className="logo">
+          <div className="header-logo" onClick={() => navigate("/")}>
+            <img src={logo} alt="logo" />
+          </div>
         </div>
-      </div>
-      <div className="header-navbar">
-        <button className="click-navbar" onClick={() => navigate("/home")}>
-          Home
-        </button>
-        <button className="click-navbar" onClick={() => navigate("/about-us")}>
-          About Us
-        </button>
-        <div className="header-dashboard-dropdown">
+        <div className="header-navbar">
+          <button className="click-navbar" onClick={() => navigate("/home")}>
+            Home
+          </button>
           <button
             className="click-navbar"
-            onClick={() => setShowDropdownDashboard(!showDropdownDashboard)}
+            onClick={() => navigate("/about-us")}
           >
-            Dashboard 🔽
+            About Us
           </button>
-          {showDropdownDashboard && (
-            <div className="header-dropdowndashboard-menu">
-              <ul>{renderDashboardLinks()}</ul>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="user">
-        {/* <div className="voucher">
-          <button
-            className="header-voucher-button"
-            onClick={() => setShowVoucherPopup(true)}
-          >
-            Vouchers
-          </button>
-          {showVoucherPopup && (
-            <Voucher
-              vouchers={vouchers}
-              onClose={() => setShowVoucherPopup(false)}
-              onClaim={handleClaimVoucher}
-            />
-          )}
-        </div> */}
-        <NotificationForm id={user?.id} />
-        <div className="header-user-dropdown">
-          <button
-            className="header-user-show"
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            <i className="fas fa-user-circle"></i>
-            {itlogedin && user?.UserName ? (
-              <div className="user-info">
-                <span>{user.UserName}</span>
-                {showDropdown && (
-                  <div className="header-dropdown-menu">
-                    <ul>
-                      <li>
-                        <a href="/profile">Profile</a>
-                      </li>
-                      <li onClick={handleLogout}>Logout</li>
-                    </ul>
-                  </div>
-                )}
+          <div className="header-dashboard-dropdown">
+            <button
+              className="click-navbar"
+              onClick={() => setShowDropdownDashboard(!showDropdownDashboard)}
+            >
+              Dashboard 🔽
+            </button>
+            {showDropdownDashboard && (
+              <div className="header-dropdowndashboard-menu">
+                <ul>{renderDashboardLinks()}</ul>
               </div>
-            ) : (
-              <a href="../login">Login</a>
             )}
-          </button>
+          </div>
+        </div>
+
+        <div className="user">
+          {itlogedin && (
+            <button
+              className="header-voucher-button"
+              onClick={() => navigate("/voucher")}
+            >
+              Vouchers
+            </button>
+          )}
+          {itlogedin && <NotificationForm id={user?.id} />}
+          <div className="header-user-dropdown">
+            <button
+              className="header-user-show"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <i className="fas fa-user-circle"></i>
+              {itlogedin && user?.UserName ? (
+                <div className="user-info">
+                  <span>{user.UserName}</span>
+                  {showDropdown && (
+                    <div className="header-dropdown-menu">
+                      <ul>
+                        <li>
+                          <a href="/profile">Profile</a>
+                        </li>
+                        <li onClick={handleLogout}>Logout</li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <a href="../login">Login</a>
+              )}
+            </button>
+          </div>
         </div>
       </div>
       <button className="chat-icon" onClick={HandlerAssistant}>
         💬
       </button>
-    </div>
+      <button className="map-icon" onClick={HandlerMaps}>
+        🗺️
+      </button>
+    </>
   );
 };
 

@@ -46,8 +46,8 @@ const Login = () => {
           "user",
           JSON.stringify({ id: acc.id, role: acc.Role })
         );
-        if (acc.Role === 0) {
-          navigate(`/homeadmin`);
+        if (acc.Role === 1) {
+          navigate(`/home`);
         } else {
           navigate(`/home`);
         }

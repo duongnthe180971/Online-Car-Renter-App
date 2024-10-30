@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import logo from "../../assets/icon/logo.png";
 import "../../styles/payment/payment.css";
 import qrcode from "../../assets/icon/qrcode.png";
-import insurance from "../customer/CarDetail";
-import total_renting_price from "../customer/CarDetail";
 import { formatPrice } from "../../assets/format/numberFormat";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import {
   vietcombank,
@@ -22,8 +21,6 @@ import {
 } from "../../assets/icon";
 
 const Payment = () => {
-  // const totalRentingPrice =
-  //   Price * getNumOfDay(formData.startDate, formData.returnDate);
   const [activeMenu, setActiveMenu] = useState("qr-code");
 
   const showBankCard = () => {
@@ -33,6 +30,12 @@ const Payment = () => {
   const showQRCode = () => {
     setActiveMenu("qr-code");
   };
+  const HandlerConfirm = () => {
+    navigate("/car-status");
+  };
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { totalPay } = location.state;
 
   return (
     <div className="payment-body">
@@ -65,7 +68,7 @@ const Payment = () => {
         </div>
         <div className="payment-content" id="content-payment">
           <h1>You are about to pay</h1>
-          <h2>Pay {formatPrice(total_renting_price + insurance)} to BookCar</h2>
+          <h2>Pay {formatPrice(totalPay)} to BookCar</h2>
           {activeMenu === "qr-code" && (
             <>
               <div className="info">
@@ -80,6 +83,12 @@ const Payment = () => {
               </div>
               <div className="payment-footer-text">
                 <span>Compartible parter apps</span>
+                <button
+                  className="payment-footer-confirm"
+                  onClick={HandlerConfirm}
+                >
+                  Confirm
+                </button>
               </div>
               <div className="payment-partners">
                 <img src={vietcombank} alt="vietcombank" />

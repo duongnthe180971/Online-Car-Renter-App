@@ -9,7 +9,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: 0.5s ease;
+  transition: top 0.5s ease, opacity 0.5s ease;
+}
+.header-home.hidden {
+  top: -60px;
+  opacity: 0;
+}
+.header-home.visible {
+  top: 0;
+  opacity: 1;
+}
+
+.header-home:hover {
+  opacity: 1;
+  top: 0;
 }
 .header-home .user {
   display: flex;
@@ -103,12 +116,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 15rem;
+  /* margin-left: 15rem; */
 }
-.chat-icon {
+.chat-icon,
+.map-icon {
   position: fixed;
   bottom: 20px;
-  right: 20px;
   background-color: #4caf50;
   color: #fff;
   font-size: 24px;
@@ -118,13 +131,20 @@
   cursor: pointer;
   z-index: 1000;
 }
+.chat-icon {
+  right: 20px;
+}
+
+.map-icon {
+  right: 80px;
+}
 .header-voucher-button {
   background-color: #00000046;
   color: #ffffff;
   display: flex;
   font-size: 13px;
   height: 4vh;
-  width: 7vw;
+  width: 5vw;
   align-items: center;
   justify-content: center;
 }

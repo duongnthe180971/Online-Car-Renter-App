@@ -137,22 +137,22 @@ app.post("/api/rental", async (req, res) => {
 
 app.put("/api/rentals/:id", async (req, res) => {
   const rentalId = req.params.id;
-  const { status } = req.body; 
+  const { status } = req.body;
 
   try {
-      await sql.connect(sqlConfig);
+    await sql.connect(sqlConfig);
 
     const result =
       await sql.query`UPDATE Rental SET RentalStatus = ${status} WHERE RentalID = ${rentalId}`;
 
-      if (result.rowsAffected[0] > 0) {
-          res.status(200).json({ message: "Rental status updated successfully" });
-      } else {
-          res.status(404).json({ message: "Rental not found" });
-      }
+    if (result.rowsAffected[0] > 0) {
+      res.status(200).json({ message: "Rental status updated successfully" });
+    } else {
+      res.status(404).json({ message: "Rental not found" });
+    }
   } catch (error) {
-      console.error("Error updating rental status:", error);
-      res.status(500).json({ message: "Server error" });
+    console.error("Error updating rental status:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -275,11 +275,13 @@ app.get("/api/garage", async (req, res) => {
   }
 });
 
-app.get("/api/garage/:id", async (req, res) => { 
-  try { 
+app.get("/api/garage/:id", async (req, res) => {
+  try {
     await sql.connect(sqlConfig);
-    const {id} = req.params;
-    const result = await sql.query(`SELECT * FROM Garage Where CarOwnerID = ${id}`);
+    const { id } = req.params;
+    const result = await sql.query(
+      `SELECT * FROM Garage Where CarOwnerID = ${id}`
+    );
     res.json(result.recordset);
   } catch (err) {
     console.error("Error connecting to the database:", err);
@@ -356,6 +358,86 @@ app.get("/api/notification-description", async (req, res) => {
   } catch (err) {
     console.error("Error connecting to the database:", err);
     res.status(500).send("Server error");
+  }
+});
+app.get("/api/notification/:AccID", async (req, res) => {
+  const { AccID } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(`
+      SELECT ND.Description, N.NotificationDate
+      FROM Notification N
+      JOIN NotificationDescription ND ON N.NotificationID = ND.NotificationID
+      WHERE N.AccID = ${AccID}
+    `);
+    res.json(result.recordset);
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).send("Server error");
+  }
+});
+
+const voucherStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "img/voucher"), // Separate folder for vouchers
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+});
+const voucherUpload = multer({ storage: voucherStorage });
+app.post("/api/voucher", voucherUpload.single("image"), async (req, res) => {
+  const { code, discountPercentage } = req.body;
+
+  if (!req.file) {
+    return res.status(400).json({ message: "Image is required" });
+  }
+
+  const imageNames = req.file.filename;
+  const imagePath = `http://localhost:5000/img/voucher/${imageNames}`;
+  try {
+    await sql.connect(sqlConfig);
+    const query = `INSERT INTO Voucher (VoucherCode, DiscountAmount, image) VALUES ('${code}', ${discountPercentage}, '${imagePath}')`;
+    await sql.query(query);
+    res.status(201).json({ message: "Voucher created successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to create voucher" });
+  }
+});
+
+// Route to fetch all vouchers
+app.get("/api/voucher", async (req, res) => {
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query("SELECT * FROM Voucher");
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch vouchers" });
+  }
+});
+
+app.delete("/api/voucher/:voucherId", async (req, res) => {
+  const { voucherId } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    await sql.query(`DELETE FROM Voucher WHERE VoucherID = ${voucherId}`);
+    res.status(200).json({ message: "Voucher deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete voucher" });
+  }
+});
+
+app.put("/api/voucher/claim/:voucherId", async (req, res) => {
+  const { voucherId } = req.params;
+  const { userId } = req.body;
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(`
+      UPDATE Voucher SET IsClaimed = 1, ClaimedBy = ${userId} WHERE VoucherID = ${voucherId} AND IsClaimed = 0
+    `);
+    if (result.rowsAffected[0] > 0) {
+      res.status(200).json({ message: "Voucher claimed successfully" });
+    } else {
+      res.status(400).json({ message: "Voucher already claimed or not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to claim voucher" });
   }
 });
 
@@ -928,7 +1010,9 @@ app.put("/api/car/:carId/delete", async (req, res) => {
     await sql.connect(sqlConfig);
 
     // Set CarStatus to 'Deleted' instead of deleting the car
-    await sql.query(`UPDATE Car SET CarStatus = 'Deleted' WHERE CarID = ${carId}`);
+    await sql.query(
+      `UPDATE Car SET CarStatus = 'Deleted' WHERE CarID = ${carId}`
+    );
 
     res.status(200).send({ message: "Car marked as deleted successfully" });
   } catch (error) {
@@ -971,8 +1055,11 @@ app.post("/api/register-cars/:carId/approve", async (req, res) => {
     await sql.connect(sqlConfig);
 
     // Fetch car details
-    const carResult = await sql.query(`SELECT * FROM RegisterCar WHERE CarID = ${carId}`);
-    if (carResult.recordset.length === 0) return res.status(404).send("Car not found");
+    const carResult = await sql.query(
+      `SELECT * FROM RegisterCar WHERE CarID = ${carId}`
+    );
+    if (carResult.recordset.length === 0)
+      return res.status(404).send("Car not found");
     const car = carResult.recordset[0];
 
     // Insert into Car table
@@ -985,9 +1072,13 @@ app.post("/api/register-cars/:carId/approve", async (req, res) => {
     const newCarId = (await sql.query(carInsertQuery)).recordset[0].CarID;
 
     // Migrate features
-    const featureResult = await sql.query(`SELECT FeatureID FROM RegisterCarFeature WHERE CarID = ${carId}`);
+    const featureResult = await sql.query(
+      `SELECT FeatureID FROM RegisterCarFeature WHERE CarID = ${carId}`
+    );
     for (const feature of featureResult.recordset) {
-      await sql.query(`INSERT INTO CarFeature (CarID, FeatureID) VALUES (${newCarId}, ${feature.FeatureID})`);
+      await sql.query(
+        `INSERT INTO CarFeature (CarID, FeatureID) VALUES (${newCarId}, ${feature.FeatureID})`
+      );
     }
 
     // Delete old records
