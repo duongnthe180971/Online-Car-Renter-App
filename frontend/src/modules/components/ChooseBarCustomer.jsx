@@ -1,12 +1,19 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom';
-import { FaUser, FaCar, FaHistory, FaDollarSign, FaCog, FaSignOutAlt, FaCheckSquare } from 'react-icons/fa';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaUser, FaCar, FaHistory, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import '../../styles/component/ChooseBar.css';
 
-export class ChooseBarCustomer extends Component {
-    render() {
-      return (
-        <div className="sidebar">
+const ChooseBarCustomer = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    alert("Log out success");
+    navigate("/home");
+  };
+
+  return (
+    <div className="sidebar">
       <ul>
         <li>
           <Link to="/profile">
@@ -28,15 +35,12 @@ export class ChooseBarCustomer extends Component {
             <FaCog className="icon" /> Settings
           </Link>
         </li>
-        <li>
-          <Link to="/logout">
-            <FaSignOutAlt className="icon" /> Log Out
-          </Link>
+        <li onClick={handleLogout}>
+          <FaSignOutAlt className="icon" /> Log Out
         </li>
       </ul>
     </div>
-      )
-    }
-  }
+  );
+};
 
 export default ChooseBarCustomer;

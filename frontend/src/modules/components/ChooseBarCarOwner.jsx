@@ -16,7 +16,7 @@ const ChooseBarCarOwner = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    console.log("Logout clicked");
+    alert("Log out success");
     navigate("/home");
   };
 

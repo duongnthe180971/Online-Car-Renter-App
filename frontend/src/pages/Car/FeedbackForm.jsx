@@ -18,7 +18,7 @@ const FeedbackForm = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
 
-    if (!userData || userData.role !== 2) {
+    if (!userData || userData.role !== 3) {
       setAuthorized(false);
       return;
     }
