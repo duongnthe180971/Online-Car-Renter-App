@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import ChooseBar from "../../modules/components/ChooseBarCarOwner";
+import ChooseBar from "../../modules/components/ChooseBarAdmin";
 import FinanceChart from "../../modules/components/FinanceChart";
 import "../../styles/admin/Finance.css";
 
@@ -49,7 +49,9 @@ const Finance = () => {
   return (
     <div className="AllPage">
       <div className="LeftSide">
-        <ChooseBar />
+        <div className="Bar">
+          <ChooseBar />
+        </div>
       </div>
 
       <div className="RightSide">

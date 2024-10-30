@@ -6,7 +6,8 @@ import { getNumOfDay, formatPrice } from "../../assets/format/numberFormat";
 import "../../styles/customer/CarDetail.css";
 import 'react-datepicker/dist/react-datepicker.css';
 
-const CarDetailCard = ({ car }) => {
+const CarDetailCard = ({ car, userAddress }) => {
+    const navigate = useNavigate();
     const { CarID, GarageID, CarImage, CarName, Rate, Seats, CarType, Gear, Fuel, CarDescription } = car;
     const [address, setAddress] = useState("");
     const [features, setFeatures] = useState([]);
@@ -43,6 +44,9 @@ const CarDetailCard = ({ car }) => {
 
     const featureList = Array.isArray(features) ? features : [];
 
+    const handleViewMap = async () => {
+        navigate('/customer-map', { state: { fromName: userAddress, toName: address } });
+    };
     return (
         <div className="car-detail-card-container">
             <img src={CarImage} alt="Car" className="car-image" />
@@ -67,7 +71,8 @@ const CarDetailCard = ({ car }) => {
                     {featureList.map((item, index) => <p key={index}>{item}</p>)}
                 </div>
                 <div className="address">
-                    <h5>Address:</h5> <p>{address}</p>
+                    <div className="address-detail"> <h5>Address:</h5> <p>{address}</p> </div>
+                    <button className="view-map-button" onClick={handleViewMap}> View Map </button>
                 </div>
                 <div className="description">
                     <h5>Description:</h5> <p>{CarDescription}</p>
@@ -176,17 +181,28 @@ const RentalCard = ({ car, accID }) => {
 
 const CarDetail = () => {
     const location = useLocation();
-    const { carID } = location.state || {carID: 1};
+    const { carID } = location.state || { carID: 1 };
     const [car, setCar] = useState(null);
     const [accID, setAccID] = useState(0);
-    
+    const [userAddress, setUserAddress] = useState('');
+
     useEffect(() => {
+        const fetchUserAddress = async (id) => {
+            try {
+                const response = await axios.get("http://localhost:5000/api/account");
+                const address_ = response.data.find((item) => item.id === id).Address;
+                setUserAddress(address_);
+            } catch (err) {
+                console.error("Error fetching car data:", err);
+            }
+        };
+
         const storedUser = JSON.parse(localStorage.getItem("user"));
         if (storedUser && storedUser.id) {
-          setAccID(storedUser.id);
+            setAccID(storedUser.id);
+            fetchUserAddress(storedUser.id);
         }
-      });
-    useEffect(() => {
+
         const fetchCarData = async () => {
             try {
                 const response = await axios.get("http://localhost:5000/api/car");
@@ -204,7 +220,7 @@ const CarDetail = () => {
 
     return (
         <div className="car-detail-container">
-            <CarDetailCard car={car} />
+            <CarDetailCard car={car} userAddress={userAddress} />
             <RentalCard car={car} accID={accID} />
         </div>
     );

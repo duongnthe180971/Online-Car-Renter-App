@@ -56,21 +56,3 @@
   width: 100%; /* Chiều rộng toàn phần của khung chứa */
 }
 
-/* Cấu trúc trang */
-.AllPage {
-  display: flex;
-}
-
-.LeftSide {
-  width: 250px; /* Giữ cho sidebar có độ rộng cố định */
-}
-
-.RightSide {
-  flex: 1;
-  padding: 20px;
-}
-.error-message {
-  color: red;
-  font-weight: bold;
-  margin-top: 20px;
-}

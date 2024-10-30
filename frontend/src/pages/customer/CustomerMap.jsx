@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import ReactDOMServer from 'react-dom/server';
@@ -59,7 +60,7 @@ const LocationForm = ({ fromLocation, toLocation, setFromLocation, setToLocation
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="toInput">Car Location:</label>
+                <label htmlFor="toInput">Destination:</label>
                 <input
                     id="toInput"
                     value={toLocation.name}
@@ -155,6 +156,9 @@ const MapComponent = ({ fromLocation, toLocation }) => {
 };
 
 const CustomerMap = () => {
+    const location = useLocation();
+    const { fromName } = location.state || {fromName: 'Dai Hoc FPT Ha Noi'};
+    const { toName } = location.state || {toName: 'Ho Hoan Kiem'};
     const [fromLocation, setFromLocation] = useState({
         name: '',
         lat: 0,
@@ -170,8 +174,8 @@ const CustomerMap = () => {
 
     useEffect(() => {
         const geocodeDefaultLocations = async () => {
-            const geocodedFrom = await geocodeLocation('Dai Hoc FPT Ha Noi');
-            const geocodedTo = await geocodeLocation('75 Hang Bong, Hoan Kiem, Ha Noi');
+            const geocodedFrom = await geocodeLocation(fromName);
+            const geocodedTo = await geocodeLocation(toName);
 
             if (geocodedFrom && geocodedTo) {
                 setFromLocation(geocodedFrom);

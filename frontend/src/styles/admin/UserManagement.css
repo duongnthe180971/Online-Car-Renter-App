@@ -1,25 +1,3 @@
-/* Toàn bộ phần của trang */
-.AllPage {
-  display: flex;
-  justify-content: center; /* Căn giữa nội dung */
-  align-items: center;
-  min-height: 100vh; /* Đảm bảo chiều cao toàn trang */
-  background-color: rgb(94, 94, 94); /* Màu nền như car reg */
-}
-
-.LeftSide {
-  width: 20%;
-}
-
-.RightSide {
-  width: 80%;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 /* Container cho việc quản lý người dùng */
 .manage-user-container {
   background-color: #444; /* Màu nền xám đậm */

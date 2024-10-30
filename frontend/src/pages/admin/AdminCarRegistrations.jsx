@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../modules/components/ChooseBarAdmin";
+import ChooseBar from "../../modules/components/ChooseBarAdmin";
 import "../../styles/admin/AdminCarRegistrations.css";
 
 // AdminCarRegistrations Component
@@ -50,10 +50,10 @@ const AdminCarRegistrations = () => {
       selectedPriceRange === "low"
         ? car.Price <= 300000
         : selectedPriceRange === "mid"
-        ? car.Price > 300000 && car.Price <= 600000
-        : selectedPriceRange === "high"
-        ? car.Price > 600000
-        : true;
+          ? car.Price > 300000 && car.Price <= 600000
+          : selectedPriceRange === "high"
+            ? car.Price > 600000
+            : true;
 
     return matchesBrand && matchesSeats && matchesPrice;
   });
@@ -153,7 +153,9 @@ const AdminCarRegistrations = () => {
   return (
     <div className="AllPage">
       <div className="LeftSide">
-        <Sidebar /> {/* Sidebar component */}
+        <div className="Bar">
+          <ChooseBar />
+        </div>
       </div>
       <div className="RightSide">
         <div className="adm-car-registration-container">
@@ -324,9 +326,8 @@ const Pagination = ({ carsPerPage, totalCars, currentPage, paginate }) => {
           </li>
         ))}
         <li
-          className={`page-item ${
-            currentPage === pageNumbers.length ? "disabled" : ""
-          }`}
+          className={`page-item ${currentPage === pageNumbers.length ? "disabled" : ""
+            }`}
         >
           <button
             onClick={() => paginate(currentPage + 1)}

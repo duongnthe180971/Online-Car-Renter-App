@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../modules/components/ChooseBarAdmin";
+import ChooseBar from "../../modules/components/ChooseBarAdmin";
 import "../../styles/admin/CarTemplate.css";
 
 // CarTemplate Component
@@ -108,7 +108,9 @@ const CarTemplate = () => {
   return (
     <div className="AllPage">
       <div className="LeftSide">
-        <Sidebar /> {/* Sidebar component */}
+        <div className="Bar">
+          <ChooseBar />
+        </div>
       </div>
       <div className="RightSide">
         <div className="template-container">

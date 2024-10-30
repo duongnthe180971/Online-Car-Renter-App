@@ -104,7 +104,9 @@ const UserManagement = () => {
   return (
     <div className="AllPage">
       <div className="LeftSide">
-        <ChooseBar /> {/* Sidebar component */}
+        <div className="Bar">
+          <ChooseBar />
+        </div>
       </div>
       <div className="RightSide">
         <div className="manage-user-container">
@@ -190,8 +192,8 @@ const UserManagement = () => {
                     {selectedUser.Role === 1
                       ? "Admin"
                       : selectedUser.Role === 2
-                      ? "Customer"
-                      : "Car Owner"}
+                        ? "Customer"
+                        : "Car Owner"}
                   </p>
                   <p>
                     <strong>Address:</strong>{" "}
@@ -238,9 +240,8 @@ const Pagination = ({ usersPerPage, totalUsers, currentPage, paginate }) => {
           </li>
         ))}
         <li
-          className={`page-item ${
-            currentPage === pageNumbers.length ? "disabled" : ""
-          }`}
+          className={`page-item ${currentPage === pageNumbers.length ? "disabled" : ""
+            }`}
         >
           <button
             onClick={() => paginate(currentPage + 1)}
