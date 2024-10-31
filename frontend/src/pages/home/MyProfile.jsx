@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import ChooseBar from "../../modules/components/ChooseBarCarOwner";
+import ChooseBarCarOwner from "../../modules/components/ChooseBarCarOwner";
 import ChooseBarCustomer from "../../modules/components/ChooseBarCustomer";
 import ChooseBarAdmin from "../../modules/components/ChooseBarAdmin";
 import "../../styles/cars_owner/Garage.css";
@@ -8,6 +8,7 @@ import "../../styles/home/myprofile.css";
 import EditProfileModal from "../../modules/components/EditProfileModal";
 import ChangePasswordModal from "../../modules/components/ChangePassWord";
 import { formatPrice, formatDate_String } from "../../assets/format/numberFormat";
+
 //import avatar from 'process.env.PUBLIC_URL'
 const MyProfile = ({}) => {
     const [user, setUser] = useState({});
@@ -88,10 +89,10 @@ const MyProfile = ({}) => {
         <div className="AllPage">
             <div className="LeftSide">
                 <div className="Bar">
-                    {AccRole === 3 &&
-                    <ChooseBar />
-                    }
                     {AccRole === 2 &&
+                    <ChooseBarCarOwner />
+                    }
+                    {AccRole === 3 &&
                     <ChooseBarCustomer />
                     }
                     {AccRole === 1 &&

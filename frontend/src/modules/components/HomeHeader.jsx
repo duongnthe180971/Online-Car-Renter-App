@@ -121,6 +121,9 @@ const HomeHeader = ({ id }) => {
           <li>
             <a href="/car-status">Car Status</a>
           </li>
+          <li>
+            <a href="/car-history">Car History</a>
+          </li>
         </>
       );
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaCar, FaHistory, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaCar, FaHistory, FaCog, FaSignOutAlt, FaList } from 'react-icons/fa';
 import '../../styles/component/ChooseBar.css';
 
 const ChooseBarCustomer = () => {
@@ -28,6 +28,11 @@ const ChooseBarCustomer = () => {
         <li>
           <Link to="/car-history">
             <FaHistory className="icon" /> Car History
+          </Link>
+        </li>
+        <li>
+          <Link to="/car-list">
+            <FaList className="icon" /> List Of Car
           </Link>
         </li>
         <li>
