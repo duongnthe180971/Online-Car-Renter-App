@@ -38,7 +38,7 @@ const RentalRequests = () => {
       setAccID(storedUser.id);
     }
 
-    if (storedUser.role !== 3) {
+    if (storedUser.role !== 2) {
       setError("No permission for current feauture");
     }
 

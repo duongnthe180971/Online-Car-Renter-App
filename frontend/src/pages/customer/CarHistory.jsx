@@ -65,7 +65,10 @@ const CarHistory = () => {
             }
             return null;
           })
-          .filter(rental => rental && rental.CustomerID === Accid);
+          .filter(rental => rental && rental.CustomerID === Accid 
+            && (rental.RentalStatus === 0
+            || rental.RentalStatus === 5)
+            );
 
         setRentalHistory(rentals);
       } catch (error) {
