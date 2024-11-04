@@ -5,18 +5,24 @@ import FinanceChart from "../../modules/components/FinanceChart";
 import "../../styles/admin/Finance.css";
 
 const FinanceCarOwner = () => {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedYear, setSelectedYear] = useState(2024);
   const [financeData, setFinanceData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [noData, setNoData] = useState(false);
-  const [Accid, setAccID] = useState(0);
+  const [Accid, setAccID] = useState(null);
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.id) {
       setAccID(storedUser.id);
     }
+  }, []);
+
+  useEffect(() => {
     const fetchFinanceData = async () => {
+      if (!Accid) return;
+
       setLoading(true);
       setError(null);
       setNoData(false);
@@ -26,7 +32,7 @@ const FinanceCarOwner = () => {
           `http://localhost:5000/api/finance/carOwner/${Accid}/${selectedYear}`
         );
 
-        if (response.data && response.data.length > 0 && Accid) {
+        if (response.data && response.data.length > 0) {
           const formattedData = response.data.map((item) => ({
             name: new Date(item.Date).toLocaleString("default", {
               month: "short",
@@ -59,7 +65,7 @@ const FinanceCarOwner = () => {
 
       <div className="RightSide">
         <div className="finance-container">
-          <h1 className="title">My Financial Overview {selectedYear} </h1>
+          <h1 className="title">Finance CarOwner </h1>
           <div className="filters">
             <div className="filter-item">
               <label>Select Year</label>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ChooseBar from "../../modules/components/ChooseBarAdmin";
 import "../../styles/admin/AdminCarRegistrations.css";
-
+import Loader from "../../modules/components/Loader";
 // AdminCarRegistrations Component
 const AdminCarRegistrations = () => {
   const [cars, setCars] = useState([]); // State to hold car data
@@ -48,10 +48,10 @@ const AdminCarRegistrations = () => {
       selectedPriceRange === "low"
         ? car.Price <= 300000
         : selectedPriceRange === "mid"
-          ? car.Price > 300000 && car.Price <= 600000
-          : selectedPriceRange === "high"
-            ? car.Price > 600000
-            : true;
+        ? car.Price > 300000 && car.Price <= 600000
+        : selectedPriceRange === "high"
+        ? car.Price > 600000
+        : true;
 
     return matchesBrand && matchesSeats && matchesPrice;
   });
@@ -139,9 +139,7 @@ const AdminCarRegistrations = () => {
   };
 
   // Display a loading indicator while data is being fetched
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <Loader />;
 
   // Display error if there's a problem fetching the data
   if (error) {
@@ -326,8 +324,9 @@ const Pagination = ({ carsPerPage, totalCars, currentPage, paginate }) => {
           </li>
         ))}
         <li
-          className={`page-item ${currentPage === pageNumbers.length ? "disabled" : ""
-            }`}
+          className={`page-item ${
+            currentPage === pageNumbers.length ? "disabled" : ""
+          }`}
         >
           <button
             onClick={() => paginate(currentPage + 1)}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ChooseBar from "../../modules/components/ChooseBarAdmin"; // Sidebar
 import "../../styles/admin/UserManagement.css"; // CSS for user management page
 import defaultAvatar from "../../assets/img/user.png"; // Default avatar for users
-
+import Loader from "../../modules/components/Loader";
 const UserManagement = () => {
   const [users, setUsers] = useState([]); // To hold the user data
   const [loading, setLoading] = useState(true); // Loading state
@@ -95,9 +95,7 @@ const UserManagement = () => {
   };
 
   // Display a loading spinner while fetching data
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <Loader />;
 
   // Display error if there's an issue fetching the data
   if (error) {
@@ -125,8 +123,8 @@ const UserManagement = () => {
             >
               <option value="">All Roles</option>
               <option value="1">Admin</option>
-              <option value="2">Customer</option>
-              <option value="3">Car Owner</option>
+              <option value="3">Customer</option>
+              <option value="2">Car Owner</option>
             </select>
           </div>
 
@@ -197,8 +195,8 @@ const UserManagement = () => {
                     {selectedUser.Role === 1
                       ? "Admin"
                       : selectedUser.Role === 2
-                        ? "Customer"
-                        : "Car Owner"}
+                      ? "Customer"
+                      : "Car Owner"}
                   </p>
                   <p>
                     <strong>Address:</strong>{" "}
@@ -245,8 +243,9 @@ const Pagination = ({ usersPerPage, totalUsers, currentPage, paginate }) => {
           </li>
         ))}
         <li
-          className={`page-item ${currentPage === pageNumbers.length ? "disabled" : ""
-            }`}
+          className={`page-item ${
+            currentPage === pageNumbers.length ? "disabled" : ""
+          }`}
         >
           <button
             onClick={() => paginate(currentPage + 1)}

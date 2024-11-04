@@ -3,7 +3,7 @@ import axios from "axios";
 import ChooseBar from "../../modules/components/ChooseBarAdmin";
 import FinanceChart from "../../modules/components/FinanceChart";
 import "../../styles/admin/Finance.css";
-
+import Loader from "../../modules/components/Loader";
 const Finance = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [financeData, setFinanceData] = useState([]);
@@ -69,7 +69,7 @@ const Finance = () => {
               </select>
             </div>
           </div>
-          {loading && <div>Loading data...</div>}
+          {loading && <Loader />}
           {error && <div className="error-message">Error: {error}</div>}
           {!loading && !error && noData && (
             <div>No data available for this year</div>

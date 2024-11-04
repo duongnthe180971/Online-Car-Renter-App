@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ChooseBar from "../../modules/components/ChooseBarAdmin";
 import "../../styles/admin/CarTemplate.css";
+import Input from "../../modules/components/Input";
 
 // CarTemplate Component
 const CarTemplate = () => {
@@ -130,11 +131,10 @@ const CarTemplate = () => {
           <h1 className="page-title">Manage Car Template</h1>
           <div className="feature-list">
             {/* Input to add a new feature */}
-            <input
-              type="text"
-              placeholder="Enter new feature"
+            <Input
               value={newFeature}
-              onChange={handleInputChange} // Update input value
+              onChange={handleInputChange}
+              placeholder="Enter new feature"
             />
             <button className="add-feature-btn" onClick={handleAddFeature}>
               Add Feature

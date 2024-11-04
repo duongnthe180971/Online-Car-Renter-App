@@ -44,7 +44,7 @@ const ChooseBarCarOwner = () => {
           </Link>
         </li>
         <li>
-          <Link to="/finance">
+          <Link to="/finance-carowner">
             <FaDollarSign className="icon" /> Finance
           </Link>
         </li>
@@ -54,7 +54,7 @@ const ChooseBarCarOwner = () => {
           </Link>
         </li>
         <li onClick={handleLogout}>
-            <FaSignOutAlt className="icon" /> Log Out
+          <FaSignOutAlt className="icon" /> Log Out
         </li>
       </ul>
     </div>
