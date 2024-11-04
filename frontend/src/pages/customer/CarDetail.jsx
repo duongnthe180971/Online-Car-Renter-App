@@ -111,6 +111,8 @@ const RentalCard = ({ car, accID }) => {
   const navigate = useNavigate();
   const { Price, CarID } = car;
   const insurance = 60000;
+  const [vouchers, setVouchers] = useState([]);
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
 
   const [formData, setFormData] = useState({
     startDate: new Date(),
@@ -121,7 +123,37 @@ const RentalCard = ({ car, accID }) => {
 
   const totalRentingPrice =
     Price * getNumOfDay(formData.startDate, formData.returnDate);
+  const discountAmount = selectedVoucher ? selectedVoucher.DiscountAmount : 0;
+  const finalPrice = totalRentingPrice + insurance - (totalRentingPrice * (discountAmount / 100));
 
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/voucher/`);
+        const claimedVouchers = res.data.filter((item) => item.ClaimedBy = accID);
+        setVouchers(claimedVouchers);
+      } catch (err) {
+        console.error("Error fetching vouchers:", err);
+      }
+    };
+
+    if (accID) {
+      fetchVouchers();
+    }
+  }, [accID]);
+
+
+  const deleteVoucher = async (voucherId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/voucher/${voucherId}`);
+      setVouchers(
+        vouchers.filter((voucher) => voucher.VoucherID !== voucherId)
+      );
+      alert("Your voucher has been use!");
+    } catch (error) {
+      console.error("Error using voucher:", error);
+    }
+  };
   const handleDateChange = (name, date) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -164,8 +196,9 @@ const RentalCard = ({ car, accID }) => {
 
     try {
       await axios.post("http://localhost:5000/api/rental", newRental);
+      if(selectedVoucher) deleteVoucher(selectedVoucher.VoucherID);
       navigate("/payment", {
-        state: { totalPay: totalRentingPrice + insurance },
+        state: { totalPay: finalPrice },
       });
     } catch (error) {
       console.error("Error adding rental:", error);
@@ -194,10 +227,29 @@ const RentalCard = ({ car, accID }) => {
           />
         </div>
       </div>
+      <div className="voucher-section">
+        <h3>Choose Voucher</h3>
+        <select
+          value={selectedVoucher ? selectedVoucher.VoucherID : ""}
+          onChange={(e) =>
+            setSelectedVoucher(
+              vouchers.find((v) => v.VoucherID === parseInt(e.target.value))
+            )
+          }
+        >
+          <option value="" hidden>Select a Voucher</option>
+          <option value="" >None</option>
+          {vouchers.map((voucher) => (
+            <option key={voucher.VoucherID} value={voucher.VoucherID}>
+              {voucher.VoucherCode} - {voucher.DiscountAmount}% Off
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="price-details">
         <div className="item">
           <h7>Total Renting Price:</h7>
-          <h7>{errors ? 0 : formatPrice(totalRentingPrice)} VND</h7>
+          <h7>{selectedVoucher ? `(- ${selectedVoucher.DiscountAmount}%) ` : ""}{errors ? 0 : formatPrice(finalPrice - insurance)} VND </h7>
         </div>
         <div className="item">
           <h7>Insurance:</h7>
@@ -205,7 +257,12 @@ const RentalCard = ({ car, accID }) => {
         </div>
         <div className="item">
           <h5>Total:</h5>
-          <h5>{errors ? 0 : formatPrice(totalRentingPrice + insurance)} VND</h5>
+          <h5 style={{ textDecoration: selectedVoucher ? "line-through" : "none", fontSize: selectedVoucher ? "0.9rem" : "1.2rem" }}>
+            {errors ? 0 : formatPrice(totalRentingPrice + insurance)} VND
+          </h5>
+          {selectedVoucher && !errors && (
+            <h5>{formatPrice(finalPrice)} VND</h5>
+          )}
         </div>
       </div>
       <div className="button-container">

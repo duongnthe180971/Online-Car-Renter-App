@@ -92,7 +92,6 @@
   padding: 30px 50px;
   text-align: center;
 }
-
 .rental-card-container h1 {
   text-align: left;
   font-size: 28px;
@@ -130,6 +129,17 @@
   background-color: #1f1f1f;
   text-align: center;
 }
+.rental-card-container .voucher-section{
+  margin-left: 0;
+  display: flex;
+  gap: 3vw;
+}
+.voucher-section select, .voucher-section option{
+  width: 10vw;
+  font-size: 0.9em;
+  font-weight: 700;
+  color: #e3921a;
+}
 .rental-card-container .price-details {
   display: flex;
   flex-direction: column;
@@ -147,7 +157,8 @@
   margin: 10px 0;
 }
 .rental-card-container .price-details h5 {
-  margin: 30px 0;
+  margin: auto 0;
+  padding: 30px 0;
 }
 .rental-card-container .book-button {
   width: 70%;
