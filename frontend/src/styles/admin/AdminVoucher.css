@@ -30,7 +30,7 @@
 .voucher-inputs input {
   flex: 1;
   padding: 0vw;
-  font-size: 1em;
+  font-size: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -76,7 +76,7 @@
   background-color: #5a5a5acc;
 }
 .existing-vouchers::-webkit-scrollbar {
-  width: 8px; /* Adjust scrollbar width */
+  width: 8px;
 }
 .existing-vouchers::-webkit-scrollbar-thumb {
   background-color: #888;
@@ -105,7 +105,7 @@
   background-color: #c82333;
 }
 .voucher-image-preview {
-  width: 10vw;
+  width: 12vw;
   height: 15vh;
   background-color: #000;
   border-radius: 5px;

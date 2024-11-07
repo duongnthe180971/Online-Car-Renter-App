@@ -38,7 +38,8 @@ const NotificationForm = ({ id }) => {
               className="notification-close"
               onClick={handleCloseNotification}
             >
-              Close
+              &lt; Back
+              <h5 className="notification-title">Notification</h5>
             </button>
             <div className="notification-messages">
               {notifications.map((notification, index) => (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../styles/home/home.css";
 import CarPlot from "../../modules/components/CarPlot";
 import HomeHeader from "../../modules/components/HomeHeader";
@@ -9,11 +9,7 @@ import "../../styles/home/notification.css";
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Home = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { status } = location.state || {
-    status: false,
-  };
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [

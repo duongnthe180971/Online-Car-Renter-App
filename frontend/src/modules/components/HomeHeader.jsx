@@ -6,7 +6,7 @@ import "../../styles/home/homeheader.css";
 import NotificationForm from "../../modules/components/NotificationForm";
 import "../../styles/home/notification.css";
 
-const HomeHeader = ({ id }) => {
+const HomeHeader = () => {
   const navigate = useNavigate();
   const [itlogedin, setitlogedin] = useState(false);
   const [user, setUser] = useState(null);
@@ -23,13 +23,16 @@ const HomeHeader = ({ id }) => {
   };
   const handleCheckLoginRole = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser && storedUser.id === 2) {
+    if (storedUser && storedUser?.role === 3) {
       navigate(`/voucher`);
-    } else if (storedUser && storedUser.id) {
+    } else if (
+      storedUser &&
+      (storedUser?.role === 1 || storedUser?.role === 2)
+    ) {
       alert("You must login at Customer!");
     } else {
       alert("Please log in to get Voucher");
-      navigate("./login");
+      navigate("/login");
     }
   };
   useEffect(() => {
@@ -120,7 +123,7 @@ const HomeHeader = ({ id }) => {
         <>
           <li>
             <a href="/car-status">Car Status</a>
-          </li>
+          </li>{" "}
           <li>
             <a href="/car-history">Car History</a>
           </li>
@@ -173,7 +176,7 @@ const HomeHeader = ({ id }) => {
               Vouchers
             </button>
           )}
-          {itlogedin && <NotificationForm id={user?.id} />}
+          <div>{itlogedin && <NotificationForm id={user?.id} />}</div>
           <div className="header-user-dropdown">
             <button
               className="header-user-show"

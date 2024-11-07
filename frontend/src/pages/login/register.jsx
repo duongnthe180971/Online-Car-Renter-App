@@ -215,8 +215,8 @@ const Register = () => {
               type="radio"
               id="carowner"
               name="role"
-              value="1"
-              checked={formData.role === "1"}
+              value="2"
+              checked={formData.role === "2"}
               onChange={handleChange}
               required
             />
@@ -225,8 +225,8 @@ const Register = () => {
               type="radio"
               id="customer"
               name="role"
-              value="2"
-              checked={formData.role === "2"}
+              value="3"
+              checked={formData.role === "3"}
               onChange={handleChange}
               required
             />

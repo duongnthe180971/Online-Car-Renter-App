@@ -113,10 +113,8 @@
   font-weight: bold;
 }
 .header-navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: 5vw;
+  position: fixed;
+  margin-left: 41vw;
 }
 .chat-icon,
 .map-icon {

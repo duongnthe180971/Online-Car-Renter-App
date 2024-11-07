@@ -9,11 +9,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it's on top */
+  z-index: 1000;
 }
 
 .notification-content {
-  width: 20vw;
+  width: 27vw;
   max-height: 60vh;
   background-color: #000000;
   padding: 20px;
@@ -24,11 +24,14 @@
   flex-direction: column;
   justify-content: space-between;
 }
-
+.notification-title {
+  display: flex;
+  margin-left: 16vw;
+}
 .notification-messages {
   overflow-y: auto;
-  padding-right: 10px; /* Spacing for scrollbar */
-  height: 45vh; /* Limit the height for scrolling */
+  padding-right: 10px;
+  height: 45vh;
 }
 
 /* Custom scrollbar styling */
@@ -46,15 +49,10 @@
 }
 
 .notification-close {
+  display: flex;
   margin-bottom: 2vh;
-  background-color: #33333349;
+  background-color: #33333300;
   color: #fff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-  justify-content: left;
 }
 
 .notification-show {
@@ -71,24 +69,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1vh 2vh;
-  background-color: rgba(139, 173, 235, 0.185);
-  border-radius: 20px;
-  margin-bottom: 10px;
-  color: #333;
+  padding: 1.2vh 2vh;
+  background-color: #333;
+  border-radius: 15px;
+  margin-bottom: 15px;
 }
 .notification-description {
-  flex: 2;
   padding-right: 10px;
   font-weight: bold;
   color: #ffffff;
 }
 
 .notification-date {
-  flex: 1;
-  background-color: bisque;
-  padding: 5px;
+  display: flex;
+  color: aliceblue;
+  margin-top: 5vh;
   border-radius: 5px;
-  text-align: center;
-  font-size: 0.9em;
+  font-size: 10px;
 }

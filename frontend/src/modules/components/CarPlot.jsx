@@ -9,13 +9,16 @@ const CarPlot = (props) => {
   const navigate = useNavigate();
   const handleCheckDetailCar = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser && storedUser.id === 2) {
+    if (storedUser && storedUser?.role === 3) {
       navigate(`/car-detail`, { state: { carID: CarID } });
-    } else if (storedUser && storedUser.id) {
+    } else if (
+      storedUser &&
+      (storedUser?.role === 1 || storedUser?.role === 2)
+    ) {
       alert("You must login at Customer!");
     } else {
-      alert("Please log in to book a car.");
-      navigate("./login");
+      alert("Please login to book a car.");
+      navigate("/login");
     }
   };
   return (
