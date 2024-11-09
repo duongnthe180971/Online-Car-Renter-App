@@ -4,25 +4,33 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function RentalCard({ request }) {
-  const { car, customer, bookDate, timePeriod, price, rentalId } = request;
+  const { car, carId, customer, bookDate, timePeriod, price, rentalId } = request;
   const navigate = useNavigate();
-  // Initialize the state to "Waiting to confirm"
   const [status, setStatus] = useState(request.status);
-  //const [loading, setLoading] = useState(false); // To manage the loading state
   const [error, setError] = useState(null);
-  // Handle approving the rental
+
   const handleApprove = async () => {
-    setStatus('Renting'); // Change the status to "Renting" when the "Approve" button is clicked
+    setStatus('Renting');
     try {
-      // Make the API request to update the rental status
       const response = await axios.put(`http://localhost:5000/api/rentals/${rentalId}`, {
-        status: 2 // Update the status to "Renting"
+        status: 2
       });
 
+      const responseCar = await axios.put(`http://localhost:5000/api/cars/${carId}`, {
+        newStatus: 'Renting'
+      },
+      {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+
+
       if (response.status === 200) {
-        setStatus('Renting'); // Change the status to "Renting" after a successful API call
+        setStatus('Renting');
       } else {
-        setError('Failed to update status.'); // Set error if the response isn't successful
+        setError('Failed to update status.');
       }
     } catch (err) {
       console.error('Error updating rental status:', err);

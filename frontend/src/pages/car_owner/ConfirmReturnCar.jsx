@@ -86,6 +86,7 @@ const RentalReturn = () => {
               return {
                 ...rental,
                 carName: car.CarName,
+                carId : car.CarID,
                 price: car.Price,
                 GarageID: car.GarageID,
                 Customer: customer?.UserName || "Unknown Customer",
@@ -117,13 +118,17 @@ const RentalReturn = () => {
           <p className="Error">{error}</p>
         ) : (
           <div className="garage rentalReq">
-            <h1>Rental Requests</h1>
+            <h1>Confirm Return</h1>
             <div className="rental-requests">
+            
+            {filteredRentalRequests.length !== 0 ? (
+              <>
               {filteredRentalRequests.map((request) => (
                 <RentalCardReturn
                   key={request.id}
                   request={{
                     car: request.carName,
+                    carId: request.carId,
                     customer: request.Customer,
                     status: getStatusLabel(request.RentalStatus),
                     bookDate: `${formatDate_String(request.RentalStart)}`,
@@ -134,6 +139,11 @@ const RentalReturn = () => {
                   }}
                 />
               ))}
+              </>
+            ):(
+              <p className="Error">Currently no request</p>
+            )}
+
             </div>
           </div>
         )}

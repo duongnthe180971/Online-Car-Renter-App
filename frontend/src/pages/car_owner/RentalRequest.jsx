@@ -86,6 +86,7 @@ const RentalRequests = () => {
               return {
                 ...rental,
                 carName: car.CarName,
+                carId : car.CarID,
                 price: car.Price,
                 GarageID: car.GarageID,
                 Customer: customer?.UserName || "Unknown Customer",
@@ -124,6 +125,7 @@ const RentalRequests = () => {
                   key={request.id}
                   request={{
                     car: request.carName,
+                    carId: request.carId,
                     customer: request.Customer,
                     status: getStatusLabel(request.RentalStatus),
                     bookDate: `${formatDate_String(request.RentalStart)}`,

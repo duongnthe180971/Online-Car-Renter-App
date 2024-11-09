@@ -14,22 +14,19 @@ const CarCard = ({ car, onStatusChange, onDeleteClick, onViewClick }) => {
 
     
     const handleToggle = async () => {
-        const newStatus = isAvailable ? 'Closed' : 'Idle'; // Change status accordingly
-        setIsAvailable(!isAvailable); // Update availability
+        const newStatus = isAvailable ? 'Closed' : 'Idle';
+        setIsAvailable(!isAvailable);
         try {
-            // Send PUT request to update the car status in the database
             const response = await axios.put(`http://localhost:5000/api/cars/${car.CarID}`, {
                 newStatus: newStatus,
             },
             {
                 headers: {
-                    'Content-Type': 'application/json', // Ensure the Content-Type header is set
+                    'Content-Type': 'application/json',
                 },
             });
-
-            // Update the parent component that the status has changed
             if (response.status === 200) {
-                onStatusChange(car.CarID, newStatus); // Inform the parent about the status change
+                onStatusChange(car.CarID, newStatus);
             }
         } catch (error) {
             console.error('Failed to update car status:', error);
@@ -72,12 +69,17 @@ const CarCard = ({ car, onStatusChange, onDeleteClick, onViewClick }) => {
                 </div>
                 <div className="car-actions">
                     <button className="view-car-btn" onClick={onViewClick}>View Car</button>
-                    <button className="view-car-btn" onClick={handleViewFeedback}>Feedback</button>
+                    <button className="view-car-btn" onClick={handleViewFeedback}>Feedback</button>                    
+                {car.CarStatus !== 'Renting' && (
+                    <>                    
                     <button className="delete-car-btn" onClick={() => onDeleteClick(car.CarID)}>Delete Car</button>
                     <label className="switch">
                         <input type="checkbox" checked={isAvailable} onChange={handleToggle} />
                         <span className="slider round"></span>
                     </label>
+                    </>
+                )}
+                    
                 </div>
             </div>
         </div>

@@ -4,38 +4,31 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function RentalCard({ request }) {
-  const { car, customer, bookDate, timePeriod, price, rentalId } = request;
+  const { car, carId, customer, bookDate, timePeriod, price, rentalId } = request;
   const navigate = useNavigate();
-  // Initialize the state to "Waiting to confirm"
   const [status, setStatus] = useState(request.status);
-  //const [loading, setLoading] = useState(false); // To manage the loading state
   const [error, setError] = useState(null);
-  // Handle approving the rental
+
   const handleApprove = async () => {
-    setStatus('Completed'); // Change the status to "Renting" when the "Approve" button is clicked
+    setStatus('Completed');
     try {
-      // Make the API request to update the rental status
       const response = await axios.put(`http://localhost:5000/api/rentals/${rentalId}`, {
-        status: 5 // Update the status to "Completed"
+        status: 5
+      });
+      const responseCar = await axios.put(`http://localhost:5000/api/cars/${carId}`, {
+        newStatus: 'Idle'
+      },
+      {
+        headers: {
+            'Content-Type': 'application/json',
+        },
       });
 
       if (response.status === 200) {
-        setStatus('Completed'); // Change the status to "Renting" after a successful API call
+        window.location.reload();
       } else {
-        setError('Failed to update status.'); // Set error if the response isn't successful
+        setError('Failed to update status.');
       }
-    } catch (err) {
-      console.error('Error updating rental status:', err);
-      setError('An error occurred while updating the status.');
-    } finally {
-      //setLoading(false); // Turn off the loading spinner
-    }
-  };
-
-  const handleReject = async () => {
-    try {
-      await axios.delete(`http://localhost:5000/api/rentals/${rentalId}`);
-      window.location.reload();
     } catch (err) {
       console.error('Error updating rental status:', err);
       setError('An error occurred while updating the status.');
@@ -65,11 +58,9 @@ function RentalCard({ request }) {
         </div>
         <div className="rental-actions">
           <button className="view-customer-btn" onClick={handleRentalOrder}>View Rental Order</button>
-          {/* Approve button triggers the status change to "Renting" */}
           {status === 'Waiting to confirm' && (
             <>
-              <button className="approve-btn" onClick={handleApprove}>Approve</button>
-              <button className="reject-btn" onClick={handleReject}>Reject</button>
+              <button className="approve-btn" onClick={handleApprove}>Confirm</button>
             </>
           )}
         </div>
