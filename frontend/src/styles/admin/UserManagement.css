@@ -1,26 +1,18 @@
 /* Container cho việc quản lý người dùng */
 .manage-user-container {
-  background-color: #444; /* Màu nền xám đậm */
+  background-color: #444;
   border-radius: 10px;
-  padding: 30px;
-  width: 90%; /* Giảm chiều rộng để gọn hơn */
-  max-width: 800px; /* Chiều rộng tối đa */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Đổ bóng */
+  height: 90%;
+  width: 95%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white; /* Màu chữ */
-  margin-bottom: 40px; /* Tạo khoảng cách phía dưới container */
 }
 
 /* Tiêu đề trang */
 .manage-user-container .title {
-  font-size: 36px;
-  font-weight: bold;
   color: white;
-  margin-bottom: 30px; /* Tăng khoảng cách dưới tiêu đề */
-  text-align: center;
+  margin-left: 5vh;
+  font-weight: 600;
 }
 
 /* Bộ lọc và phần filter */

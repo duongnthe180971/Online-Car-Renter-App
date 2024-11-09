@@ -23,9 +23,12 @@ const Input = ({ value, onChange, placeholder }) => {
 const StyledWrapper = styled.div`
   .input-group {
     position: relative;
+    margin-top: 40px;
+    margin-left: 20px;
   }
 
   .input {
+    width: 600px;
     border: solid 1.5px #9e9e9e;
     border-radius: 1rem;
     background: none;

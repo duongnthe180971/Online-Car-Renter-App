@@ -154,8 +154,8 @@ const AdminCarRegistrations = () => {
         </div>
       </div>
       <div className="RightSide">
-        <div className="adm-car-registration-container">
-          <h1 className="page-title">Car Registrations</h1>
+        <div className="registration">
+          <h1 className="page-registration">Car Registrations</h1>
 
           {/* Filter Section */}
           <div className="filter-container">

@@ -127,18 +127,19 @@ const CarTemplate = () => {
         </div>
       </div>
       <div className="RightSide">
-        <div className="template-container">
+        <div className="template">
           <h1 className="page-title">Manage Car Template</h1>
           <div className="feature-list">
-            {/* Input to add a new feature */}
-            <Input
-              value={newFeature}
-              onChange={handleInputChange}
-              placeholder="Enter new feature"
-            />
-            <button className="add-feature-btn" onClick={handleAddFeature}>
-              Add Feature
-            </button>
+            <div className="feature-input-container">
+              <Input
+                value={newFeature}
+                onChange={handleInputChange}
+                placeholder="Enter new feature"
+              />
+              <button className="add-feature-btn" onClick={handleAddFeature}>
+                Add Feature
+              </button>
+            </div>
 
             {/* List of existing features */}
             {features.map((feature) => (

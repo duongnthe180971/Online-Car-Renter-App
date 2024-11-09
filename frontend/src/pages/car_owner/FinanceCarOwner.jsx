@@ -60,7 +60,9 @@ const FinanceCarOwner = () => {
   return (
     <div className="AllPage">
       <div className="LeftSide">
-        <ChooseBarCarOwner />
+        <div className="Bar">
+          <ChooseBarCarOwner />
+        </div>
       </div>
 
       <div className="RightSide">

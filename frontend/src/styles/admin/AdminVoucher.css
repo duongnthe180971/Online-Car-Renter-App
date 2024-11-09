@@ -1,21 +1,22 @@
 .admin-vouchers {
   height: 90%;
   width: 95%;
-  border-radius: 1vw;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-
   font-family: Arial, sans-serif;
-  color: #333;
-  background-color: rgb(94, 94, 94);
+  color: white;
+  background-color: #444;
 }
 
 .admin-vouchers h2 {
-  color: #444;
-  font-size: 1.8em;
-  margin-bottom: 15px;
-  text-align: center;
+  color: white;
+  margin-left: 5vh;
+  font-weight: 600;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  font-size: 32px;
 }
 
 .voucher-inputs {
