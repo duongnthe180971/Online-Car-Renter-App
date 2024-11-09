@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import DatePicker from "react-datepicker";
+import HomeHeader from "../../modules/components/HomeHeader";
 import { getNumOfDay, formatPrice } from "../../assets/format/numberFormat";
 import "../../styles/customer/CarDetail.css";
 import "react-datepicker/dist/react-datepicker.css";
 
-const CarDetailCard = ({ car, userAddress }) => {
+const CarDetailCard = ({ car, userAddress, carOwnerID }) => {
   const navigate = useNavigate();
   const {
     CarID,
@@ -26,11 +27,7 @@ const CarDetailCard = ({ car, userAddress }) => {
   useEffect(() => {
     const fetchAddressData = async () => {
       try {
-        const resGarage = await axios.get("http://localhost:5000/api/garage");
-        const garage = resGarage.data.find(
-          (item) => item.GarageID === GarageID
-        );
-        const accID = garage.CarOwnerID;
+        const accID = carOwnerID;
         const resAccount = await axios.get("http://localhost:5000/api/account");
         const account = resAccount.data.find((item) => item.id === accID);
         setAddress(account.Address);
@@ -55,7 +52,7 @@ const CarDetailCard = ({ car, userAddress }) => {
       fetchAddressData();
       fetchFeatureData();
     }
-  }, [CarID, GarageID]);
+  }, [CarID, GarageID, carOwnerID]);
 
   const featureList = Array.isArray(features) ? features : [];
 
@@ -107,7 +104,7 @@ const CarDetailCard = ({ car, userAddress }) => {
   );
 };
 
-const RentalCard = ({ car, accID }) => {
+const RentalCard = ({ car, accID, carOwnerID }) => {
   const navigate = useNavigate();
   const { Price, CarID } = car;
   const insurance = 60000;
@@ -180,12 +177,34 @@ const RentalCard = ({ car, accID }) => {
 
     setErrors(errorMessage);
   };
+  const sendNotification = async (accID) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ NotificationID: 1, AccID: accID }),
+      });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error(
+          `Failed to send notification to owner: ${accID}. Error: ${errorData.message}`
+        );
+  
+      if (!response.data.success) {
+        console.error("Failed to send notification to car owner.");
+      } else {
+        console.log("Notification sent to car owner successfully.");
+      }
+    }
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  }
   const addNewRental = async () => {
     if (errors) {
       return;
     }
-
     const newRental = {
       CarID: CarID,
       CustomerID: accID,
@@ -197,6 +216,7 @@ const RentalCard = ({ car, accID }) => {
     try {
       await axios.post("http://localhost:5000/api/rental", newRental);
       if(selectedVoucher) deleteVoucher(selectedVoucher.VoucherID);
+      sendNotification(carOwnerID);
       navigate("/payment", {
         state: { totalPay: finalPrice },
       });
@@ -279,6 +299,7 @@ const CarDetail = () => {
   const location = useLocation();
   const { carID } = location.state || { carID: 1 };
   const [car, setCar] = useState(null);
+  const [carOwnerID, setCarOwnerID] = useState(null);
   const [accID, setAccID] = useState(0);
   const [userAddress, setUserAddress] = useState("");
 
@@ -303,7 +324,19 @@ const CarDetail = () => {
       try {
         const response = await axios.get("http://localhost:5000/api/car");
         const car_ = response.data.find((item) => item.CarID === carID);
-        setCar(car_);
+        if (car_) {
+          setCar(car_);
+          const resGarage = await axios.get("http://localhost:5000/api/garage");
+          const garage = resGarage.data.find((item) => item.GarageID === car_.GarageID);
+          
+          if (garage) {
+            setCarOwnerID(garage.CarOwnerID);
+          } else {
+            console.error("Garage not found for CarID:", carID);
+          }
+        } else {
+          console.error("Car not found for CarID:", carID);
+        }
       } catch (err) {
         console.error("Error fetching car data:", err);
       }
@@ -315,9 +348,13 @@ const CarDetail = () => {
   if (!car) return <div>Car not found.</div>;
 
   return (
-    <div className="car-detail-container">
-      <CarDetailCard car={car} userAddress={userAddress} />
-      <RentalCard car={car} accID={accID} />
+    <div>
+      <HomeHeader/>
+      <div className="car-detail-container" style={{marginTop: '0px'}}> 
+      <CarDetailCard car={car} userAddress={userAddress} carOwnerID={carOwnerID}/>
+      <RentalCard car={car} accID={accID} carOwnerID={carOwnerID}/>
+      </div>
+      
     </div>
   );
 };
