@@ -8,6 +8,7 @@ import {
   FaCog,
   FaSignOutAlt,
   FaCheckSquare,
+  FaCarSide,
 } from "react-icons/fa";
 import "../../styles/component/ChooseBar.css";
 
@@ -39,6 +40,11 @@ const ChooseBarCarOwner = () => {
           </Link>
         </li>
         <li>
+          <Link to="/rental-return">
+            <FaCarSide className="icon" /> Confirm Return
+          </Link>
+        </li>
+        <li>
           <Link to="/rental-history">
             <FaHistory className="icon" /> Rental History
           </Link>
@@ -48,11 +54,7 @@ const ChooseBarCarOwner = () => {
             <FaDollarSign className="icon" /> Finance
           </Link>
         </li>
-        <li>
-          <Link to="/rental-return">
-            <FaCog className="icon" /> Confirm Return
-          </Link>
-        </li>
+
         <li onClick={handleLogout}>
           <FaSignOutAlt className="icon" /> Log Out
         </li>
