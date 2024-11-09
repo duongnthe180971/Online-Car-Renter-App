@@ -31,24 +31,43 @@ const Payment = () => {
   const showQRCode = () => {
     setActiveMenu("qr-code");
   };
-  const HandlerConfirm =  async () => {
+  const HandlerConfirm = async () => {
     try {
       const carResponse = await axios.get(`http://localhost:5000/api/car/${carId}`);
       const garageId = carResponse.data.GarageID;
-      console.log(garageId);
+  
+      if (!garageId) {
+        alert("Failed to fetch garage information.");
+        return;
+      }
+  
       const garageResponse = await axios.get(`http://localhost:5000/api/garageCarOwner/${garageId}`);
       const carOwnerId = garageResponse.data?.CarOwnerID;
-      console.log(carOwnerId);
-      if (carOwnerId) {
-        await axios.post("http://localhost:5000/api/notification", {
-          AccID: carOwnerId,
-          NotificationID: 12, 
-        });
+  
+      if (!carOwnerId) {
+        alert("Failed to fetch car owner information.");
+        return;
       }
-    navigate("/car-status");
-  } catch (error) {
-    console.error("Error sending notification:", error);
-  }
+  
+      const billData = {
+        AccID: carOwnerId,
+        Date: new Date().toISOString().split("T")[0],
+        totalMoney: totalPay, 
+      };
+  
+      await axios.post("http://localhost:5000/api/finance", billData);
+  
+      await axios.post("http://localhost:5000/api/notification", {
+        AccID: carOwnerId,
+        NotificationID: 12, 
+      });
+  
+      alert("Payment successful.");
+      navigate("/car-status");
+    } catch (error) {
+      console.error("Error during payment confirmation:", error);
+      alert("An error occurred during payment. Please try again.");
+    }
   };
   const navigate = useNavigate();
   const location = useLocation();
