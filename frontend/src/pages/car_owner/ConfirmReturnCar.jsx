@@ -129,6 +129,7 @@ const RentalReturn = () => {
                   request={{
                     car: request.carName,
                     carId: request.carId,
+                    customerId: request.CustomerID,
                     customer: request.Customer,
                     status: getStatusLabel(request.RentalStatus),
                     bookDate: `${formatDate_String(request.RentalStart)}`,

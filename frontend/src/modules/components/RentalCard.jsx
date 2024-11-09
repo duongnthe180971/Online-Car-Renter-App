@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function RentalCard({ request }) {
-  const { car, carId, customer, bookDate, timePeriod, price, rentalId } = request;
+  const { car, carId, customerId, customer, bookDate, timePeriod, price, rentalId } = request;
   const navigate = useNavigate();
   const [status, setStatus] = useState(request.status);
   const [error, setError] = useState(null);
@@ -16,7 +16,7 @@ function RentalCard({ request }) {
         status: 2
       });
 
-      const responseCar = await axios.put(`http://localhost:5000/api/cars/${carId}`, {
+      await axios.put(`http://localhost:5000/api/cars/${carId}`, {
         newStatus: 'Renting'
       },
       {
@@ -25,7 +25,10 @@ function RentalCard({ request }) {
         },
     });
 
-
+      await axios.post(`http://localhost:5000/api/notification` , {
+        AccID: customerId,
+        NotificationID: 1
+      });
 
       if (response.status === 200) {
         setStatus('Renting');

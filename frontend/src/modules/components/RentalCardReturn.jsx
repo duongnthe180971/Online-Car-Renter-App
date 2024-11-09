@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function RentalCard({ request }) {
-  const { car, carId, customer, bookDate, timePeriod, price, rentalId } = request;
+  const { car, carId, customerId, customer, bookDate, timePeriod, price, rentalId } = request;
   const navigate = useNavigate();
   const [status, setStatus] = useState(request.status);
   const [error, setError] = useState(null);
@@ -22,6 +22,11 @@ function RentalCard({ request }) {
         headers: {
             'Content-Type': 'application/json',
         },
+      });
+
+      await axios.post(`http://localhost:5000/api/notification` , {
+        AccID: customerId,
+        NotificationID: 4
       });
 
       if (response.status === 200) {
@@ -46,7 +51,7 @@ function RentalCard({ request }) {
       <div className="rental-info">
         <h2>{car}</h2>
         <div className="rental-customer">
-          <span>Customer: {customer}</span>
+          <span>Customer: {customerId}</span>
           <span className={`status1 ${status.toLowerCase().replace(/\s+/g, '-')}`}>
             Status: {status}
           </span>
