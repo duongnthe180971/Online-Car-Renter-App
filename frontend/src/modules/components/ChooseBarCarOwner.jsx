@@ -49,8 +49,8 @@ const ChooseBarCarOwner = () => {
           </Link>
         </li>
         <li>
-          <Link to="/settings">
-            <FaCog className="icon" /> Settings
+          <Link to="/rental-return">
+            <FaCog className="icon" /> Confirm Return
           </Link>
         </li>
         <li onClick={handleLogout}>

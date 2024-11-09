@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import RentalCard from "../../modules/components/RentalCard";
+import RentalCardReturn from "../../modules/components/RentalCardReturn";
 import ChooseBar from "../../modules/components/ChooseBarCarOwner";
 import "../../styles/cars_owner/RentalRequest.css";
 import { formatPrice, formatDate_String } from "../../assets/format/numberFormat";
@@ -8,15 +8,15 @@ import { formatPrice, formatDate_String } from "../../assets/format/numberFormat
 const getStatusLabel = (status) => {
   switch (status) {
     case 1:
-      return 'Waiting to confirm';
+      return 'Invalid';
     case 2:
-      return 'Renting';
+      return 'Invalid';
     case 3:
-      return 'Renting';
+      return 'Invalid';
     case 4:
-      return 'Renting';
+      return 'Waiting to confirm';
     case 5:
-      return 'Renting';
+      return 'Confirmed';
     default:
       return 'Unknown';
   }
@@ -24,7 +24,7 @@ const getStatusLabel = (status) => {
 
 
 
-const RentalRequests = () => {
+const RentalReturn = () => {
 
   const [filteredRentalRequests, setRentalRequest] = useState([]);
   const [Accid, setAccID] = useState(0);
@@ -95,7 +95,7 @@ const RentalRequests = () => {
             }
             return null;
           })
-          .filter((rental) => rental && rental.GarageID === garageID && rental.RentalStatus !== 5);
+          .filter((rental) => rental && rental.GarageID === garageID && rental.RentalStatus == 4);
 
         setRentalRequest(filteredData);
       } catch (error) {
@@ -118,10 +118,13 @@ const RentalRequests = () => {
           <p className="Error">{error}</p>
         ) : (
           <div className="garage rentalReq">
-            <h1>Rental Requests</h1>
+            <h1>Confirm Return</h1>
             <div className="rental-requests">
+            
+            {filteredRentalRequests.length !== 0 ? (
+              <>
               {filteredRentalRequests.map((request) => (
-                <RentalCard
+                <RentalCardReturn
                   key={request.id}
                   request={{
                     car: request.carName,
@@ -137,6 +140,11 @@ const RentalRequests = () => {
                   }}
                 />
               ))}
+              </>
+            ):(
+              <p className="Error">Currently no request</p>
+            )}
+
             </div>
           </div>
         )}
@@ -145,4 +153,4 @@ const RentalRequests = () => {
   );
 };
 
-export default RentalRequests;
+export default RentalReturn;

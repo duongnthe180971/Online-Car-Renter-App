@@ -23,8 +23,6 @@ const Garage = () => {
         if (storedUser && storedUser.id) {
             setAccID(storedUser.id);
         }
-
-        console.error(storedUser);
         if (storedUser.role !== 2) {
             setError("No permission for current feauture");
         }
@@ -40,6 +38,7 @@ const Garage = () => {
                     }
                 }
             } catch (error) {
+                console.error("Garage Error");
                 setError("Server error");
             } finally {
                 setLoading(false);
@@ -60,6 +59,7 @@ const Garage = () => {
                     setCars(filteredCars);
                 }
             } catch (error) {
+                console.error("Car Error");
                 setError("Server error");
             } finally {
                 setLoading(false);
