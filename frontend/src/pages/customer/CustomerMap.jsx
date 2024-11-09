@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
+import HomeHeader from "../../modules/components/HomeHeader";
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
@@ -204,6 +205,7 @@ const CustomerMap = () => {
 
     return (
         <div className="map-page-container">
+            <HomeHeader/>
             <LocationForm
                 fromLocation={fromLocation}
                 toLocation={toLocation}

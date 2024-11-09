@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Row, Col } from "reactstrap";
-import Helmet from "../../modules/components/Helmet";
+import HomeHeader from "../../modules/components/HomeHeader";
 import Filter from "../../modules/components/Filter";
 import CarPlot from "../../modules/components/CarPlot";
 import carDemo from "../../assets/data/carDemo";
@@ -79,6 +79,7 @@ const CarList = () => {
   }, []);
 
   const filteredData = cars.filter((car) => {
+    const isAvailable = car.CarStatus === "Idle";
     const matchesType = filters.type === "" || car.CarType === filters.type;
     const matchesGear = filters.gear === "" || car.Gear === filters.gear;
     const matchesBrand = filters.brand === "" || car.Brand === filters.brand;
@@ -86,12 +87,12 @@ const CarList = () => {
     const matchesMinPrice = !filters.minPrice || car.Price >= parseFloat(filters.minPrice);
     const matchesMaxPrice = !filters.maxPrice || car.Price <= parseFloat(filters.maxPrice);
 
-    return matchesType && matchesGear && matchesBrand && matchesLocation && matchesMinPrice && matchesMaxPrice;
+    return isAvailable && matchesType && matchesGear && matchesBrand && matchesLocation && matchesMinPrice && matchesMaxPrice;
   });
 
   return (
-    <>
-      <Helmet title="Cars">
+    <div>
+    <HomeHeader/>
         <section />
         <Filter onFilterChange={handleFilterChange} onFilterRemove={handleFilterRemove} />
         {error && <p className="error-message" style={{marginLeft: 5 + 'em'}}>{error}</p>}
@@ -106,8 +107,7 @@ const CarList = () => {
             </Row>
           </Container>
         </section>
-      </Helmet>
-    </>
+    </div>
   );
 };
 

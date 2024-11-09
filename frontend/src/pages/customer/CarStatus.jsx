@@ -112,6 +112,7 @@ const CarStatus = () => {
   const [rental, setRental] = useState(null);
   const [error, setError] = useState("");
   const [accID, setAccID] = useState(0);
+  const [carOwnerID, setCarOwnerID] = useState(null);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -143,6 +144,14 @@ const CarStatus = () => {
             (item) => item.CarID === rental_.CarID
           );
           setCar(car_);
+          const resGarage = await axios.get("http://localhost:5000/api/garage");
+          const garage = resGarage.data.find((item) => item.GarageID === car_.GarageID);
+          
+          if (garage) {
+            setCarOwnerID(garage.CarOwnerID);
+          } else {
+            console.error("Garage not found for CarID:", car_.CarID);
+          }
         } else {
           setError("You have not rented any car yet");
         }
@@ -177,7 +186,30 @@ const CarStatus = () => {
       alert("Failed to check feedback status.");
     }
   };
+  const sendNotification = async (accID) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ NotificationID: 3, AccID: accID }),
+      });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error(
+          `Failed to send notification to owner: ${accID}. Error: ${errorData.message}`
+        );
+  
+      if (!response.data.success) {
+        console.error("Failed to send notification to car owner.");
+      } else {
+        console.log("Notification sent to car owner successfully.");
+      }
+    }
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  }
   const updateStatus = async (newStatus) => {
     if (!rental || !rental.RentalID) {
       alert("Rental data is missing.");
@@ -193,6 +225,7 @@ const CarStatus = () => {
       );
 
       if (response.status === 200) {
+        sendNotification(carOwnerID);
         setRental((prevRental) => ({
           ...prevRental,
           RentalStatus: newStatus,
