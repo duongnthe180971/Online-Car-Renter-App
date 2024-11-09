@@ -9,6 +9,7 @@ import {
   FaSignOutAlt,
   FaCheckSquare,
   FaCarSide,
+  FaHome,
 } from "react-icons/fa";
 import "../../styles/component/ChooseBar.css";
 
@@ -24,6 +25,12 @@ const ChooseBarCarOwner = () => {
   return (
     <div className="sidebar">
       <ul>
+      <li>
+          <Link to="/">
+            <FaHome className="icon" /> Home
+          </Link>
+        </li>
+
         <li>
           <Link to="/profile">
             <FaUser className="icon" /> My Profile

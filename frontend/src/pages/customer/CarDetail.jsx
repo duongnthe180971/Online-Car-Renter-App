@@ -203,25 +203,58 @@ const RentalCard = ({ car, accID, carOwnerID }) => {
   }
   const addNewRental = async () => {
     if (errors) {
+      alert(errors);
       return;
     }
-    const newRental = {
-      CarID: CarID,
-      CustomerID: accID,
-      RentalStart: formData.startDate,
-      RentalEnd: formData.returnDate,
-      RentalStatus: 1,
-    };
-
+  
     try {
+      // Check for existing rentals with statuses from 1 to 4
+      const res = await axios.get(`http://localhost:5000/api/rental`);
+      const existingRental = res.data.some(
+        (rental) =>
+          rental.CustomerID === accID &&
+          rental.RentalStatus >= 1 &&
+          rental.RentalStatus <= 4
+      );
+  
+      if (existingRental) {
+        alert(
+          "You already have an ongoing or pending rental. Please complete or cancel it before booking a new car."
+        );
+        return;
+      }
+  
+      // Proceed with the booking if no conflicting rentals are found
+      const newRental = {
+        CarID: CarID,
+        CustomerID: accID,
+        RentalStart: formData.startDate,
+        RentalEnd: formData.returnDate,
+        RentalStatus: 1,
+      };
+  
+      await axios.put(
+        `http://localhost:5000/api/cars/${car.CarID}`,
+        {
+          newStatus: "Renting",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
       await axios.post("http://localhost:5000/api/rental", newRental);
-      if(selectedVoucher) deleteVoucher(selectedVoucher.VoucherID);
+  
+      if (selectedVoucher) deleteVoucher(selectedVoucher.VoucherID);
       sendNotification(carOwnerID);
+  
       navigate("/payment", {
-        state: { totalPay: finalPrice },
+        state: { totalPay: finalPrice, carId: CarID },
       });
     } catch (error) {
       console.error("Error adding rental:", error);
+      alert("An error occurred while booking the car. Please try again.");
     }
   };
 

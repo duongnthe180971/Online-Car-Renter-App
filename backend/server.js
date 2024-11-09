@@ -1160,6 +1160,23 @@ app.post("/api/notification", async (req, res) => {
   }
 });
 
+app.get("/api/garageCarOwner/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(
+      `SELECT * FROM Garage WHERE GarageID = ${id}`
+    );
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: "Garage not found" });
+    }
+    res.json(result.recordset[0]); // Return the first record
+  } catch (err) {
+    console.error("Error fetching garage data:", err);
+    res.status(500).send("Server error");
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

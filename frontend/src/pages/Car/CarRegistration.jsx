@@ -135,7 +135,7 @@ const userData = JSON.parse(localStorage.getItem("user"));
         const response = await fetch("http://localhost:5000/api/notification", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ NotificationID: 1, AccID: admin.id }),
+          body: JSON.stringify({ NotificationID: 13, AccID: admin.id }),
         });
   
         if (!response.ok) {

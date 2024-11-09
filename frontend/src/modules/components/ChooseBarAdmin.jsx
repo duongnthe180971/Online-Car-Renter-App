@@ -8,6 +8,7 @@ import {
   FaGift,
   FaCog,
   FaSignOutAlt,
+  FaHome,
 } from "react-icons/fa";
 import "../../styles/component/ChooseBar.css";
 
@@ -31,6 +32,12 @@ const ChooseBarAdmin = () => {
   return (
     <div className="sidebar">
       <ul>
+      <li>
+          <Link to="/">
+            <FaHome className="icon" /> Home
+          </Link>
+        </li>
+
         <li>
           <Link to="/finance">
             <FaChartBar className="icon" /> Statistic
@@ -61,6 +68,7 @@ const ChooseBarAdmin = () => {
             <FaCog className="icon" /> Setting
           </Link>
         </li>
+        
         <li onClick={handleLogout}>
           <FaSignOutAlt className="icon" /> Log Out
         </li>

@@ -4,6 +4,7 @@ import "../../styles/payment/payment.css";
 import qrcode from "../../assets/icon/qrcode.png";
 import { formatPrice } from "../../assets/format/numberFormat";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 
 import {
   vietcombank,
@@ -30,12 +31,29 @@ const Payment = () => {
   const showQRCode = () => {
     setActiveMenu("qr-code");
   };
-  const HandlerConfirm = () => {
+  const HandlerConfirm =  async () => {
+    try {
+      const carResponse = await axios.get(`http://localhost:5000/api/car/${carId}`);
+      const garageId = carResponse.data.GarageID;
+      console.log(garageId);
+      const garageResponse = await axios.get(`http://localhost:5000/api/garageCarOwner/${garageId}`);
+      const carOwnerId = garageResponse.data?.CarOwnerID;
+      console.log(carOwnerId);
+      if (carOwnerId) {
+        await axios.post("http://localhost:5000/api/notification", {
+          AccID: carOwnerId,
+          NotificationID: 12, 
+        });
+      }
     navigate("/car-status");
+  } catch (error) {
+    console.error("Error sending notification:", error);
+  }
   };
   const navigate = useNavigate();
   const location = useLocation();
   const { totalPay } = location.state;
+  const { carId } = location.state;
 
   return (
     <div className="payment-body">

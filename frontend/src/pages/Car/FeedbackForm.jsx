@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import "../../styles/car/FeedbackStyle.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import Radio from "../../modules/components/Radio"; // Assuming Radio is in the correct path
+import Radio from "../../modules/components/Radio";
 
 const FeedbackForm = () => {
   const [carName, setCarName] = useState("");
   const [rating, setRating] = useState(0);
-    const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState("");
   const [authorized, setAuthorized] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { carId } = location.state || {}; 
+  const { carId } = location.state || {};
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -26,9 +26,10 @@ const FeedbackForm = () => {
     setUserId(userData.id);
 
     if (carId) {
-      axios.get(`http://localhost:5000/api/car/${carId}`)
+      axios
+        .get(`http://localhost:5000/api/car/${carId}`)
         .then((response) => {
-          setCarName(response.data.CarName); 
+          setCarName(response.data.CarName);
         })
         .catch((error) => {
           console.error("Error fetching car details:", error);
@@ -57,10 +58,23 @@ const FeedbackForm = () => {
 
       await axios.put(`http://localhost:5000/api/car/update-rating/${carId}`);
 
+      const carResponse = await axios.get(`http://localhost:5000/api/car/${carId}`);
+      const garageId = carResponse.data.GarageID;
+      console.log(garageId);
+      const garageResponse = await axios.get(`http://localhost:5000/api/garageCarOwner/${garageId}`);
+      const carOwnerId = garageResponse.data?.CarOwnerID;
+      console.log(carOwnerId);
+      if (carOwnerId) {
+        await axios.post("http://localhost:5000/api/notification", {
+          AccID: carOwnerId,
+          NotificationID: 11, 
+        });
+      }
+
       alert("Feedback submitted successfully!");
-      navigate("/car-status"); 
+      navigate("/car-status");
     } catch (error) {
-      console.error("Error submitting feedback:", error);
+      console.error("Error submitting feedback or adding notification:", error);
       alert("Failed to submit feedback.");
     }
   };
@@ -79,12 +93,16 @@ const FeedbackForm = () => {
     <div className="feedback-wrapper">
       <div className="containerFeedback">
         <div className="back">
-          <a href="#" onClick={() => navigate(-1)}><span></span> Back</a>
+          <a href="#" onClick={() => navigate(-1)}>
+            <span></span> Back
+          </a>
         </div>
 
         <div className="feedback-title">Feedback Car</div>
 
-        <div className="feedback-car">Feedback Car: {carName}</div>
+        <div className="feedback-car" data-testid="car-name">
+          Feedback Car: {carName}
+        </div>
 
         <div className="stars">
           <Radio setRating={setRating} rating={rating} />
@@ -95,9 +113,14 @@ const FeedbackForm = () => {
           placeholder="Leave your feedback here..."
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
+          data-testid="feedback-text"
         />
 
-        <button className="feedback-button" onClick={handleSubmitFeedback}>
+        <button
+          className="feedback-button"
+          onClick={handleSubmitFeedback}
+          data-testid="submit-feedback"
+        >
           Submit Feedback
         </button>
       </div>

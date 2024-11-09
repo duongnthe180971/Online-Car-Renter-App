@@ -6,6 +6,10 @@ const CarDetailsModal = ({ car, onClose }) => {
     const navigate = useNavigate();
 
     const handleUpdateClick = () => {
+        if(car.CarStatus === "Renting"){
+            alert("You cannot edit renting car");
+            return;
+        }
         navigate(`/update-car`, { state: { carId: car.CarID } });
     };
 
