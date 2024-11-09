@@ -3,7 +3,11 @@ import axios from "axios";
 import ChooseBar from "../../modules/components/ChooseBarAdmin";
 import FinanceChart from "../../modules/components/FinanceChart";
 import "../../styles/admin/Finance.css";
-import Loader from "../../modules/components/Loader";
+const Loader = () => (
+  <div data-testid="loading" role="status">
+    Loading...
+  </div>
+);
 const Finance = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [financeData, setFinanceData] = useState([]);
@@ -59,8 +63,13 @@ const Finance = () => {
           <h1 className="title">Financial Overview</h1>
           <div className="filters">
             <div className="filter-item">
-              <label>Select Year</label>
-              <select value={selectedYear} onChange={handleYearChange}>
+              <label htmlFor="year-select">Select Year</label>
+              <select
+                id="year-select"
+                aria-label="Select Year"
+                value={selectedYear}
+                onChange={handleYearChange}
+              >
                 <option value={2024}>2024</option>
                 <option value={2023}>2023</option>
                 <option value={2022}>2022</option>

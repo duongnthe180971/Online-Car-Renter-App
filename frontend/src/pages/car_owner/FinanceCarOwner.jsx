@@ -68,8 +68,12 @@ const FinanceCarOwner = () => {
           <h1 className="title">Finance CarOwner </h1>
           <div className="filters">
             <div className="filter-item">
-              <label>Select Year</label>
-              <select value={selectedYear} onChange={handleYearChange}>
+              <label htmlFor="year-select">Select Year</label>
+              <select
+                id="year-select"
+                value={selectedYear}
+                onChange={handleYearChange}
+              >
                 <option value={2024}>2024</option>
                 <option value={2023}>2023</option>
                 <option value={2022}>2022</option>
