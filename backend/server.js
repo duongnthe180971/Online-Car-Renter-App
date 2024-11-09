@@ -1129,6 +1129,37 @@ app.delete("/api/register-cars/:carId/decline", async (req, res) => {
   }
 });
 
+app.post("/api/notification", async (req, res) => {
+  const { AccID, NotificationID } = req.body;
+
+  if (!AccID || !NotificationID) {
+    return res.status(400).json({ message: "AccID and NotificationID are required" });
+  }
+
+  try {
+    await sql.connect(sqlConfig);
+
+    const query = `
+      INSERT INTO Notification (AccID, NotificationID, NotificationDate)
+      VALUES (@AccID, @NotificationID, GETDATE());
+    `;
+
+    const request = new sql.Request();
+    request.input("AccID", sql.Int, AccID);
+    request.input("NotificationID", sql.Int, NotificationID);
+
+    await request.query(query);
+
+    res.status(201).json({ message: "Notification added successfully" });
+  } catch (error) {
+    console.error("Error adding notification:", error.message, error.stack);
+    res.status(500).json({
+      message: "Failed to add notification",
+      error: error.message,
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

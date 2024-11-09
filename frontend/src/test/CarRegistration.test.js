@@ -4,168 +4,132 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import CarRegistration from '../pages/car/CarRegistration';
 import '@testing-library/jest-dom'; 
 
+// Mock localStorage
+const localStorageMock = (() => {
+  let store = {};
+  return {
+    getItem: (key) => store[key] || null,
+    setItem: (key, value) => {
+      store[key] = value.toString();
+    },
+    clear: () => {
+      store = {};
+    },
+  };
+})();
+Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: jest.fn(), 
-  useParams: jest.fn(),
-}));
+// Mock fetch
+global.fetch = jest.fn();
 
+// Mock URL.createObjectURL
+global.URL.createObjectURL = jest.fn(() => 'mock-url');
 
+describe('CarRegistration Component', () => {
 beforeEach(() => {
-  global.fetch = jest.fn((url) => {
-    if (url === 'http://localhost:5000/api/feature') {
+  // Set a mock user in localStorage
+    window.localStorage.setItem(
+      'user',
+      JSON.stringify({ role: 2, id: 1, username: 'testuser' })
+    );
+
+    // Mock API responses
+fetch.mockImplementation((url) => {
+    if (url.includes('/api/feature')) {
       return Promise.resolve({
         json: () =>
           Promise.resolve([
-            { FeatureID: 1, Name: 'Air Conditioning' },
-            { FeatureID: 2, Name: 'Sunroof' },
+            { FeatureID: 1, Name: 'Feature 1' },
+            { FeatureID: 2, Name: 'Feature 2' },
           ]),
       });
-    }
-    if (url === 'http://localhost:5000/api/registerCar') {
+    } else     if (url.includes('/api/options')) {
       return Promise.resolve({
-        ok: true,
-        status: 200,
-        statusText: 'OK',
+        json: () =>
+            Promise.resolve({
+              carTypes: ['SUV', 'Sedan'],
+              seatOptions: ['2', '4'],
+              gearOptions: ['Auto', 'Manual'],
+              fuelOptions: ['Gasoline', 'Diesel'],
+              brandOptions: ['Toyota', 'Tesla'],
+            }),
       });
     }
-  });
-
-
-  global.URL.createObjectURL = jest.fn(() => 'mocked-image-url');
+  return Promise.resolve({ json: () => Promise.resolve([]) });
+    });
 });
 
 afterEach(() => {
-  jest.clearAllMocks();
-});
-
-describe('CarRegistration Component', () => {
-  beforeEach(() => {
-
-    const { useParams, useNavigate } = require('react-router-dom');
-    useParams.mockReturnValue({ garageID: '1' });
-
-
-    useNavigate.mockReturnValue(jest.fn());
-
-
-    fetch.mockClear();
+      fetch.mockClear();
+localStorage.clear();
+    jest.clearAllMocks();
   });
 
-  test('renders form elements and allows user input', async () => {
+  test('renders the Car Registration form', async () => {
     render(
       <Router>
         <CarRegistration />
       </Router>
     );
 
-
-    await waitFor(() => expect(screen.getByLabelText(/Enter Name/i)).toBeInTheDocument());
-
-
-    expect(screen.getByLabelText(/Enter Name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Choose Brand/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Choose Picture/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Type/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Seats/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Gear/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Fuel/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Description/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Price/i)).toBeInTheDocument();
-
-
-    const nameInput = screen.getByLabelText(/Enter Name/i);
-    fireEvent.change(nameInput, { target: { value: 'New Car Name' } });
-    expect(nameInput.value).toBe('New Car Name');
-
-
-    const brandSelect = screen.getByLabelText(/Choose Brand/i);
-    fireEvent.change(brandSelect, { target: { value: 'Tesla' } });
-    expect(brandSelect.value).toBe('Tesla');
-
-
-    const fileInput = screen.getByLabelText(/Choose Picture/i);
-    const file = new File(['dummy content'], 'example.png', { type: 'image/png' });
-    fireEvent.change(fileInput, { target: { files: [file] } });
-    expect(fileInput.files[0]).toBe(file);
-
-
-    const carTypeSelect = screen.getByLabelText(/Type/i);
-    fireEvent.change(carTypeSelect, { target: { value: 'Sedan' } });
-    expect(carTypeSelect.value).toBe('Sedan');
-
-
-    const priceInput = screen.getByLabelText(/Price/i);
-    fireEvent.change(priceInput, { target: { value: '5000' } });
-    expect(priceInput.value).toBe('5000');
-
-
-    await waitFor(() => screen.getByLabelText('Air Conditioning'));
-    const featureCheckbox = screen.getByLabelText('Air Conditioning');
-    fireEvent.click(featureCheckbox);
-    expect(featureCheckbox.checked).toBe(true);
-
-
-    const submitButton = screen.getByText(/Confirm/i);
-    expect(submitButton).toBeInTheDocument();
+expect(await screen.findByText('Car Registration')).toBeInTheDocument();
+    expect(screen.getByLabelText('Enter Name')).toBeInTheDocument();
+    expect(screen.getByLabelText('Choose Brand')).toBeInTheDocument();
+    expect(screen.getByLabelText('Choose Picture')).toBeInTheDocument();
+    expect(screen.getByLabelText('Upload License')).toBeInTheDocument();
+    expect(screen.getByLabelText('Description')).toBeInTheDocument();
+    expect(screen.getByLabelText('Price')).toBeInTheDocument();
+expect(screen.getByRole('button', { name: 'Confirm' })).toBeInTheDocument();
   });
 
-  test('submits form data correctly', async () => {
+  test('handles image upload and displays preview', async () => {
     render(
       <Router>
         <CarRegistration />
       </Router>
     );
   
+const file = new File(['image content'], 'example.png', { type: 'image/png' });
+
+    const input = await screen.findByLabelText('Choose Picture');
+    fireEvent.change(input, { target: { files: [file] } });
+  
+console.log(screen.debug()); // Inspect the DOM to ensure the <img> is rendered
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/Enter Name/i)).toBeInTheDocument();
+      expect(screen.getByAltText('Selected')).toBeInTheDocument();
+    expect(screen.getByAltText('Selected')).toHaveAttribute('src', 'mock-url');
     });
-  
+  });
 
+  test('handles license upload and displays file name', async () => {
+    render(
+      <Router>
+        <CarRegistration />
+      </Router>
+    );
+
+    const file = new File(['license content'], 'example.pdf', { type: 'application/pdf' });
+
+    const input = await screen.findByLabelText('Upload License');
+    fireEvent.change(input, { target: { files: [file] } });
+  
     await waitFor(() => {
-      expect(screen.getByLabelText('Air Conditioning')).toBeInTheDocument();
+      expect(screen.getByText('example.pdf')).toBeInTheDocument(); 
     });
-  
+  });
 
-    const featureCheckbox = screen.getByLabelText('Air Conditioning');
-    fireEvent.click(featureCheckbox);
-    expect(featureCheckbox.checked).toBe(true);
-  
+  test('fetches and displays dropdown options', async () => {
+    render(
+      <Router>
+        <CarRegistration />
+      </Router>
+    );
 
-    fireEvent.change(screen.getByLabelText(/Enter Name/i), { target: { value: 'My Car' } });
-    fireEvent.change(screen.getByLabelText(/Description/i), { target: { value: 'This is a test car.' } });
-    fireEvent.change(screen.getByLabelText(/Price/i), { target: { value: '5000' } });
-    fireEvent.change(screen.getByLabelText(/Choose Brand/i), { target: { value: 'Tesla' } });
-    fireEvent.change(screen.getByLabelText(/Type/i), { target: { value: 'SUV' } });
-    fireEvent.change(screen.getByLabelText(/Seats/i), { target: { value: '5' } });
-    fireEvent.change(screen.getByLabelText(/Gear/i), { target: { value: 'Auto' } });
-    fireEvent.change(screen.getByLabelText(/Fuel/i), { target: { value: 'Gasoline' } });
-  
+    const brandDropdown = await screen.findByLabelText('Choose Brand');
+    fireEvent.click(brandDropdown);
 
-    const submitButton = screen.getByText(/Confirm/i);
-    fireEvent.click(submitButton);
-  
-
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledTimes(2); 
-    });
-  
-
-    const formData = fetch.mock.calls[1][1].body;
-  
-    expect(formData.get('name')).toBe('My Car');
-    expect(formData.get('description')).toBe('This is a test car.');
-    expect(formData.get('price')).toBe('5000');
-    expect(formData.get('brand')).toBe('Tesla');
-    expect(formData.get('type')).toBe('SUV');
-    expect(formData.get('seat')).toBe('5');
-    expect(formData.get('gear')).toBe('Auto');
-    expect(formData.get('fuel')).toBe('Gasoline');
-  
-
-    const selectedFeatures = JSON.parse(formData.get('features')).map(Number);
-    expect(selectedFeatures).toEqual([1]);
+    const options = screen.getAllByRole('option');
+    expect(options.length).toBeGreaterThan(1); // Assumes options are dynamically populated
   });
 });

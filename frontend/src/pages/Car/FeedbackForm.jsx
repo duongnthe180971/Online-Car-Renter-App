@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import "../../styles/car/FeedbackStyle.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import Radio from "../../modules/components/Radio"; // Assuming Radio is in the correct path
 
 const FeedbackForm = () => {
   const [carName, setCarName] = useState("");
   const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [feedback, setFeedback] = useState("");
+    const [feedback, setFeedback] = useState("");
   const [authorized, setAuthorized] = useState(true);
 
   const navigate = useNavigate();
@@ -87,17 +87,7 @@ const FeedbackForm = () => {
         <div className="feedback-car">Feedback Car: {carName}</div>
 
         <div className="stars">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <span
-              key={star}
-              className={star <= (hoverRating || rating) ? 'filled' : 'empty'}
-              onClick={() => setRating(star)}
-              onMouseEnter={() => setHoverRating(star)}
-              onMouseLeave={() => setHoverRating(0)}
-            >
-              {star <= (hoverRating || rating) ? '★' : '☆'}
-            </span>
-          ))}
+          <Radio setRating={setRating} rating={rating} />
         </div>
 
         <textarea
