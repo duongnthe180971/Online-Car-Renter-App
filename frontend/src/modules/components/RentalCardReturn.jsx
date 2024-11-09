@@ -26,7 +26,7 @@ function RentalCard({ request }) {
 
       await axios.post(`http://localhost:5000/api/notification` , {
         AccID: customerId,
-        NotificationID: 4
+        NotificationID: 10
       });
 
       if (response.status === 200) {
@@ -59,7 +59,7 @@ function RentalCard({ request }) {
         <div className="rental-details">
           <span>Book Date: {bookDate}</span>
           <span>Time Period: {timePeriod}</span>
-          <span>Price: {price}</span>
+          <span>Price per day: {price}</span>
         </div>
         <div className="rental-actions">
           <button className="view-customer-btn" onClick={handleRentalOrder}>View Rental Order</button>
