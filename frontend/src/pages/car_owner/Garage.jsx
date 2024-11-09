@@ -24,8 +24,7 @@ const Garage = () => {
             setAccID(storedUser.id);
         }
 
-        console.error(storedUser);
-        if (storedUser.role !== 2) {
+                if (storedUser.role !== 2) {
             setError("No permission for current feauture");
         }
 

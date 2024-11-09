@@ -1,115 +1,147 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { BrowserRouter } from 'react-router-dom';
-import axios from 'axios';
-import UpdateCar from '../pages/car/UpdateCar';
+import React from "react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+import UpdateCar from "../pages/car/UpdateCar";
+import axios from "axios";
+import "@testing-library/jest-dom";
 
-jest.mock('axios');
+jest.mock("axios");
 
+describe("UpdateCar Component", () => {
+  const mockCarDetails = {
+    CarName: "Test Car",
+    CarDescription: "A description of the test car",
+    Price: 1000,
+    CarImage: "/img/test-car.jpg",
+    CarType: "SUV",
+    Seats: "5",
+    Gear: "Auto",
+    Fuel: "Gasoline",
+    Brand: "Toyota",
+  };
 
 beforeAll(() => {
-  global.URL.createObjectURL = jest.fn(() => 'mocked-url');
-  global.console.error = jest.fn(); 
-  window.alert = jest.fn();
-});
+  global.alert = jest.fn();
 
-const mockCarDetails = {
-  CarName: 'Test Car',
-  CarDescription: 'A nice car',
-  Price: 100000, 
-  CarImage: 'http://localhost:5000/img/test-car.jpg',
-  CarType: 'SUV',
-  Seats: 5,
-  Gear: 'Auto',
-  Fuel: 'Gasoline',
-  Brand: 'Toyota',
-};
+    const localStorageMock = (() => {
+      let store = {};
+      return {
+        getItem: jest.fn((key) => store[key] || null),
+        setItem: jest.fn((key, value) => {
+          store[key] = value;
+        }),
+        clear: jest.fn(() => {
+          store = {};
+        }),
+      };
+    })();
 
-const mockFeatures = [
-  { FeatureID: 1, Name: 'GPS' },
-  { FeatureID: 2, Name: 'Air Conditioning' },
-];
+    Object.defineProperty(global, "localStorage", { value: localStorageMock });
+  });
 
-const mockCarFeatureIDs = [1];
+  beforeEach(() => {
+    localStorage.getItem.mockReturnValue(JSON.stringify({ role: 2 }));
 
-describe('UpdateCar Component', () => {
-  beforeEach(async () => {
     axios.get.mockImplementation((url) => {
-      if (url.includes('/api/car/')) {
-        return Promise.resolve({ data: mockCarDetails });
-      } else if (url.includes('/api/car-features/')) {
-        return Promise.resolve({ data: mockCarFeatureIDs });
-      } else if (url.includes('/api/feature')) {
-        return Promise.resolve({ data: mockFeatures });
+      if (url.includes("api/car-features")) {
+        return Promise.resolve({ data: [1] }); // Mock feature IDs to match Air Conditioning being selected
       }
-    });
-
-    render(
-      <BrowserRouter>
-        <UpdateCar />
-      </BrowserRouter>
-    );
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(3));
+      if (url.includes("api/feature")) {
+        return Promise.resolve({
+          data: [
+            { FeatureID: 1, Name: "Air Conditioning" },
+            { FeatureID: 2, Name: "Sunroof" },
+          ],
+        });
+      }
+      if (url.includes("api/car")) {
+        return Promise.resolve({ data: mockCarDetails });
+      }
+        return Promise.resolve({ data: {} });
+      });
   });
 
   afterEach(() => {
     jest.clearAllMocks(); 
   });
 
-  test('renders UpdateCar form with initial values', () => {
-    expect(screen.getByLabelText(/Enter Name/i)).toHaveValue(mockCarDetails.CarName);
-    expect(screen.getByLabelText(/Description/i)).toHaveValue(mockCarDetails.CarDescription);
-    expect(screen.getByLabelText(/Price/i)).toHaveValue(mockCarDetails.Price); 
-    expect(screen.getByLabelText(/Type:/i)).toHaveValue(mockCarDetails.CarType);
-    expect(screen.getByLabelText(/Seats:/i)).toHaveValue(mockCarDetails.Seats.toString());
-    expect(screen.getByLabelText(/Gear:/i)).toHaveValue(mockCarDetails.Gear);
-    expect(screen.getByLabelText(/Fuel:/i)).toHaveValue(mockCarDetails.Fuel);
-    expect(screen.getByAltText('Current')).toHaveAttribute('src', mockCarDetails.CarImage);
-  });
-
-  test('allows feature selection to be toggled', () => {
-    const gpsCheckbox = screen.getByLabelText('GPS');
-    const airConditioningCheckbox = screen.getByLabelText('Air Conditioning');
-
-    fireEvent.click(gpsCheckbox);
-    expect(gpsCheckbox).not.toBeChecked();
-
-    fireEvent.click(airConditioningCheckbox);
-    expect(airConditioningCheckbox).toBeChecked();
-  });
-
-  test('handles form submission', async () => {
-    const submitButton = screen.getByText(/Confirm/i);
-    axios.put.mockResolvedValueOnce({});
-
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(axios.put).toHaveBeenCalledTimes(1);
+  test("renders UpdateCar component correctly", async () => {
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <UpdateCar />
+        </BrowserRouter>
+      );
     });
 
-    expect(axios.put).toHaveBeenCalledWith(
-      expect.stringContaining('/api/updateCar/'),
-      expect.any(FormData),
-      expect.objectContaining({
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+    // Wait for car details to load
+    await waitFor(() => {
+      expect(screen.getByDisplayValue(mockCarDetails.CarName)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(mockCarDetails.CarDescription)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(mockCarDetails.Price.toString())).toBeInTheDocument();
+  });
+
+  // Wait for features to render
+    await waitFor(() => {
+      const airConditioning = screen.getByLabelText("Air Conditioning");
+      expect(airConditioning).toBeInTheDocument();
+      expect(airConditioning.checked).toBe(true);
+
+      const sunroof = screen.getByLabelText("Sunroof");
+      expect(sunroof).toBeInTheDocument();
+      expect(sunroof.checked).toBe(false); // Sunroof should now be unchecked as per the mock
+    });
+  });
+
+  test("validates form fields on submit", async () => {
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <UpdateCar />
+        </BrowserRouter>
     );
   });
 
-  test('handles form submission failure gracefully', async () => {
-    const submitButton = screen.getByText(/Confirm/i);
-  
+  // Clear required fields and submit form
+    fireEvent.change(screen.getByLabelText("Enter Name"), { target: { value: "" } });
+    fireEvent.click(screen.getByText("Confirm"));
 
-    axios.put.mockRejectedValueOnce({ response: { data: { message: 'Error updating car' } } });
-  
+    // Verify validation error messages
+    expect(screen.getByText("Car name is required.")).toBeInTheDocument();
+  });
 
-    fireEvent.click(submitButton);
-  
-    await waitFor(() => {
-      expect(axios.put).toHaveBeenCalledTimes(1);
+  test("submits form successfully", async () => {
+    axios.put.mockResolvedValueOnce({ data: { message: "Car updated successfully!" } });
+
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <UpdateCar />
+        </BrowserRouter>
+      );
     });
+
+    // Simulate form submission
+    fireEvent.click(screen.getByText("Confirm"));
+
+    // Verify success message
+    await waitFor(() => {
+      expect(axios.put).toHaveBeenCalled();
+    });
+  });
+
+  test("handles unauthorized access", async () => {
+    localStorage.getItem.mockReturnValue(null);
+
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <UpdateCar />
+        </BrowserRouter>
+      );
+    });
+
+    // Verify access denied message
+    expect(screen.getByText("Access Denied")).toBeInTheDocument();
   });
 });

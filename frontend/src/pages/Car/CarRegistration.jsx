@@ -29,21 +29,29 @@ const CarRegistration = () => {
   const [licenseError, setLicenseError] = useState("");
   const [isFormValid, setIsFormValid] = useState(true); 
   const [submitError, setSubmitError] = useState("");
+const [authorized, setAuthorized] = useState(true);
 
   useEffect(() => {
+const userData = JSON.parse(localStorage.getItem("user"));
+
+    if (!userData || userData.role !== 2) {
+      setAuthorized(false);
+      return;
+    }
+
     const fetchFeatures = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/feature');
+        const response = await fetch("http://localhost:5000/api/feature");
         const data = await response.json();
 
         const featureOptions = {};
-        data.forEach(feature => {
+        data.forEach((feature) => {
           featureOptions[feature.FeatureID] = { selected: false, name: feature.Name };
         });
         setFeatures(featureOptions);
       } catch (error) {
-        console.error('Error fetching features:', error);
-        setSubmitError('Error fetching features: ' + error.message);
+        console.error("Error fetching features:", error);
+        setSubmitError("Error fetching features: " + error.message);
       }
     };
 
@@ -113,6 +121,38 @@ const CarRegistration = () => {
     }
   };
 
+  const sendNotification = async () => {
+    try {
+      const adminResponse = await fetch("http://localhost:5000/api/account");
+      if (!adminResponse.ok) {
+        throw new Error("Failed to fetch admin accounts");
+      }
+      const accounts = await adminResponse.json();
+  
+      const admins = accounts.filter((account) => account.Role === 1);
+  
+      for (const admin of admins) {
+        const response = await fetch("http://localhost:5000/api/notification", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ NotificationID: 1, AccID: admin.id }),
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error(
+            `Failed to send notification to admin ID: ${admin.id}. Error: ${errorData.message}`
+          );
+          throw new Error(`Failed to send notification to admin ID: ${admin.id}`);
+        }
+      }
+  
+      console.log("Notifications sent to all admins.");
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -127,56 +167,72 @@ const CarRegistration = () => {
     }
 
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('price', price);
-    formData.append('type', carType);
-    formData.append('seat', seatOption);
-    formData.append('gear', gearOption);
-    formData.append('fuel', fuelOption);
-    formData.append('brand', brandOption);
-    formData.append('garageID', garageID);
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("type", carType);
+    formData.append("seat", seatOption);
+    formData.append("gear", gearOption);
+    formData.append("fuel", fuelOption);
+    formData.append("brand", brandOption);
+    formData.append("garageID", garageID);
 
-    formData.append('image', selectedImage);
-    formData.append('license', selectedLicense); 
+    formData.append("image", selectedImage);
+    formData.append("license", selectedLicense); 
 
     const selectedFeatures = Object.keys(features).filter(
       (featureID) => features[featureID].selected
     );
-    formData.append('features', JSON.stringify(selectedFeatures));
+    formData.append("features", JSON.stringify(selectedFeatures));
 
     try {
-      const response = await fetch('http://localhost:5000/api/registerCar', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/registerCar", {
+        method: "POST",
         body: formData,
       });
 
       if (response.ok) {
-        console.log('Form Submitted:', formData);
-
-        
-        alert('Registration successful!'); 
+        console.log("Form Submitted:", formData);
+        alert("Registration successful!");
+        await sendNotification(); 
         navigate(`/garage`, { state: { garageID: garageID } });
       } else {
-        console.error('Error submitting form:', response.statusText);
-        setImageError('Error submitting form: ' + response.statusText);
+        console.error("Error submitting form:", response.statusText);
+        setSubmitError("Error submitting form: " + response.statusText);
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
-      setSubmitError('Error submitting form: ' + error.message);
+      console.error("Error submitting form:", error);
+      setSubmitError("Error submitting form: " + error.message);
     }
   };
+
+  if (!authorized) {
+    return (
+      <div className="error-page">
+        <h1>Access Denied</h1>
+        <p>You do not have permission to view this page.</p>
+        <button onClick={() => navigate("/")}>Go to Home</button>
+      </div>
+    );
+  }
 
   return (
     <div className="car-container">
       <div className="car-header">
-        <button className="backButton" onClick={() => navigate(-1)}>&lt; Back</button>
+        <button className="backButton" onClick={() => navigate(-1)}>
+&lt; Back
+</button>
         <h1 className="heading">Car Registration</h1>
       </div>
 
       <div className="formContainer">
       {submitError && <p className="error-message">{submitError}</p>}
-        <form className="form" onSubmit={handleSubmit} encType="multipart/form-data" data-testid="car-form">
+        <form
+className="form"
+onSubmit={handleSubmit}
+encType="multipart/form-data"
+data-testid="car-form"
+>
           <label className="label" htmlFor="car-name">Enter Name</label>
           <input
             id="car-name"
