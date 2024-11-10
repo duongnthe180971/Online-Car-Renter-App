@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaCar, FaHistory, FaCog, FaSignOutAlt, FaList } from 'react-icons/fa';
+import { FaUser, FaCar, FaHistory, FaCog, FaSignOutAlt, FaList, FaHome } from 'react-icons/fa';
 import '../../styles/component/ChooseBar.css';
 
 const ChooseBarCustomer = () => {
@@ -15,6 +15,12 @@ const ChooseBarCustomer = () => {
   return (
     <div className="sidebar">
       <ul>
+      <li>
+          <Link to="/">
+            <FaHome className="icon" /> Home
+          </Link>
+        </li>
+
         <li>
           <Link to="/profile">
             <FaUser className="icon" /> My Profile

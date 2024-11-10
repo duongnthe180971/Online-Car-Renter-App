@@ -4,6 +4,7 @@ import "../../styles/payment/payment.css";
 import qrcode from "../../assets/icon/qrcode.png";
 import { formatPrice } from "../../assets/format/numberFormat";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 
 import {
   vietcombank,
@@ -30,12 +31,48 @@ const Payment = () => {
   const showQRCode = () => {
     setActiveMenu("qr-code");
   };
-  const HandlerConfirm = () => {
-    navigate("/car-status");
+  const HandlerConfirm = async () => {
+    try {
+      const carResponse = await axios.get(`http://localhost:5000/api/car/${carId}`);
+      const garageId = carResponse.data.GarageID;
+  
+      if (!garageId) {
+        alert("Failed to fetch garage information.");
+        return;
+      }
+  
+      const garageResponse = await axios.get(`http://localhost:5000/api/garageCarOwner/${garageId}`);
+      const carOwnerId = garageResponse.data?.CarOwnerID;
+  
+      if (!carOwnerId) {
+        alert("Failed to fetch car owner information.");
+        return;
+      }
+  
+      const billData = {
+        AccID: carOwnerId,
+        Date: new Date().toISOString().split("T")[0],
+        totalMoney: totalPay, 
+      };
+  
+      await axios.post("http://localhost:5000/api/finance", billData);
+  
+      await axios.post("http://localhost:5000/api/notification", {
+        AccID: carOwnerId,
+        NotificationID: 12, 
+      });
+  
+      alert("Payment successful.");
+      navigate("/car-status");
+    } catch (error) {
+      console.error("Error during payment confirmation:", error);
+      alert("An error occurred during payment. Please try again.");
+    }
   };
   const navigate = useNavigate();
   const location = useLocation();
   const { totalPay } = location.state;
+  const { carId } = location.state;
 
   return (
     <div className="payment-body">

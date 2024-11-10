@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const Radio = ({ setRating, rating }) => {
   const handleRatingChange = (event) => {
@@ -18,6 +18,8 @@ const Radio = ({ setRating, rating }) => {
               value={star}
               checked={rating === star}
               onChange={handleRatingChange}
+              aria-label={`${star} star`}
+              data-testid={`star-${star}`}
             />
             <label htmlFor={`star-${star}`}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

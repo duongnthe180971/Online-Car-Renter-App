@@ -191,7 +191,7 @@ const CarStatus = () => {
       const response = await fetch("http://localhost:5000/api/notification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ NotificationID: 3, AccID: accID }),
+        body: JSON.stringify({ NotificationID: 8, AccID: accID }),
       });
 
       if (!response.ok) {

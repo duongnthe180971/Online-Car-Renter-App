@@ -1160,6 +1160,51 @@ app.post("/api/notification", async (req, res) => {
   }
 });
 
+app.get("/api/garageCarOwner/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await sql.connect(sqlConfig);
+    const result = await sql.query(
+      `SELECT * FROM Garage WHERE GarageID = ${id}`
+    );
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: "Garage not found" });
+    }
+    res.json(result.recordset[0]); // Return the first record
+  } catch (err) {
+    console.error("Error fetching garage data:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.post("/api/finance", async (req, res) => {
+  const { AccID, Date, totalMoney } = req.body;
+
+  if (!AccID || !Date || !totalMoney) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    await sql.connect(sqlConfig);
+    const query = `
+      INSERT INTO Bill (AccID, Date, totalMoney)
+      VALUES (@AccID, @Date, @totalMoney)
+    `;
+
+    const request = new sql.Request();
+    request.input("AccID", sql.Int, AccID);
+    request.input("Date", sql.Date, Date);
+    request.input("totalMoney", sql.Int, totalMoney);
+
+    await request.query(query);
+
+    res.status(201).send("Bill entry created successfully");
+  } catch (error) {
+    console.error("Error inserting into Bill table:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

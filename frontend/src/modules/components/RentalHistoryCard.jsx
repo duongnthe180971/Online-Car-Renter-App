@@ -25,7 +25,7 @@ function RentalHistoryCard({ rental }) {
                 <div className="rental-history-details">
                     <span>Book Date: {bookDate}</span>
                     <span>Time Period: {timePeriod}</span>
-                    <span>Price: {price}</span>
+                    <span>Price per day: {price}</span>
                     <span className={`status2 ${status.toLowerCase().replace(' ', '-')}`}>
                         Status: {status}
                     </span>
