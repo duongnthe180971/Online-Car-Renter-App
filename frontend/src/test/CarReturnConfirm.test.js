@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import RentalRequests from '../pages/car_owner/RentalRequest';
+import RentalReturn from '../pages/car_owner/ConfirmReturnCar';
 import axios from 'axios';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -34,13 +34,13 @@ const mockRentalData = [
     RentalID: 2,
     CarID: 2,
     CustomerID: 2,
-    RentalStatus: 1,
+    RentalStatus: 4,
     RentalStart: '2024-09-12T00:00:00.000Z',
     RentalEnd: '2024-09-15T00:00:00.000Z',
   },
 ];
 
-describe('RentalRequests Component', () => {
+describe('RentalReturns Component', () => {
   beforeEach(() => {
     axios.get.mockImplementation((url) => {
       switch (url) {
@@ -65,15 +65,12 @@ describe('RentalRequests Component', () => {
     localStorage.removeItem('user');
   });
 
-  test('renders RentalRequests and displays rentals', async () => {
-    renderWithRouter(<RentalRequests />);
-    expect(screen.getAllByText('Rental Requests')[1]).toBeInTheDocument();
+  test('renders RentalReturn and displays rentals', async () => {
+    renderWithRouter(<RentalReturn />);
+    expect(screen.getAllByText('Confirm Return')[1]).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText('Tesla Malibu')).toBeInTheDocument();
-      expect(screen.getByText('Toyota Aventador')).toBeInTheDocument();
-      expect(screen.getAllByText(/Customer2/i)[1]).toBeInTheDocument(); 
-      expect(screen.getAllByText(/waiting to confirm/i)).toHaveLength(2); // For both rentals
+      expect(screen.getByText(/Toyota Aventador/i)).toBeInTheDocument(); 
     });
   });
 
@@ -81,7 +78,7 @@ describe('RentalRequests Component', () => {
     localStorage.setItem('user', JSON.stringify({ id: 4, role: 1 }));
   
     renderWithRouter(
-      <RentalRequests accountData={mockAccountData} carData={mockCarData} rentalData={mockRentalData} />
+      <RentalReturn accountData={mockAccountData} carData={mockCarData} rentalData={mockRentalData} />
     );
 
     const errorMessage = await screen.findByText("Server error");

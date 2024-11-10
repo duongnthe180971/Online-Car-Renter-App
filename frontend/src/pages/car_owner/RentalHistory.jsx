@@ -44,7 +44,7 @@ const RentalHistory = () => {
         if (Accid) {
           const responseGarage = await axios.get(`http://localhost:5000/api/garage/${Accid}`);
           if (responseGarage.data.length > 0) {
-            setGarageID(responseGarage.data[0].GarageID); // Ensure data exists before setting
+            setGarageID(responseGarage.data[0].GarageID);
           } else {
             console.log("No garage found for this CarOwnerID");
           }

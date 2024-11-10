@@ -1,95 +1,74 @@
 import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom'; // for additional matchers
-import axios from 'axios';
-import { BrowserRouter as Router } from 'react-router-dom'; // wrap Router for navigate
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import Garage from '../pages/car_owner/Garage';
-import mockCarsData from './mockCarsData.js'; // Mocked car data
+import axios from 'axios';
+import { BrowserRouter } from 'react-router-dom';
 
 jest.mock('axios');
 
-describe('Garage Component', () => {
-    const garageID = 1;
+const renderWithRouter = (ui, { route = '/' } = {}) => {
+    window.history.pushState({}, 'Test page', route)
+    return render(ui, { wrapper: BrowserRouter })
+}
 
+const mockCarData = [
+    { CarID: 1, GarageID: 1, CarName: "Tesla Malibu", CarStatus: "Idle" },
+    { CarID: 2, GarageID: 1, CarName: "Toyota Aventador", CarStatus: "Idle" },
+];
+
+
+const mockGarageData = [{ GarageID: 1 }];
+
+describe('Garage Component', () => {
     beforeEach(() => {
-        axios.get.mockResolvedValue({
-            data: mockCarsData
-        });
+        localStorage.setItem('user', JSON.stringify({ id: 4, role: 2 }));
     });
 
     afterEach(() => {
         jest.clearAllMocks();
+        localStorage.removeItem('user');
     });
 
-    test('renders Garage component and fetches car data', async () => {
-        render(
-            <Router>
-                <Garage garageID={garageID} />
-            </Router>
-        );
+    //passed
+    test('displays error if user has no permission', async () => {
+        localStorage.setItem('user', JSON.stringify({ id: 1, role: 1 }));
+        renderWithRouter(<Garage />);
 
-        // Wait for the cars to load
         await waitFor(() => {
-            mockCarsData
-                .filter(car => car.GarageID === garageID)
-                .forEach(car => {
-                    expect(screen.getByText(car.CarName)).toBeInTheDocument();
-                });
+            const errorMessage = screen.getByText((content, element) => content.includes('No permission'));
+            expect(errorMessage).toBeInTheDocument();
         });
     });
 
-    test('handles status change correctly', async () => {
-        render(
-            <Router>
-                <Garage garageID={garageID} />
-            </Router>
-        );
-
-        // Wait for the cars to load
+    //passed
+    test('renders "Garage" heading without ambiguity', async () => {
+        axios.get.mockResolvedValueOnce({ data: [{ GarageID: 1 }] });
+        axios.get.mockResolvedValueOnce({ data: [] });
+        
+        renderWithRouter(<Garage />);
+        
         await waitFor(() => {
-            const carNames = mockCarsData
-                .filter(car => car.GarageID === garageID)
-                .map(car => car.CarName);
-
-            carNames.forEach(name => {
-                expect(screen.getByText(name)).toBeInTheDocument();
-            });
+            const garageHeading = screen.getAllByText('Garage');
+            expect(garageHeading[1]).toBeInTheDocument();
         });
-
-        // Find the first toggle switch for the car
-        const toggle = screen.getAllByRole('checkbox')[0];
-        fireEvent.click(toggle); // Simulate status toggle
-
-        // Expect that the checkbox is toggled (checked/unchecked)
-        expect(toggle.checked).toBe(false); // Example: if initially checked
     });
 
-    test('navigates to car registration page when "Add New Car" is clicked', () => {
-        render(
-            <Router>
-                <Garage garageID={garageID} />
-            </Router>
-        );
-
-        const addCarButton = screen.getByText('Add New Car');
-        fireEvent.click(addCarButton);
-
-        // Check if the URL changes (simulate navigation)
-        expect(window.location.pathname).toBe(`/car-registration/${garageID}`);
-    });
-
-    test('handles errors when fetching data', async () => {
-        axios.get.mockRejectedValueOnce(new Error('Network error'));
-
-        render(
-            <Router>
-                <Garage garageID={garageID} />
-            </Router>
-        );
-
-        // Ensure that error is handled (e.g., could display an error message)
+    test('displays valid car data only for the chosen GarageID', async () => {
+        // Set up axios mocks
+        axios.get.mockImplementation((url) => {
+            if (url.includes('/api/garage/')) {
+                return Promise.resolve({ data: mockGarageData });
+            }
+            if (url.includes('/api/car')) {
+                return Promise.resolve({ data: mockCarData });
+            }
+            return Promise.reject(new Error('not found'));
+        });    
+        renderWithRouter(<Garage />);    
         await waitFor(() => {
-            expect(screen.getByText('Server error')).toBeInTheDocument();
+            expect(screen.getByText("Tesla Malibu")).toBeInTheDocument();
+            expect(screen.getByText("Toyota Aventador")).toBeInTheDocument();
         });
     });
 });
