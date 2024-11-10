@@ -77,7 +77,7 @@ const AdminVouchers = () => {
       <div className="RightSide">
         <div className="admin-vouchers">
           {loading ? (
-            <Loader /> // Show Loader while data is being fetched
+            <Loader /> 
           ) : (
             <>
               <h2>Create Voucher</h2>

@@ -29,7 +29,7 @@ const Finance = () => {
           const formattedData = response.data.map((item) => ({
             name: new Date(item.Date).toLocaleString("default", {
               month: "short",
-            }), // Formatting date to show month
+            }), 
             uv: item.totalMoney,
           }));
           setFinanceData(formattedData);

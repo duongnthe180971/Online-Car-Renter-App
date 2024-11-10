@@ -3,14 +3,14 @@ import ChooseBar from "../../modules/components/ChooseBarAdmin";
 import "../../styles/admin/CarTemplate.css";
 import Input from "../../modules/components/Input";
 
-// CarTemplate Component
-const CarTemplate = () => {
-  const [features, setFeatures] = useState([]); // State to store feature list
-  const [newFeature, setNewFeature] = useState(""); // State for new feature input
-  const [loading, setLoading] = useState(true); // State for loading indicator
-  const [error, setError] = useState(null); // State for error handling
 
-  // Fetch feature data from the API
+const CarTemplate = () => {
+  const [features, setFeatures] = useState([]); 
+  const [newFeature, setNewFeature] = useState(""); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
   useEffect(() => {
     const fetchFeatures = async () => {
       try {
@@ -19,10 +19,10 @@ const CarTemplate = () => {
           throw new Error("Unable to fetch features.");
         }
         const data = await response.json();
-        setFeatures(data); // Store fetched features in state
-        setLoading(false); // Stop loading indicator
+        setFeatures(data);
+        setLoading(false);
       } catch (err) {
-        setError(err.message); // Handle fetch error
+        setError(err.message);
         setLoading(false);
       }
     };
@@ -30,21 +30,19 @@ const CarTemplate = () => {
     fetchFeatures();
   }, []);
 
-  // Add a new feature with duplicate check and validation
   const handleAddFeature = async () => {
     const featureName = newFeature.trim();
 
-    // Check if the feature already exists in the list (duplicate check)
     const isDuplicate = features.some(
       (feature) => feature.Name.toLowerCase() === featureName.toLowerCase()
     );
 
     if (isDuplicate) {
-      alert("Feature already exists."); // Display error message for duplicate
-      return; // Prevent further action
+      alert("Feature already exists."); 
+      return; 
     }
 
-    // Validate that the input contains only letters and spaces, with no more than two consecutive spaces
+
     const isValid =
       /^[a-zA-Z]+( [a-zA-Z]+)*$/.test(featureName) &&
       featureName.split(" ").filter((word) => word !== "").length <= 2;
@@ -54,7 +52,7 @@ const CarTemplate = () => {
     }
 
     if (featureName === "") {
-      alert("Feature name cannot be empty."); // Show error if input is empty
+      alert("Feature name cannot be empty."); 
       return;
     }
 
@@ -62,28 +60,26 @@ const CarTemplate = () => {
       const response = await fetch("http://localhost:5000/api/features", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: featureName }), // Send the new feature name
+        body: JSON.stringify({ name: featureName }), 
       });
 
       if (response.ok) {
-        const addedFeature = await response.json(); // Fetch the new feature from response
-        setFeatures([...features, addedFeature]); // Add new feature to the list
-        setNewFeature(""); // Clear the input field
+        const addedFeature = await response.json();
+        setFeatures([...features, addedFeature]); 
+        setNewFeature(""); 
         alert("Feature added successfully!");
       } else {
         throw new Error("Failed to add feature.");
       }
     } catch (err) {
-      alert(`Error: ${err.message}`); // Show error message
+      alert(`Error: ${err.message}`);
     }
   };
 
-  // Handle input change
   const handleInputChange = (e) => {
-    setNewFeature(e.target.value); // Allow any input, validation happens on Add
+    setNewFeature(e.target.value);
   };
 
-  // Remove a feature with API error handling
   const handleRemoveFeature = async (featureId) => {
     try {
       const response = await fetch(
@@ -96,25 +92,25 @@ const CarTemplate = () => {
       if (response.ok) {
         setFeatures(
           features.filter((feature) => feature.FeatureID !== featureId)
-        ); // Remove the feature from the list if successful
+        );
         alert("Feature removed successfully!");
       } else {
-        // If the response is not ok, get the detailed error message from the server
+
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to remove feature.");
       }
     } catch (err) {
-      alert(`Error: ${err.message}`); // Show detailed error message
+      alert(`Error: ${err.message}`); 
       console.error("Error removing feature:", err);
     }
   };
 
-  // Show loading indicator while fetching features
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  // Show error if there was an issue fetching the data
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -141,7 +137,6 @@ const CarTemplate = () => {
               </button>
             </div>
 
-            {/* List of existing features */}
             {features.map((feature) => (
               <FeatureItem
                 key={feature.FeatureID}
@@ -156,7 +151,7 @@ const CarTemplate = () => {
   );
 };
 
-// FeatureItem Component
+
 const FeatureItem = ({ feature, onRemove }) => {
   return (
     <div className="feature-item">

@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import ChooseBar from "../../modules/components/ChooseBarAdmin"; // Sidebar
-import "../../styles/admin/UserManagement.css"; // CSS for user management page
-import defaultAvatar from "../../assets/img/user.png"; // Default avatar for users
+import ChooseBar from "../../modules/components/ChooseBarAdmin";
+import "../../styles/admin/UserManagement.css";
+import defaultAvatar from "../../assets/img/user.png";
 import Loader from "../../modules/components/Loader";
 const UserManagement = () => {
-  const [users, setUsers] = useState([]); // To hold the user data
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
-  const [selectedUser, setSelectedUser] = useState(null); // Selected user for details
-  const [currentPage, setCurrentPage] = useState(1); // Pagination: current page
-  const usersPerPage = 3; // Number of users per page
-  const [selectedRole, setSelectedRole] = useState(""); // Filter by role
-  const [isDeleting, setIsDeleting] = useState(false); // Deleting state
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const usersPerPage = 3;
+  const [selectedRole, setSelectedRole] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // Fetch users from the API
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -23,12 +23,12 @@ const UserManagement = () => {
         }
         const data = await response.json();
 
-        // Filter only activated users (Status = 1)
+
         const activeUsers = data.filter((user) => user.Status === true);
-        setUsers(activeUsers); // Update users list
-        setLoading(false); // Turn off loading spinner
+        setUsers(activeUsers);
+        setLoading(false);
       } catch (err) {
-        setError(err.message); // Handle error
+        setError(err.message);
         setLoading(false);
       }
     };
@@ -36,27 +36,26 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
-  // Define handleViewFull to set selected user for viewing details
   const handleViewFull = (user) => {
-    setSelectedUser(user); // Set the selected user for viewing details
+    setSelectedUser(user);
   };
 
-  // Filter users based on selected role
+
   const filteredUsers = users.filter((user) => {
     return selectedRole ? user.Role === parseInt(selectedRole) : true;
   });
 
-  // Get the current users for the current page
+
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
-  // Change page
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Handle user deletion
+
   const handleDeleteUser = async (id, UserName, Role) => {
-    // Check if the user is an Admin
+
     if (Role === 1) {
       alert("Admin accounts cannot be deactivated.");
       return;
@@ -67,7 +66,7 @@ const UserManagement = () => {
     );
 
     if (confirmDelete) {
-      setIsDeleting(true); // Start deleting state
+      setIsDeleting(true); 
       try {
         const response = await fetch(
           `http://localhost:5000/api/deactivate-user/${id}`,
@@ -85,19 +84,19 @@ const UserManagement = () => {
       } catch (err) {
         console.error("Error deactivating user:", err);
       } finally {
-        setIsDeleting(false); // Reset deleting state
+        setIsDeleting(false);
       }
     }
   };
 
   const handleCloseInfo = () => {
-    setSelectedUser(null); // Close modal
+    setSelectedUser(null);
   };
 
-  // Display a loading spinner while fetching data
+
   if (loading) return <Loader />;
 
-  // Display error if there's an issue fetching the data
+ 
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -113,7 +112,6 @@ const UserManagement = () => {
         <div className="manage-user-container">
           <h1 className="title">Manage Users</h1>
 
-          {/* Filter section for roles */}
           <div className="filter-container">
             <label htmlFor="roleFilter">Filter by Role:</label>
             <select
@@ -128,7 +126,6 @@ const UserManagement = () => {
             </select>
           </div>
 
-          {/* User list */}
           <div className="user-list">
             {currentUsers.map((user) => (
               <div key={user.id} className="user-card">
@@ -163,7 +160,6 @@ const UserManagement = () => {
             ))}
           </div>
 
-          {/* Pagination Component */}
           <Pagination
             usersPerPage={usersPerPage}
             totalUsers={filteredUsers.length}
@@ -171,7 +167,6 @@ const UserManagement = () => {
             paginate={paginate}
           />
 
-          {/* User Details Modal */}
           {selectedUser && (
             <div className="user-details-modal">
               <div className="user-details-content">
@@ -212,7 +207,6 @@ const UserManagement = () => {
   );
 };
 
-// Pagination Component
 const Pagination = ({ usersPerPage, totalUsers, currentPage, paginate }) => {
   const pageNumbers = [];
 

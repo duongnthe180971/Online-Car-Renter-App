@@ -137,6 +137,7 @@ const CarStatus = () => {
         );
         const rental_ = sortedRentals.length > 0 ? sortedRentals[0] : null;
 
+        
         if (rental_) {
           setRental(rental_);
           const carResponse = await axios.get("http://localhost:5000/api/car");

@@ -11,7 +11,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [Error, setError] = useState(""); //eror
   const navigate = useNavigate();
-  //check input from user
   const validateInputs = () => {
     let valid = true;
 

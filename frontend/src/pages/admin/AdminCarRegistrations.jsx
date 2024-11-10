@@ -2,35 +2,34 @@ import React, { useState, useEffect } from "react";
 import ChooseBar from "../../modules/components/ChooseBarAdmin";
 import "../../styles/admin/AdminCarRegistrations.css";
 import Loader from "../../modules/components/Loader";
-// AdminCarRegistrations Component
+
 const AdminCarRegistrations = () => {
-  const [cars, setCars] = useState([]); // State to hold car data
-  const [loading, setLoading] = useState(true); // State for loading indicator
-  const [error, setError] = useState(null); // State for error handling
-  const [selectedCar, setSelectedCar] = useState(null); // State for the selected car object
-  const [currentPage, setCurrentPage] = useState(1); // State for current page
-  const carsPerPage = 3; // Number of cars per page
+  const [cars, setCars] = useState([]); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const [selectedCar, setSelectedCar] = useState(null); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 3;
 
-  // Filter states
-  const [selectedBrand, setSelectedBrand] = useState(""); // State for selected brand
-  const [selectedSeats, setSelectedSeats] = useState(""); // State for selected number of seats
-  const [selectedPriceRange, setSelectedPriceRange] = useState(""); // State for selected price range
 
-  const adminId = 1; // Placeholder: Use actual admin ID from your authentication logic
+  const [selectedBrand, setSelectedBrand] = useState(""); 
+  const [selectedSeats, setSelectedSeats] = useState("");
+  const [selectedPriceRange, setSelectedPriceRange] = useState("");
 
-  // Fetch car data from the backend API
+  const adminId = 1; 
+
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/register-cars"); // Fetch only pending cars
+        const response = await fetch("http://localhost:5000/api/register-cars"); 
         if (!response.ok) {
           throw new Error("Failed to fetch car data");
         }
         const data = await response.json();
-        setCars(data); // Store car data in state
-        setLoading(false); // Turn off loading spinner
+        setCars(data);
+        setLoading(false); 
       } catch (err) {
-        setError(err.message); // Handle error
+        setError(err.message);
         setLoading(false);
       }
     };
@@ -38,7 +37,6 @@ const AdminCarRegistrations = () => {
     fetchCars();
   }, []);
 
-  // Filtered Cars based on selected filters
   const filteredCars = cars.filter((car) => {
     const matchesBrand = selectedBrand ? car.Brand === selectedBrand : true;
     const matchesSeats = selectedSeats
@@ -56,15 +54,12 @@ const AdminCarRegistrations = () => {
     return matchesBrand && matchesSeats && matchesPrice;
   });
 
-  // Get the current cars based on the currentPage
   const indexOfLastCar = currentPage * carsPerPage;
   const indexOfFirstCar = indexOfLastCar - carsPerPage;
   const currentCars = filteredCars.slice(indexOfFirstCar, indexOfLastCar);
 
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Function to handle car approval
   const handleApprove = async (carId) => {
     try {
       const response = await fetch(
@@ -77,7 +72,7 @@ const AdminCarRegistrations = () => {
       );
 
       if (response.ok) {
-        setCars(cars.filter((car) => car.CarID !== carId)); // Remove car from state
+        setCars(cars.filter((car) => car.CarID !== carId));
         alert("Car approved successfully!");
       } else {
         const errorData = await response.json();
@@ -88,7 +83,6 @@ const AdminCarRegistrations = () => {
     }
   };
 
-  // Function to handle car decline
   const handleDecline = async (carId) => {
     try {
       const response = await fetch(
@@ -100,7 +94,7 @@ const AdminCarRegistrations = () => {
       );
 
       if (response.ok) {
-        setCars(cars.filter((car) => car.CarID !== carId)); // Remove the car from state if successful
+        setCars(cars.filter((car) => car.CarID !== carId));
         alert("Car declined successfully!");
       } else {
         const errorData = await response.json();
@@ -111,9 +105,8 @@ const AdminCarRegistrations = () => {
     }
   };
 
-  // Function to handle viewing car details
   const handleViewInfo = async (car) => {
-    setSelectedCar(car); // Set the selected car object in state
+    setSelectedCar(car);
     try {
       const response = await fetch(
         `http://localhost:5000/api/register-cars/${car.CarID}/features`
@@ -125,12 +118,11 @@ const AdminCarRegistrations = () => {
     }
   };
 
-  // Function to close the detailed view
+
   const handleCloseInfo = () => {
-    setSelectedCar(null); // Close the detailed view
+    setSelectedCar(null);
   };
 
-  // Function to download license file
   const handleDownloadLicense = (licenseUrl) => {
     const link = document.createElement("a");
     link.href = licenseUrl;
@@ -138,10 +130,8 @@ const AdminCarRegistrations = () => {
     link.click();
   };
 
-  // Display a loading indicator while data is being fetched
   if (loading) return <Loader />;
 
-  // Display error if there's a problem fetching the data
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -157,7 +147,6 @@ const AdminCarRegistrations = () => {
         <div className="registration">
           <h1 className="page-registration">Car Registrations</h1>
 
-          {/* Filter Section */}
           <div className="filter-container">
             <div className="filter-group">
               <label htmlFor="brand">Brand:</label>
@@ -209,14 +198,12 @@ const AdminCarRegistrations = () => {
             </div>
           </div>
 
-          {/* If no cars match the search filters */}
           {filteredCars.length === 0 ? (
             <div className="no-registrations">
               <p>No cars match the selected criteria.</p>
             </div>
           ) : (
             <>
-              {/* Car List */}
               <div className="car-registration-list">
                 {currentCars.map((car) => (
                   <CarCard
@@ -229,7 +216,6 @@ const AdminCarRegistrations = () => {
                 ))}
               </div>
 
-              {/* Pagination Component */}
               <Pagination
                 carsPerPage={carsPerPage}
                 totalCars={filteredCars.length}
@@ -293,7 +279,6 @@ const AdminCarRegistrations = () => {
   );
 };
 
-// Pagination Component with Next and Previous
 const Pagination = ({ carsPerPage, totalCars, currentPage, paginate }) => {
   const pageNumbers = [];
 
@@ -341,10 +326,9 @@ const Pagination = ({ carsPerPage, totalCars, currentPage, paginate }) => {
   );
 };
 
-// CarCard Component
 const CarCard = ({ car, onApprove, onDecline, onViewInfo }) => {
   const handleImageError = (e) => {
-    e.target.src = "/img/default-car.png"; // Fallback image if the actual image is missing
+    e.target.src = "/img/default-car.png";
   };
 
   return (

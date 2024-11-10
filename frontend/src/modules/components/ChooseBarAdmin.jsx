@@ -63,11 +63,6 @@ const ChooseBarAdmin = () => {
             <FaGift className="icon" /> Voucher
           </Link>
         </li>
-        <li>
-          <Link to="/settings">
-            <FaCog className="icon" /> Setting
-          </Link>
-        </li>
         
         <li onClick={handleLogout}>
           <FaSignOutAlt className="icon" /> Log Out
