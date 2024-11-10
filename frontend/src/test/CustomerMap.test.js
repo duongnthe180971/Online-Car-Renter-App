@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import CustomerMap from '../pages/customer/CustomerMap';
 
 jest.mock('react-leaflet', () => ({
@@ -10,25 +11,52 @@ jest.mock('react-leaflet', () => ({
         <div data-testid={`mock-marker-${position[0]}-${position[1]}`}>{children}</div>
     )),
     Popup: jest.fn(({ children }) => <div data-testid="mock-popup">{children}</div>),
+    useMap: jest.fn(() => ({
+        removeControl: jest.fn(),
+        addControl: jest.fn(),
+    })),
 }));
 
+// Always mock fetch to return mock data or simulate failure
+global.fetch = jest.fn(() =>
+    Promise.resolve({
+        json: () =>
+            Promise.resolve([
+                {
+                    lat: '21.0285',
+                    lon: '105.8542',
+                    display_name: 'Dai Hoc FPT Ha Noi',
+                },
+                {
+                    lat: '21.0286',
+                    lon: '105.8543',
+                    display_name: 'Ho Hoan Kiem',
+                },
+            ]),
+    })
+);
+
+const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+
 describe('CustomerMap Component', () => {
-    test('renders the initial form with locations', () => {
-        render(<CustomerMap />);
-        const fromInput = screen.getByLabelText('From:');
-        const toInput = screen.getByLabelText('To:');
 
-        expect(fromInput).toBeInTheDocument();
-        expect(fromInput.value).toBe('Dai Hoc FPT Ha Noi');
-        expect(toInput).toBeInTheDocument();
-        expect(toInput.value).toBe('So 33 Duong Tran Cung Quan Bac Tu Liem Ha Noi');
-    });
+    test('Cập nhật địa chỉ khi nhập vào ô input', () => {
+        const mockLocation = {
+            state: {
+                fromName: 'Dai Hoc FPT Ha Noi',
+                toName: 'Ho Hoan Kiem',
+            },
+        };
 
-    test('updates locations when typing in the inputs', () => {
-        render(<CustomerMap />);
+        render(
+            <Router location={mockLocation}>
+                <CustomerMap />
+            </Router>
+        );
 
-        const fromInput = screen.getByLabelText('From:');
-        const toInput = screen.getByLabelText('To:');
+        const fromInput = screen.getByLabelText('Your Location:');
+        const toInput = screen.getByLabelText('Destination:');
+
         fireEvent.change(fromInput, { target: { value: 'New From Location' } });
         fireEvent.change(toInput, { target: { value: 'New To Location' } });
 
@@ -36,21 +64,32 @@ describe('CustomerMap Component', () => {
         expect(toInput.value).toBe('New To Location');
     });
 
+    test('Hiển thị thông báo lỗi khi không tìm thấy địa chỉ', async () => {
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                json: () => Promise.resolve([]), // Returning an empty array to simulate not found
+            })
+        );
 
-    test('calls handleShowWay when "Show Way" button is clicked', () => {
-        const consoleSpy = jest.spyOn(console, 'log');
-        render(<CustomerMap />);
+        const mockLocation = {
+            state: {
+                fromName: 'Dai Hoc FPT Ha Noi',
+                toName: 'Ho Hoan Kiem',
+            },
+        };
+
+        render(
+            <Router location={mockLocation}>
+                <CustomerMap />
+            </Router>
+        );
 
         const showWayButton = screen.getByText('Show Way');
         fireEvent.click(showWayButton);
 
-        expect(consoleSpy).toHaveBeenCalledWith(
-            'Showing directions from:',
-            { name: 'Dai Hoc FPT Ha Noi', lat: 21.0367, lng: 105.8342 },
-            'to:',
-            { name: 'So 33 Duong Tran Cung Quan Bac Tu Liem Ha Noi', lat: 21.0381, lng: 105.7821 }
-        );
-
-        consoleSpy.mockRestore();
+        await waitFor(() => {
+            const errorMessage = screen.getByText('One or both locations were not found. Please check the inputs.');
+            expect(errorMessage).toBeInTheDocument();
+        });
     });
 });
