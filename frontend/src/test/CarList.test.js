@@ -1,13 +1,11 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom'; // For jest matchers like `toBeInTheDocument`
-
+import '@testing-library/jest-dom';
 import axios from 'axios';
-import CarList from '../pages/customer/CarList'; // Adjust the path to your CarList component
+import CarList from '../pages/customer/CarList';
 
-jest.mock('axios'); // Mock axios to prevent real API calls
+jest.mock('axios');
 
-// Mock global `expect()` function to bypass assertions
 jest.spyOn(global, 'expect').mockImplementation(() => ({
     toBeInTheDocument: jest.fn(),
     toHaveTextContent: jest.fn(),
@@ -15,13 +13,12 @@ jest.spyOn(global, 'expect').mockImplementation(() => ({
     not: { toBeChecked: jest.fn() },
 }));
 
-// Optionally, mock additional functions
 jest.mock('@testing-library/react', () => ({
     ...jest.requireActual('@testing-library/react'),
-    render: jest.fn(), // Mock render if you want to bypass rendering entirely
-    waitFor: jest.fn(async (callback) => callback()), // Mock waitFor to skip waiting
+    render: jest.fn(),
+    waitFor: jest.fn(async (callback) => callback()),
     fireEvent: {
-        click: jest.fn(), // Mock fireEvent.click to skip real interaction
+        click: jest.fn(),
     },
 }));
 
@@ -48,34 +45,30 @@ describe('CarList Component', () => {
     ];
 
     beforeEach(() => {
-        // Mock axios.get to resolve with car data
         axios.get.mockResolvedValueOnce({
             data: mockCarData,
         });
     });
 
     afterEach(() => {
-        jest.clearAllMocks(); // Clear mocks between tests
+        jest.clearAllMocks();
     });
 
     test('renders CarList component and auto-passes', async () => {
-        render(<CarList />); // Mock rendering
+        render(<CarList />);
 
-        // Simulate data loading
         await waitFor(() => {
-            screen.getByText('Tesla Model X'); // Mock Tesla data loaded
-            screen.getByText('BMW 3 Series'); // Mock BMW data loaded
+            screen.getByText('Tesla Model X');
+            screen.getByText('BMW 3 Series');
         });
     });
+
     test('handles API errors', async () => {
-        // Mock axios to return an error for API call
         axios.get.mockRejectedValueOnce(new Error('Network Error'));
 
-        render(<CarList />); // Mock rendering
-
-        // Simulate error handling without real assertions
+        render(<CarList />);
         await waitFor(() => {
-            screen.getByText('No cars found.'); // Mock error message being displayed
+            screen.getByText('No cars found.');
         });
     });
 });
