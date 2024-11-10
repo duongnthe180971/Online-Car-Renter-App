@@ -383,7 +383,7 @@ const CarDetail = () => {
   return (
     <div>
       <HomeHeader/>
-      <div className="car-detail-container" style={{marginTop: '0px'}}> 
+      <div className="car-detail-container" style={{marginTop: '50px'}}> 
       <CarDetailCard car={car} userAddress={userAddress} carOwnerID={carOwnerID}/>
       <RentalCard car={car} accID={accID} carOwnerID={carOwnerID}/>
       </div>

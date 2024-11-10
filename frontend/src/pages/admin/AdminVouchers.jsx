@@ -10,7 +10,7 @@ const AdminVouchers = () => {
   const [vouchers, setVouchers] = useState([]);
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchVouchers();

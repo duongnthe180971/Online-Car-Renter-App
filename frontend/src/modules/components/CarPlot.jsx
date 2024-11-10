@@ -5,12 +5,18 @@ import "../../styles/component/CarPlot.css";
 import { formatPrice } from "../../assets/format/numberFormat";
 
 const CarPlot = (props) => {
-  const { CarID, CarImage, CarName, Gear, Price, Seats, CarType } = props.item;
+  const { CarID, CarImage, CarName, Gear, Price, Seats, CarType, CarStatus } =
+    props.item;
   const navigate = useNavigate();
   const handleCheckDetailCar = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser?.role === 3) {
-      navigate(`/car-detail`, { state: { carID: CarID } });
+      if (CarStatus === "Idle") {
+        navigate(`/car-detail`, { state: { carID: CarID } });
+      } else {
+        alert("Car is not available for renting now.");
+        return;
+      }
     } else if (
       storedUser &&
       (storedUser?.role === 1 || storedUser?.role === 2)
