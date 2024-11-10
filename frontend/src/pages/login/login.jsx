@@ -10,7 +10,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [Error, setError] = useState(""); //eror
-  const navigate = useNavigate(); // To handle redirection after login
+  const navigate = useNavigate();
   //check input from user
   const validateInputs = () => {
     let valid = true;
@@ -97,7 +97,7 @@ const Login = () => {
           </div>
         </div>
 
-        <div className="google-login-box">
+        {/* <div className="google-login-box">
           <h2>Google Login</h2>
           <GoogleLogin
             onSuccess={(credentialResponse) => {
@@ -107,7 +107,7 @@ const Login = () => {
               console.log("Login Failed");
             }}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

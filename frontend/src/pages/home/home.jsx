@@ -30,11 +30,10 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(showNextImage, 3000);
     return () => clearInterval(interval);
-  }, [currentIndex]); // Add currentIndex as dependency to avoid re-render issues
+  }, [currentIndex]);
 
-  const [cars, SetCars] = useState(carDemo); // Initial state with demo data or an empty array
+  const [cars, SetCars] = useState(carDemo);
 
-  // Add try-catch in useEffect
   useEffect(() => {
     const fetchCarData = async () => {
       try {
@@ -47,8 +46,7 @@ const Home = () => {
     };
 
     fetchCarData();
-  }, []); // Empty array to ensure it runs once
-
+  }, []);
   const handleNavigateAboutUs = () => {
     navigate("/about-us");
   };
