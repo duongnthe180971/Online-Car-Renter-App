@@ -9,7 +9,6 @@ import EditProfileModal from "../../modules/components/EditProfileModal";
 import ChangePasswordModal from "../../modules/components/ChangePassWord";
 import { formatPrice, formatDate_String } from "../../assets/format/numberFormat";
 
-//import avatar from 'process.env.PUBLIC_URL'
 const MyProfile = ({}) => {
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(true);
@@ -27,7 +26,7 @@ const MyProfile = ({}) => {
         console.log("Updated User Data:", updatedUser);
         try {
             const response = await axios.put(`http://localhost:5000/api/account/${Accid}`, updatedUser);
-            setUser(response.data); // Update the user data on success
+            setUser(response.data);
             setIsEditing(false);
 
         } catch (error) {
@@ -76,7 +75,6 @@ const MyProfile = ({}) => {
 
     const handlePasswordSave = async (passwordData) => {
         try {
-            // Here you would make an API request to change the password
             await axios.put(`http://localhost:5000/api/account/${Accid}/change-password`, passwordData);
             console.log("Password changed successfully");
             setIsChangePass(false);

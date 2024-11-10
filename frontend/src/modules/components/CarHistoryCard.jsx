@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 function CarHistoryCard({ rental }) {
     const { vehicle, carowner, bookDate, timePeriod, price, carownerID } = rental;
     const navigate = useNavigate();
-    // Initialize the state to "Waiting to confirm" or whatever the rental status is
     const [status] = useState(rental.status);
     const handleRentalPartner = () => {
         navigate(`/profile-partner`, { state: { profileID: rental.carownerID } });

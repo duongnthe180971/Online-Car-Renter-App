@@ -109,7 +109,7 @@ const EditProfileModal = ({ user, onSave, onClose }) => {
                         name="dob"
                         value={formData.dob}
                         onChange={handleChange}
-                        isValid={isDOBValid}  // Pass DOB validity to style the input
+                        isValid={isDOBValid}
                         required
                     />
                     {!isDOBValid && <ErrorMessage>{errorDob}</ErrorMessage>}
@@ -122,7 +122,7 @@ const EditProfileModal = ({ user, onSave, onClose }) => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        isValid={isPhoneValid}  // Pass phone validity to style the input
+                        isValid={isPhoneValid}
                     />
                     {!isPhoneValid && <ErrorMessage>{errorPhone}</ErrorMessage>}
                 </div>
@@ -134,7 +134,7 @@ const EditProfileModal = ({ user, onSave, onClose }) => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        isValid={isEmailValid}  // Pass email validity to style the input
+                        isValid={isEmailValid}
                     />
                     {!isEmailValid && <ErrorMessage>{errorEmail}</ErrorMessage>}
                 </div>

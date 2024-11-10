@@ -39,7 +39,6 @@ function RentalCard({ request }) {
       console.error('Error updating rental status:', err);
       setError('An error occurred while updating the status.');
     } finally {
-      //setLoading(false); // Turn off the loading spinner
     }
   };
 
@@ -76,7 +75,6 @@ function RentalCard({ request }) {
         </div>
         <div className="rental-actions">
           <button className="view-customer-btn" onClick={handleRentalOrder}>View Rental Order</button>
-          {/* Approve button triggers the status change to "Renting" */}
           {status === 'Waiting to confirm' && (
             <>
               <button className="approve-btn" onClick={handleApprove}>Approve</button>
