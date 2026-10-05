@@ -10,3 +10,11 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+bin/
+obj/
