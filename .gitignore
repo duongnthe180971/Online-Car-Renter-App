@@ -18,3 +18,8 @@ $RECYCLE.BIN/
 
 bin/
 obj/
+backend/node_modules
+CarRentalAPI/.vs
+frontend/.env
+CarRentalAPI/CarRentalAPI/img
+CarRentalAPI/CarRentalAPI/obj

@@ -1,11 +1,11 @@
 // src/App.jsx
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/home/Home";
-import AboutUs from "./pages/home/Aboutus";
+import Home from "./pages/home/home";
+import AboutUs from "./pages/home/aboutus";
 import Garage from "./pages/car_owner/Garage";
 import RentalRequest from "./pages/car_owner/RentalRequest";
-import RentalReturn from "./pages/car_owner/ConfirmReturnCar"
+import RentalReturn from "./pages/car_owner/ConfirmReturnCar";
 import RentalOrder from "./pages/car_owner/RentalOrder";
 import RentalHistory from "./pages/car_owner/RentalHistory";
 import CarHistory from "./pages/customer/CarHistory";
@@ -13,25 +13,24 @@ import CarList from "./pages/customer/CarList";
 import CarStatus from "./pages/customer/CarStatus";
 import CarDetail from "./pages/customer/CarDetail";
 import CustomerMap from "./pages/customer/CustomerMap";
-import CarRegistration from "./pages/car/CarRegistration";
-import FeedbackPage from "./pages/car/FeedbackPage";
-import UpdateCar from "./pages/car/UpdateCar";
+import CarRegistration from "./pages/Car/CarRegistration"
+import FeedbackPage from "./pages/Car/FeedbackPage";
+import UpdateCar from "./pages/Car/UpdateCar";
 import "./styles/General.css";
 import FinancePage from "./pages/admin/Finance";
 import UserManagementPage from "./pages/admin/UserManagement";
 import AdminCarRegistrations from "./pages/admin/AdminCarRegistrations";
 import CarTemplatePage from "./pages/admin/CarTemplate";
-import Login from "./pages/login/Login";
-import Register from "./pages/login/Register";
-import Payment from "./pages/payment/Payment";
+import Login from "./pages/login/login";
+import Register from "./pages/login/register";
+import Payment from "./pages/payment/payment";
 import Voucher from "./modules/components/Voucher";
 import AdminVouchers from "./pages/admin/AdminVouchers";
 import MyProfile from "./pages/home/MyProfile";
 import ProfileCard from "./pages/car_owner/ProfilePage";
-import FeedbackForm from "./pages/car/FeedbackForm";
+import FeedbackForm from "./pages/Car/FeedbackForm";
 import Assistant from "./pages/others/Assistant";
 import FinanceCarOwner from "./pages/car_owner/FinanceCarOwner";
-import "./styles/General.css";
 
 const App = () => {
   return (

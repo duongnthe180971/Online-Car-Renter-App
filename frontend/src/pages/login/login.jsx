@@ -39,17 +39,29 @@ const Login = () => {
     }
     try {
       const resAccount = await axios.get("http://localhost:5000/api/account");
-      const acc = resAccount.data.find((item) => item.UserName === username);
+      
+      // Bắt dữ liệu bất chấp C# trả về UserName hay userName
+      const acc = resAccount.data.find(
+        (item) => (item.UserName === username || item.userName === username)
+      );
 
-      if (acc && acc.PassWord === password) {
+      const dbPassword = acc ? (acc.PassWord || acc.passWord) : null;
+
+      if (acc && dbPassword === password) {
+        const userId = acc.id || acc.Id; 
+        const userRole = acc.Role || acc.role;
+        const userStatus = acc.Status !== undefined ? acc.Status : acc.status;
+
         localStorage.setItem(
           "user",
-          JSON.stringify({ id: acc.id, role: acc.Role, status: acc.Status })
+          JSON.stringify({ id: userId, role: userRole, status: userStatus })
         );
-        if (!acc.Status) {
+        
+        if (userStatus === false) {
           alert("Your account was banned!");
         } else {
-          navigate(`/home`, { state: { status: acc.Status } });
+          navigate(`/home`, { state: { status: userStatus } });
+          window.location.reload(); 
         }
       } else {
         alert("Invalid username or password");
