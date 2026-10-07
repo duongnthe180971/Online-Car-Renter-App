@@ -23,3 +23,5 @@ CarRentalAPI/.vs
 frontend/.env
 CarRentalAPI/CarRentalAPI/img
 CarRentalAPI/CarRentalAPI/obj
+backend_old(unused)/img
+backend_old(unused)/node_modules

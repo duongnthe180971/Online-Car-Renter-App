@@ -44,7 +44,7 @@ namespace CarRentalAPI.Controllers
                     FeedbackDescription = f.FeedbackDescription,
                     FeedbackDate = f.FeedbackDate,
                     Rate = f.Rate,
-                    UserName = f.Customer.UserName // Lấy thẳng tên ghép vào cho Frontend
+                    UserName = f.Customer.UserName
                 }).ToListAsync();
             return Ok(list);
         }
